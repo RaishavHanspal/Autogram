@@ -103,6 +103,13 @@ jobs:
         if: github.event_name == 'schedule'
         run: sleep $((RANDOM % 2700))  # 0-45 minutes
 
+      - name: Debug secret presence (prints NO values)
+        run: |
+          echo "POST_BACKEND set: ${POST_BACKEND:+yes} (len ${#POST_BACKEND})"
+          echo "IG_USERNAME set: ${IG_USERNAME:+yes} (len ${#IG_USERNAME})"
+          echo "IG_PASSWORD set: ${IG_PASSWORD:+yes} (len ${#IG_PASSWORD})"
+          echo "IG_SESSION_B64 set: ${IG_SESSION_B64:+yes} (len ${#IG_SESSION_B64})"
+        
       - name: Run autogram
         id: run
         run: |
