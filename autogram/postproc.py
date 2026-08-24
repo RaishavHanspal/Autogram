@@ -72,8 +72,9 @@ def _to_srgb_rgb(img: Image.Image) -> Image.Image:
 
             src = ImageCms.ImageCmsProfile(io.BytesIO(icc))
             dst = ImageCms.createProfile("sRGB")
-            img = ImageCms.profileToProfile(img, src, dst, outputMode="RGB")
-            return img
+            converted = ImageCms.profileToProfile(img, src, dst, outputMode="RGB")
+            if converted is not None:
+                return converted
         except Exception as exc:  # pragma: no cover - ICC edge case
             log.warning("ICC->sRGB conversion failed (%s); falling back to RGB", exc)
     return img.convert("RGB")
