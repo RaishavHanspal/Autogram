@@ -1,0 +1,50 @@
+# Caption profanity / slur wordlist. One term per line. Matching is
+# case-insensitive on word boundaries (see autogram/safety.py).
+# Lines starting with '#' are comments. Keep this SFW-oriented and extend as
+# needed for your brand's tolerance. Deliberately conservative starter set;
+# slurs are intentionally omitted from this public file — add your own list.
+anal
+arse
+ass
+asshole
+bastard
+bitch
+bollocks
+boner
+bugger
+bullshit
+cock
+crap
+cunt
+damn
+dick
+dildo
+douche
+dyke
+fag
+faggot
+fuck
+fucker
+fucking
+goddamn
+handjob
+hell
+horny
+jackass
+jerk
+jizz
+motherfucker
+nigga
+nigger
+piss
+prick
+pussy
+retard
+shit
+shithead
+slut
+spastic
+tits
+twat
+wanker
+whore

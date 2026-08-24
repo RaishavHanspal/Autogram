@@ -1,0 +1,24 @@
+# Local/self-hosted runner via Docker. Usage:
+#   cp .env.example .env   # fill in credentials
+#   docker compose run --rm autogram --dry-run
+#   docker compose run --rm autogram          # real post
+services:
+  autogram:
+    build: .
+    image: autogram:latest
+    env_file:
+      - .env
+    environment:
+      HF_HOME: /data/huggingface
+      OLLAMA_MODELS: /data/ollama/models
+      OLLAMA_HOST: http://127.0.0.1:11434
+    volumes:
+      - model-cache:/data          # HF + Ollama model caches (large, persistent)
+      - ./config:/app/config:ro    # your theme/config
+      - ./state:/app/state         # history.json + session, committed by you
+      - ./out:/app/out             # generated artifacts
+    # 16 GB is the reference (GitHub runner). sd-turbo fits comfortably.
+    mem_limit: 14g
+
+volumes:
+  model-cache:

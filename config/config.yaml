@@ -1,0 +1,82 @@
+# ---------------------------------------------------------------------------
+# autogram configuration. Non-secret only. Env vars override any value here
+# (see autogram/config.py for the AUTOGRAM_* override scheme).
+# Credentials live in the environment / .env, never here.
+# ---------------------------------------------------------------------------
+
+# The ONE standing content input. Every run varies a fresh brief from this.
+theme: "minimalist Scandinavian interiors with warm morning light"
+
+# Deterministic-variation salt. Change it to reshuffle the axis-hint stream
+# without changing the theme.
+seed_salt: "autogram-v1"
+
+brief:
+  history_depth: 30          # how many past briefs to feed the LLM for divergence
+  dedupe_threshold: 85       # rapidfuzz token_set_ratio above which a brief is a dup
+  max_retries: 3             # reject-and-retry attempts for near-duplicate subjects
+  # Axis hints pre-selected by a seeded RNG and injected into the LLM prompt.
+  axes:
+    camera_angle: ["eye-level", "low angle", "high angle", "dutch angle", "overhead flat-lay", "worm's-eye"]
+    season: ["spring", "summer", "autumn", "winter"]
+    focal_length: ["16mm wide", "35mm", "50mm", "85mm portrait", "135mm telephoto", "macro"]
+    subject_scale: ["extreme close-up", "close-up", "medium shot", "wide establishing shot"]
+
+llm:
+  # Ollama runtime. The daemon lifecycle is managed by autogram itself.
+  host_env: "OLLAMA_HOST"                  # env var to read; default in code
+  model: "qwen2.5:3b-instruct"             # ~2 GB, comfortable on a 4-core CPU runner
+  hq_model: "qwen2.5:7b-instruct"          # used only when a GPU is detected
+  ready_timeout_s: 120                      # health-poll budget after spawning serve
+  request_timeout_s: 180
+  temperature: 0.8
+  max_retries: 3                            # JSON-validation retries before template fallback
+
+image:
+  # CPU default. See README runtime/disk table for alternatives.
+  model: "stabilityai/sd-turbo"            # 512x512, 1-4 steps, guidance 0.0
+  hq_model: "black-forest-labs/FLUX.1-schnell"  # used only when CUDA is available
+  steps: 2                                  # turbo models: 1-4
+  guidance_scale: 0.0                       # turbo models want 0.0
+  width: 512
+  height: 512
+  # SD prompt templates. {pos}/{neg} come from the brief renderer.
+  positive_template: "{subject}, {setting}, {lighting}, {mood}, {composition}, {color_palette}, {time_of_day}, {style_modifiers}, high detail, professional photography"
+  negative_template: "lowres, blurry, deformed, disfigured, text, watermark, signature, jpeg artifacts, oversaturated, extra limbs, bad anatomy, ugly"
+
+postproc:
+  aspect: "1:1"                # one of: "1:1", "4:5", "1.91:1"
+  jpeg_quality: 92
+  unsharp_radius: 1.2
+  unsharp_percent: 80
+  unsharp_threshold: 3
+  max_bytes: 8388608           # 8 MB Instagram hard limit
+
+caption:
+  tone: "calm, warm, understated; speaks to design lovers"
+  emoji_budget: 2              # max emoji in the caption (0 to disable)
+  max_length: 2200            # caption + hashtag block hard cap (Instagram)
+  hashtag_placement: "caption"  # "caption" or "comment"
+
+hashtags:
+  min_count: 12
+  max_count: 18               # hard-capped at 30 in code regardless
+  # Target tier mix (fractions, validated in code with tolerance).
+  tier_broad: 0.30            # >1M posts
+  tier_mid: 0.50
+  tier_niche: 0.20
+  brand_tags: ["autogram", "slowdesign"]   # always appended, normalized
+
+gates:
+  nsfw: true
+  degenerate: true
+  profanity: true
+  # Degenerate-image thresholds (on 0-255 grayscale).
+  degenerate_min_variance: 60.0   # reject near-uniform output
+  degenerate_dark_mean: 12.0      # reject near-black
+  degenerate_bright_mean: 243.0   # reject near-white
+
+state:
+  history_path: "state/history.json"
+  session_path: "state/ig_session.json"   # instagrapi session settings (gitignored)
+  out_dir: "out"

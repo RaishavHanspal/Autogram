@@ -1,0 +1,64 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-ci-${{ runner.os }}-${{ hashFiles('requirements*.txt') }}
+          restore-keys: |
+            pip-ci-${{ runner.os }}-
+
+      - name: Install deps (CPU torch)
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          pip install -r requirements-cpu.txt
+          pip install -e ".[dev]"
+
+      - name: Ruff (lint + format check)
+        run: |
+          ruff check autogram tests
+          ruff format --check autogram tests
+
+      - name: Mypy
+        run: mypy
+
+      - name: Pytest (no network)
+        run: pytest
+
+  smoke-dry-run:
+    # Full pipeline in --dry-run with the poster mocked (no models downloaded).
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install deps
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          pip install -r requirements-cpu.txt
+          pip install -e ".[dev]"
+      - name: Dry-run smoke (mocked image + LLM + poster)
+        run: python tests/smoke_dry_run.py

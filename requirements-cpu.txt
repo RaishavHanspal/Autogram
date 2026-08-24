@@ -1,0 +1,8 @@
+# CPU-only install. Pulls the CPU torch wheel from the official PyTorch index
+# so no CUDA runtime is downloaded (saves ~2.5 GB of runner disk and cache).
+#
+#   pip install -r requirements-cpu.txt
+#
+--extra-index-url https://download.pytorch.org/whl/cpu
+-r requirements.txt
+torch==2.3.1+cpu

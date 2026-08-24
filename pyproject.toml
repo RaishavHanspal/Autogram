@@ -1,0 +1,74 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "autogram"
+version = "0.1.0"
+description = "Free, open-source, self-hosted Instagram auto-poster (local diffusion + local LLM)."
+readme = "README.md"
+requires-python = "==3.11.*"
+license = { text = "MIT" }
+authors = [{ name = "autogram contributors" }]
+keywords = ["instagram", "automation", "diffusers", "ollama", "self-hosted"]
+
+# Exact pins live in requirements.txt / requirements-cpu.txt (torch handling
+# differs by platform). These loose ranges keep `pip install -e .` usable for
+# dev, but CI and Docker use the pinned requirements files.
+dependencies = [
+  "diffusers==0.27.2",
+  "transformers==4.40.2",
+  "accelerate==0.30.1",
+  "safetensors==0.4.3",
+  "huggingface-hub==0.23.0",
+  "numpy==1.26.4",
+  "Pillow==10.3.0",
+  "pydantic==2.7.1",
+  "pydantic-settings==2.2.1",
+  "PyYAML==6.0.1",
+  "python-dotenv==1.0.1",
+  "requests==2.31.0",
+  "tenacity==8.2.3",
+  "rapidfuzz==3.9.0",
+  "instagrapi==2.1.2",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest==8.2.0",
+  "ruff==0.4.4",
+  "mypy==1.10.0",
+  "types-PyYAML==6.0.12.20240311",
+  "types-requests==2.31.0.20240406",
+]
+
+[project.scripts]
+autogram = "autogram.run:main"
+
+[tool.setuptools]
+packages = ["autogram", "autogram.poster"]
+
+[tool.setuptools.package-data]
+autogram = ["py.typed"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP", "B", "C4", "SIM"]
+ignore = ["E501"]  # line length handled by formatter; long prompt strings are fine
+
+[tool.mypy]
+python_version = "3.11"
+warn_unused_ignores = true
+warn_redundant_casts = true
+ignore_missing_imports = true
+check_untyped_defs = true
+disallow_untyped_defs = false
+files = ["autogram"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = ["ignore::DeprecationWarning"]

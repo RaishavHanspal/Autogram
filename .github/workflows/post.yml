@@ -1,0 +1,156 @@
+name: autogram-post
+
+# Scheduled posting + manual runs.
+#
+# NOTE: cron here is UTC. GitHub delays scheduled workflows under load, so the
+# exact minute is NOT guaranteed — treat the schedule as "roughly twice weekly".
+# The in-job jitter sleep (0-45 min) further avoids robotic fixed-minute posts.
+on:
+  schedule:
+    # Mon & Thu at 14:00 UTC (twice weekly). Adjust to your audience/timezone.
+    - cron: "0 14 * * 1,4"
+  workflow_dispatch:
+    inputs:
+      description:
+        description: "One-off theme override"
+        required: false
+        type: string
+      dry_run:
+        description: "Run everything but post nothing"
+        required: false
+        type: boolean
+        default: false
+      seed:
+        description: "Reproducible seed (integer)"
+        required: false
+        type: string
+
+concurrency:
+  group: autogram
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      HF_HOME: ${{ github.workspace }}/.cache/huggingface
+      OLLAMA_MODELS: ${{ github.workspace }}/.cache/ollama/models
+      OLLAMA_HOST: http://127.0.0.1:11434
+      # Secrets -> env. Two logical inputs: IG creds + the theme (config).
+      POST_BACKEND: ${{ secrets.POST_BACKEND }}
+      IG_USERNAME: ${{ secrets.IG_USERNAME }}
+      IG_PASSWORD: ${{ secrets.IG_PASSWORD }}
+      IG_SESSION_B64: ${{ secrets.IG_SESSION_B64 }}
+      IG_PROXY: ${{ secrets.IG_PROXY }}
+      IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+      IG_USER_ID: ${{ secrets.IG_USER_ID }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_REPOSITORY: ${{ github.repository }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # Cache model weights and pip. Note: repo cache ceiling is 10 GB and
+      # entries evict after 7 days of no use (see README).
+      - name: Cache HuggingFace + Ollama models
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ github.workspace }}/.cache/huggingface
+            ${{ github.workspace }}/.cache/ollama/models
+          key: models-${{ runner.os }}-${{ hashFiles('config/config.yaml') }}
+          restore-keys: |
+            models-${{ runner.os }}-
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ runner.os }}-${{ hashFiles('requirements*.txt') }}
+          restore-keys: |
+            pip-${{ runner.os }}-
+
+      - name: Install and warm Ollama
+        run: |
+          set -euo pipefail
+          curl -fsSL https://ollama.com/install.sh | sh
+          mkdir -p "$OLLAMA_MODELS"
+          # autogram manages the daemon itself, but warm it here so the model
+          # pull is cached in this step's logs and the daemon is proven healthy.
+          OLLAMA_HOST=127.0.0.1:11434 nohup ollama serve >/tmp/ollama.log 2>&1 &
+          for i in $(seq 1 30); do
+            curl -sf http://127.0.0.1:11434/api/tags >/dev/null && break || sleep 2
+          done
+          ollama pull qwen2.5:3b-instruct
+
+      - name: Install Python deps (CPU torch)
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          pip install -r requirements-cpu.txt
+          pip install -e .
+
+      - name: Jitter (avoid robotic fixed-minute posts)
+        if: github.event_name == 'schedule'
+        run: sleep $((RANDOM % 2700))  # 0-45 minutes
+
+      - name: Run autogram
+        id: run
+        run: |
+          set -o pipefail
+          ARGS=""
+          if [ "${{ inputs.dry_run }}" = "true" ]; then ARGS="$ARGS --dry-run"; fi
+          if [ -n "${{ inputs.description }}" ]; then ARGS="$ARGS --description \"${{ inputs.description }}\""; fi
+          if [ -n "${{ inputs.seed }}" ]; then ARGS="$ARGS --seed ${{ inputs.seed }}"; fi
+          eval python -m autogram.run $ARGS 2>&1 | tee run.log
+
+      - name: Upload artifacts (image + caption)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: autogram-post-${{ github.run_id }}
+          path: |
+            out/*.jpg
+            out/*.txt
+            out/*.json
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Commit history back
+        if: success()
+        run: |
+          set -euo pipefail
+          if [ -z "$(git status --porcelain -- state/history.json)" ]; then
+            echo "no history change"; exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f state/history.json
+          git commit -m "chore(autogram): record run [skip ci]"
+          git push
+
+      - name: Open/append failure issue
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          TAIL=$(tail -n 60 run.log 2>/dev/null || echo "no log captured")
+          TITLE="autogram run failed"
+          BODY=$(printf '### Run failed\nRun: %s\n\n```\n%s\n```\n' "${{ github.run_id }}" "$TAIL")
+          EXISTING=$(gh issue list --state open --search "$TITLE in:title" --json number --jq '.[0].number' || echo "")
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --body "$BODY"
+          else
+            gh issue create --title "$TITLE" --body "$BODY" --label autogram || \
+              gh issue create --title "$TITLE" --body "$BODY"
+          fi

@@ -1,0 +1,38 @@
+# autogram
+.env
+# Ignore everything in state/ EXCEPT history.json, which the workflow commits
+# back. The instagrapi session file (a secret) stays ignored.
+state/*
+!state/history.json
+out/
+*.jpg
+*.jpeg
+*.png
+
+# python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# models / caches (never commit)
+.cache/
+huggingface/
+models/
+
+# editors / os
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

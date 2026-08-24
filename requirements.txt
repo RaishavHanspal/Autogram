@@ -1,0 +1,26 @@
+# autogram runtime dependencies (pinned).
+# NOTE: torch is intentionally NOT listed here. Install it separately so you
+# control CPU vs CUDA:
+#   CPU:  pip install -r requirements-cpu.txt   (pulls torch==2.3.1+cpu)
+#   CUDA: pip install torch==2.3.1              (from PyPI, with your CUDA)
+# Installing torch via this file would risk pulling a ~2.5 GB CUDA build onto a
+# GPU-less GitHub runner. See DECISIONS.md.
+
+diffusers==0.27.2
+transformers==4.40.2
+accelerate==0.30.1
+safetensors==0.4.3
+huggingface-hub==0.23.0
+numpy==1.26.4
+Pillow==10.3.0
+
+pydantic==2.7.1
+pydantic-settings==2.2.1
+PyYAML==6.0.1
+python-dotenv==1.0.1
+
+requests==2.31.0
+tenacity==8.2.3
+rapidfuzz==3.9.0
+
+instagrapi==2.1.2

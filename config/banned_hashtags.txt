@@ -1,0 +1,71 @@
+# Banned / shadowbanned / spam-associated hashtags. One per line, with or
+# without a leading '#'. Comparison is case-insensitive after stripping '#'.
+# Lines starting with '#' AND containing a space are treated as comments;
+# a bare "#tag" (no space) is treated as a tag. Blank lines ignored.
+# This is a maintained starter list of commonly-reported banned tags — extend it.
+
+# --- comments below, tags after ---
+alone
+adulting
+beautyblogger
+besties
+bikinibody
+brain
+costumes
+curvygirls
+date
+dating
+desk
+direct
+dm
+easter
+elevator
+eggplant
+fitnessgirls
+gloves
+graffitiigers
+hardworkpaysoff
+humpday
+ig
+instamood
+italiano
+kansas
+kickoff
+killingit
+lean
+like
+lingerie
+loseweight
+master
+milf
+mirrorphoto
+models
+mustfollow
+nasty
+newyearsday
+nude
+petite
+pornfood
+pushups
+saltwater
+selfharm
+shower
+single
+singlelife
+skype
+snap
+snapchat
+snowstorm
+sopretty
+stranger
+streetphoto
+sunbathing
+swole
+tag4like
+tagsforlikes
+teens
+thick
+todayimwearing
+undies
+valentinesday
+workflow
