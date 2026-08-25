@@ -600,5 +600,53 @@
     "post_id": "18046908191603973",
     "post_url": "https://www.instagram.com/p/DcekfhAlEjt/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260825T213934Z",
+    "timestamp": "2026-08-25T21:39:34.789758+00:00",
+    "brief": {
+      "subject": "Mid-20s South Asian woman and late-20s South Asian man in a serene alpine meadow with blooming wildflowers, their hands entwined under a misty snow-capped mountain peak backdrop.",
+      "setting": "Alpine meadow with wildflowers",
+      "lighting": "Golden hour sunlight filtering through thin clouds",
+      "mood": "Serene, adventurous, intimate, loving, emotional depth, magical atmosphere.",
+      "composition": "Macro intimate close-up of hands/faces, shallow depth with bokeh background.",
+      "color_palette": "Soft pastel tones with warm highlights and cool shadows, natural earth tones and vibrant wildflower colors.",
+      "time_of_day": "Golden hour twilight light, cool blue hour light.",
+      "style_modifiers": [
+        "cinematic",
+        "professional",
+        "photorealistic"
+      ],
+      "location_name": "Alpine meadow with wildflowers",
+      "interaction": "standing apart but connected visually"
+    },
+    "positive_prompt": "candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair, standing apart but connected visually, Mid-20s South Asian woman and late-20s South Asian man in a serene alpine meadow with blooming wildflowers, their hands entwined under a misty snow-capped mountain peak backdrop., in Alpine meadow with wildflowers, Golden hour sunlight filtering through thin clouds, Serene, adventurous, intimate, loving, emotional depth, magical atmosphere., Macro intimate close-up of hands/faces, shallow depth with bokeh background., Soft pastel tones with warm highlights and cool shadows, natural earth tones and vibrant wildflower colors., Golden hour twilight light, cool blue hour light., cinematic, professional, photorealistic, shot on DSLR, 85mm lens, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly",
+    "seed": 3646714465,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "34577629c0db8694fc3b1d3e4396867c13561fd742920ef278585e739cedc9d8",
+    "image_path": "out/20260825T213934Z.jpg",
+    "caption": "Feeling lost in time with you. 🌃 #handinhand #amazingrelationship\n\n#handinhand #amazingrelationship #alpenglow #amour #mountainmeadow #mountains #love #mountain #mountainbreeze #alpine #mountainslopes #autogram #slowdesign",
+    "alt_text": "A mid-20s South Asian woman and a late-20s South Asian man in a serene alpine meadow with blooming wildflowers, their hands entwined under a misty snow-capped mountain peak backdrop.",
+    "hashtags": [
+      "#handinhand",
+      "#amazingrelationship",
+      "#alpenglow",
+      "#amour",
+      "#mountainmeadow",
+      "#mountains",
+      "#love",
+      "#mountain",
+      "#mountainbreeze",
+      "#alpine",
+      "#mountainslopes",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "18108013760124275",
+    "post_url": "https://www.instagram.com/p/Dceox8mnaS6/",
+    "status": "posted"
   }
 ]
