@@ -34,15 +34,24 @@ llm:
 
 image:
   # CPU default. See README runtime/disk table for alternatives.
-  model: "stabilityai/sd-turbo"            # 512x512, 1-4 steps, guidance 0.0
-  hq_model: "black-forest-labs/FLUX.1-schnell"  # used only when CUDA is available
-  steps: 2                                  # turbo models: 1-4
-  guidance_scale: 0.0                       # turbo models want 0.0
+  # Photoreal SD1.5 checkpoint (diffusers format) — the realism ceiling on a
+  # free CPU runner. ~20-30 steps at 512 takes a few minutes on 4 vCPU but fits
+  # the 60-min job budget. For a fast (but plasticky) fallback set model to
+  # "stabilityai/sd-turbo" — the code auto-detects "turbo"/"lcm" and switches to
+  # the hq_steps/hq_guidance below. Other good CPU options: "Lykon/absolute-reality-1.81".
+  model: "Lykon/dreamshaper-8"
+  hq_model: "black-forest-labs/FLUX.1-schnell"  # used automatically when CUDA is present
+  steps: 26                                 # photoreal SD1.5 wants ~20-30 steps
+  guidance_scale: 6.5                       # real CFG (turbo/FLUX use the hq_* values)
+  hq_steps: 4                               # FLUX schnell / turbo: distilled, 4 steps
+  hq_guidance_scale: 0.0                    # FLUX schnell / turbo want CFG 0.0
   width: 512
   height: 512
-  # SD prompt templates. {pos}/{neg} come from the brief renderer.
-  positive_template: "{subject}, {setting}, {lighting}, {mood}, {composition}, {color_palette}, {time_of_day}, {style_modifiers}, high detail, professional photography"
-  negative_template: "lowres, blurry, deformed, disfigured, text, watermark, signature, jpeg artifacts, oversaturated, extra limbs, bad anatomy, ugly"
+  # SD prompt templates. {characters} is the fixed couple (kept identical every
+  # run); the brief fields supply the rotating scene/place/style. The photoreal
+  # cues at the end push toward a real-photograph look.
+  positive_template: "candid photograph of {characters}, {interaction}, {subject}, in {setting}, {lighting}, {mood}, {composition}, {color_palette}, {time_of_day}, {style_modifiers}, shot on DSLR, 85mm lens, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k"
+  negative_template: "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly"
 
 postproc:
   aspect: "4:5"                # one of: "1:1", "4:5", "1.91:1"
@@ -80,3 +89,5 @@ state:
   history_path: "state/history.json"
   session_path: "state/ig_session.json"   # instagrapi session settings (gitignored)
   out_dir: "out"
+
+ 
