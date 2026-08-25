@@ -1,0 +1,48 @@
+[
+  {
+    "stamp": "20260825T115658Z",
+    "timestamp": "2026-08-25T11:56:58.927173+00:00",
+    "brief": {
+      "subject": "A woven rug partially covering a wooden coffee table in a winter living room with a stack of books and a single vase of winter flowers.",
+      "setting": "A cozy winter living room with muted tones and natural textures, featuring a wooden coffee table and armchairs.",
+      "lighting": "Warm morning light streaming through a small window, casting a soft, diffused glow across the space with shadows created by a dutch angle camera angle.",
+      "mood": "Cozy, tranquil, and inviting with a hint of contemplation and reflection.",
+      "composition": "The subject (the rug and table) is centered, but the dutch angle causes the table to lean slightly to the left, creating depth and interest.",
+      "color_palette": "Muted greys, browns, and soft pinks with touches of white and green.",
+      "time_of_day": "Winter morning",
+      "style_modifiers": [
+        "Minimalist",
+        "Scandinavian",
+        "Soft lighting"
+      ]
+    },
+    "positive_prompt": "A woven rug partially covering a wooden coffee table in a winter living room with a stack of books and a single vase of winter flowers., A cozy winter living room with muted tones and natural textures, featuring a wooden coffee table and armchairs., Warm morning light streaming through a small window, casting a soft, diffused glow across the space with shadows created by a dutch angle camera angle., Cozy, tranquil, and inviting with a hint of contemplation and reflection., The subject (the rug and table) is centered, but the dutch angle causes the table to lean slightly to the left, creating depth and interest., Muted greys, browns, and soft pinks with touches of white and green., Winter morning, Minimalist, Scandinavian, Soft lighting, high detail, professional photography",
+    "negative_prompt": "lowres, blurry, deformed, disfigured, text, watermark, signature, jpeg artifacts, oversaturated, extra limbs, bad anatomy, ugly",
+    "seed": 1799173550,
+    "image_model": "stabilityai/sd-turbo",
+    "device": "cpu",
+    "image_sha256": "00a6d95f2bf6564de7db7d51acf9ea3abbcb31a1be7511c5a235653d2298948a",
+    "image_path": "out/20260825T115658Z.jpg",
+    "caption": "A minimalist Scandinavian living room setting where a woven rug gently covers a wooden coffee table, adding warmth and texture. 🌅\n\n#cozy #minimalist #scandinavian #soft_lighting #woven_rug #wooden_table #muted_tones #natural_textures #winter_flowers #armchairs #dutch_angle #autogram #slowdesign",
+    "alt_text": "A woven rug partially covering a wooden coffee table in a winter living room with a stack of books and a single vase of winter flowers.",
+    "hashtags": [
+      "#cozy",
+      "#minimalist",
+      "#scandinavian",
+      "#soft_lighting",
+      "#woven_rug",
+      "#wooden_table",
+      "#muted_tones",
+      "#natural_textures",
+      "#winter_flowers",
+      "#armchairs",
+      "#dutch_angle",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "18115591399939650",
+    "post_url": "https://www.instagram.com/p/DcdlmGioIF2/",
+    "status": "posted"
+  }
+]
