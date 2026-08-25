@@ -93,25 +93,37 @@ class ImageGenerator:
         import torch
 
         generator = torch.Generator(device=self._device).manual_seed(seed)
+        # Distilled models (FLUX schnell, *-turbo, LCM) need very few steps and
+        # zero guidance; a normal photoreal SD checkpoint needs real CFG + steps.
+        model_lc = self._model_id.lower()
+        is_distilled = any(k in model_lc for k in ("flux", "turbo", "schnell", "lcm"))
+        if self._device == "cuda" or is_distilled:
+            steps = self.cfg.image.hq_steps
+            guidance = self.cfg.image.hq_guidance_scale
+        else:
+            steps = self.cfg.image.steps
+            guidance = self.cfg.image.guidance_scale
+
         kwargs: dict[str, Any] = {
             "prompt": positive,
-            "num_inference_steps": self.cfg.image.steps,
-            "guidance_scale": self.cfg.image.guidance_scale,
+            "num_inference_steps": steps,
+            "guidance_scale": guidance,
             "width": self.cfg.image.width,
             "height": self.cfg.image.height,
             "generator": generator,
         }
-        # FLUX schnell does not accept a negative prompt; SD/SDXL turbo do.
-        if "flux" not in self._model_id.lower():
+        # FLUX schnell does not accept a negative prompt; SD/SDXL do.
+        if "flux" not in model_lc:
             kwargs["negative_prompt"] = negative
 
         log.info(
-            "generating %dx%d, %d steps, guidance %.1f, seed %d",
+            "generating %dx%d, %d steps, guidance %.1f, seed %d (model=%s)",
             self.cfg.image.width,
             self.cfg.image.height,
-            self.cfg.image.steps,
-            self.cfg.image.guidance_scale,
+            steps,
+            guidance,
             seed,
+            self._model_id,
         )
         result = self._pipe(**kwargs)
         image = result.images[0]
@@ -119,10 +131,11 @@ class ImageGenerator:
             model_id=self._model_id,
             device=self._device,
             dtype=self._dtype_name,
-            steps=self.cfg.image.steps,
-            guidance_scale=self.cfg.image.guidance_scale,
+            steps=steps,
+            guidance_scale=guidance,
             width=self.cfg.image.width,
             height=self.cfg.image.height,
             seed=seed,
         )
         return GeneratedImage(image=image, meta=meta)
+ 
