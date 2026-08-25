@@ -6,13 +6,17 @@ Variety is guaranteed three ways:
   2. The prompt includes the last N briefs and demands explicit divergence.
   3. Near-duplicate subjects (rapidfuzz token_set_ratio > threshold) are
      rejected and retried, up to max_retries.
+  4. Character descriptors and location data loaded from characters.json
+     ensure consistent couple portrayal and never-repeated scenic locations.
 """
 
 from __future__ import annotations
 
 import hashlib
+import json
 import random
 import re
+from pathlib import Path
 from typing import Any
 
 from pydantic import BaseModel, Field, ValidationError
@@ -60,6 +64,41 @@ def is_near_duplicate(subject: str, history_subjects: list[str], threshold: floa
     return False
 
 
+def load_characters_data(path: str = "config/characters.json") -> dict[str, Any]:
+    """Load character descriptors and location data from JSON."""
+    try:
+        with open(path, encoding="utf-8") as fh:
+            return json.load(fh)
+    except (FileNotFoundError, json.JSONDecodeError) as exc:
+        log.warning("characters.json not found or invalid: %s, using defaults", exc)
+        return {"characters": {}, "locations": {}}
+
+
+def flatten_locations(locations_dict: dict[str, list[dict[str, str]]]) -> list[dict[str, str]]:
+    """Flatten nested location categories into a single list."""
+    all_locations = []
+    for category, scenarios in locations_dict.items():
+        if isinstance(scenarios, list):
+            all_locations.extend(scenarios)
+    return all_locations
+
+
+def select_unique_location(
+    rng: random.Random, 
+    all_locations: list[dict[str, str]], 
+    history_locations: list[str]
+) -> dict[str, str] | None:
+    """Select a location not previously used. Return None if all exhausted."""
+    available = [
+        loc for loc in all_locations 
+        if loc.get("name", "") not in history_locations
+    ]
+    if not available:
+        log.warning("all locations exhausted; cycling through all locations")
+        available = all_locations
+    return rng.choice(available) if available else None
+
+
 def render_prompts(brief: Brief, cfg: Config) -> tuple[str, str]:
     """Render (positive, negative) Stable Diffusion prompts from the brief."""
     fields: dict[str, Any] = brief.model_dump()
@@ -76,6 +115,8 @@ def _build_messages(
     axis_hints: dict[str, str],
     recent_briefs: list[dict[str, Any]],
     error_feedback: str | None,
+    characters_data: dict[str, Any],
+    selected_location: dict[str, str] | None,
 ) -> list[dict[str, str]]:
     schema = (
         '{"subject": "string", "setting": "string", "lighting": "string", '
@@ -84,21 +125,52 @@ def _build_messages(
     )
     system = (
         "You are an art director generating a single creative brief for one "
-        "photographic image. Respond ONLY with a JSON object matching this schema "
+        "photographic image of a romantic South Asian couple. Respond ONLY with a JSON object matching this schema "
         f"exactly: {schema}. No prose, no code fences."
     )
+    
+    # Build character descriptor section
+    char_section = ""
+    if characters_data.get("characters"):
+        female = characters_data["characters"].get("female", {})
+        male = characters_data["characters"].get("male", {})
+        char_section = (
+            f"\nCOUPLE DESCRIPTORS:\n"
+            f"Female: {female.get('identity', '')}. "
+            f"Features: {female.get('facial_features', '')}. "
+            f"Hair: {female.get('hair', '')}. "
+            f"Accessories: {female.get('accessories', '')}.\n"
+            f"Male: {male.get('identity', '')}. "
+            f"Features: {male.get('facial_features', '')}. "
+            f"Hair: {male.get('hair', '')}. "
+            f"Beard: {male.get('facial_hair', '')}.\n"
+        )
+    
+    # Build location section
+    location_section = ""
+    if selected_location:
+        location_section = (
+            f"\nLOCATION/SETTING:\n"
+            f"Name: {selected_location.get('name', '')}\n"
+            f"Description: {selected_location.get('description', '')}\n"
+            f"Lighting: {selected_location.get('lighting', '')}\n"
+            f"Mood: {selected_location.get('mood', '')}\n"
+        )
+    
     hints = "\n".join(f"- {k.replace('_', ' ')}: {v}" for k, v in axis_hints.items())
     prev_lines = (
         "\n".join(f"- {b.get('subject', '?')} / {b.get('mood', '?')}" for b in recent_briefs)
         or "(none yet)"
     )
     user = (
-        f"Standing theme (stay on-brand): {cfg.theme}\n\n"
-        f"Incorporate these pre-selected creative constraints:\n{hints}\n\n"
+        f"Standing theme (stay on-brand): {cfg.theme}\n"
+        f"{char_section}"
+        f"{location_section}"
+        f"\nIncorporate these pre-selected creative constraints:\n{hints}\n\n"
         f"These are the most recent briefs already used — your brief MUST be "
         f"clearly different in subject and composition from ALL of them:\n{prev_lines}\n\n"
-        f"Produce one fresh, specific, visually concrete brief. The 'subject' must "
-        f"be a distinct scene, not a rephrasing of a previous one."
+        f"Produce one fresh, specific, visually concrete brief featuring the couple in the described location. "
+        f"The 'subject' must be a distinct scene, not a rephrasing of a previous one."
     )
     if error_feedback:
         user += (
@@ -127,6 +199,16 @@ def _fallback_brief(cfg: Config, axis_hints: dict[str, str], seed: int) -> Brief
     )
 
 
+def extract_location_from_history(history_briefs: list[dict[str, Any]]) -> list[str]:
+    """Extract location names from recent briefs if available."""
+    locations = []
+    for brief in history_briefs:
+        # Check if location metadata exists in the brief
+        if "location_name" in brief:
+            locations.append(brief["location_name"])
+    return locations
+
+
 def generate_brief(
     client: OllamaClient,
     cfg: Config,
@@ -140,13 +222,27 @@ def generate_brief(
     rng = random.Random(compute_seed(run_date, cfg.seed_salt) ^ seed)
     axis_hints = select_axis_hints(rng, cfg.brief.axes)
     log.info("axis hints: %s", axis_hints)
+    
+    # Load character and location data
+    characters_data = load_characters_data()
+    all_locations = flatten_locations(characters_data.get("locations", {}))
+    history_locations = extract_location_from_history(recent_briefs)
+    selected_location = select_unique_location(rng, all_locations, history_locations)
+    
+    if selected_location:
+        log.info("selected location: %s", selected_location.get("name", "unknown"))
+    else:
+        log.warning("no locations available or all exhausted")
 
     error_feedback: str | None = None
     for attempt in range(1, cfg.brief.max_retries + 1):
         try:
             raw = client.chat_json(
                 model=model,
-                messages=_build_messages(cfg, axis_hints, recent_briefs, error_feedback),
+                messages=_build_messages(
+                    cfg, axis_hints, recent_briefs, error_feedback, 
+                    characters_data, selected_location
+                ),
                 seed=seed + attempt,  # perturb so a retry actually diverges
                 temperature=cfg.llm.temperature,
             )
