@@ -6,7 +6,7 @@ image (self-hosted diffusion) and caption (self-hosted LLM) and posts it — on 
 machine or unattended on the GitHub Actions free tier. **No paid APIs, no hosted
 inference.** Every model runs locally.
 
-- 🎨 Image generation with `diffusers` (default `stabilityai/sd-turbo`, CPU-only)
+- 🎨 Image generation with `diffusers` (default `Lykon/dreamshaper-8`, photoreal on CPU; `sd-turbo` for speed)
 - ✍️ Captions/hashtags/alt-text with a local **Ollama** LLM (default `qwen2.5:3b-instruct`)
 - 🔁 Never repeats: seeded variation + history-aware divergence + near-duplicate rejection
 - 🛡️ Safety gates: NSFW, degenerate-image, profanity — any failure aborts cleanly
@@ -228,7 +228,8 @@ Numbers are approximate and vary with runner load — see
 | Model                              | Resolution | Steps | ~Wall-clock (CPU) | ~Disk (weights) | Notes                        |
 |------------------------------------|-----------|-------|-------------------|-----------------|------------------------------|
 | `segmind/tiny-sd`                  | 512²      | 1–4   | **~10–25 s**      | ~1.7 GB         | fastest; lower fidelity      |
-| `stabilityai/sd-turbo` *(default)* | 512²      | 1–4   | **~20–60 s**      | ~2.6 GB         | best speed/quality on CPU    |
+| `stabilityai/sd-turbo`             | 512²      | 1–4   | **~20–60 s**      | ~2.6 GB         | fast fallback; plasticky/AI-looking |
+| `Lykon/dreamshaper-8` *(default)*  | 512²      | 20–30 | **~3–8 min**      | ~4.0 GB         | photoreal on CPU; the realism ceiling without a GPU |
 | `stabilityai/sdxl-turbo`           | 1024²     | 1–4   | **~3–6 min**      | ~6.9 GB         | higher quality; slow on CPU  |
 | `black-forest-labs/FLUX.1-schnell` | 1024²     | 1–4   | GPU only (fp16)   | ~24 GB          | auto-selected when CUDA present |
 
@@ -247,10 +248,12 @@ Numbers are approximate and vary with runner load — see
 | NSFW safety checker (`CompVis/...`)     | ~1.2 GB |
 | CPU torch + diffusers + deps            | ~2.5 GB |
 
-**Total warm-cache footprint** (default sd-turbo + qwen2.5:3b + NSFW checker + deps)
-≈ **8–9 GB**, comfortably under the runner's ~14 GB free disk and the **10 GB repo
-cache ceiling**. Target scheduled run: **under 20 minutes** with a warm cache
-(cold cache adds model-download time and is excluded from that target).
+**Total warm-cache footprint** (default dreamshaper-8 + qwen2.5:3b + NSFW checker + deps)
+≈ **9–10 GB**, under the runner's ~14 GB free disk and the **10 GB repo
+cache ceiling**. Target scheduled run: **~10–15 minutes** with a warm cache — the
+photoreal model spends a few minutes sampling (cold cache adds model-download
+time). For sub-minute runs at lower fidelity, set `image.model` back to
+`stabilityai/sd-turbo` (the code auto-switches to the distilled sampling path).
 
 ---
 
@@ -292,3 +295,4 @@ is recorded in history.
 
 MIT — see [LICENSE](LICENSE). You are responsible for complying with Instagram's
 and Meta's terms for whichever backend you choose.
+ 
