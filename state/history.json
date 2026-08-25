@@ -393,5 +393,49 @@
     "post_id": "18412319899159998",
     "post_url": "https://www.instagram.com/p/Dcd5z2VIDeP/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260825T150157Z",
+    "timestamp": "2026-08-25T15:01:57.344371+00:00",
+    "brief": {
+      "subject": "high-quality, photorealistic romantic images of couples deeply in love, with crystal-clear, expressive faces, natural emotions, realistic skin and details, cinematic lighting, beautiful backgrounds, and professional photography aesthetics. (variation 550)",
+      "setting": "high-quality, photorealistic romantic images of couples deeply in love, with crystal-clear, expressive faces, natural emotions, realistic skin and details, cinematic lighting, beautiful backgrounds, and professional photography aesthetics.",
+      "lighting": "winter light",
+      "mood": "serene",
+      "composition": "dutch angle, medium shot",
+      "color_palette": "muted neutral tones",
+      "time_of_day": "morning",
+      "style_modifiers": [
+        "16mm wide",
+        "photographic"
+      ]
+    },
+    "positive_prompt": "high-quality, photorealistic romantic images of couples deeply in love, with crystal-clear, expressive faces, natural emotions, realistic skin and details, cinematic lighting, beautiful backgrounds, and professional photography aesthetics. (variation 550), high-quality, photorealistic romantic images of couples deeply in love, with crystal-clear, expressive faces, natural emotions, realistic skin and details, cinematic lighting, beautiful backgrounds, and professional photography aesthetics., winter light, serene, dutch angle, medium shot, muted neutral tones, morning, 16mm wide, photographic, high detail, professional photography",
+    "negative_prompt": "lowres, blurry, deformed, disfigured, text, watermark, signature, jpeg artifacts, oversaturated, extra limbs, bad anatomy, ugly",
+    "seed": 1799173550,
+    "image_model": "stabilityai/sd-turbo",
+    "device": "cpu",
+    "image_sha256": "419753cdc2a7710dc67227aeab892c7cf7a978a6adb6e3ae7d6cd9c662252969",
+    "image_path": "out/20260825T150157Z.jpg",
+    "caption": "Feeling the serene warmth of dawn with someone you love. Captured in muted neutral tones, this photo feels like a whisper of morning's softest whispers. 🌅\n\n#photorealistic #photographic #photography_love #love_in_action #instafriends #serene_morning #couples_love #photorealistic_couples #loving #couples_photos #autogram #slowdesign",
+    "alt_text": "High-quality, photorealistic romantic image of a couple in a dutch angle, capturing the moment with soft winter light and muted neutral tones.",
+    "hashtags": [
+      "#photorealistic",
+      "#photographic",
+      "#photography_love",
+      "#love_in_action",
+      "#instafriends",
+      "#serene_morning",
+      "#couples_love",
+      "#photorealistic_couples",
+      "#loving",
+      "#couples_photos",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "18127746904780068",
+    "post_url": "https://www.instagram.com/p/Dcd6x13IMTz/",
+    "status": "posted"
   }
 ]
