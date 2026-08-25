@@ -8,7 +8,7 @@ name: autogram-post
 on:
   schedule:
     # Mon & Thu at 14:00 UTC (twice weekly). Adjust to your audience/timezone.
-    - cron: "0 14 * * 1,4"
+    - cron: "0 */6 * * *"
   workflow_dispatch:
     inputs:
       description:
