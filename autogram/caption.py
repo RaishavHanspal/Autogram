@@ -348,22 +348,28 @@ def _build_messages(brief: Brief, cfg: Config, error_feedback: str | None) -> li
         '[{"tag": "string", "tier": "broad|mid|niche"}], "alt_text": "string"}'
     )
     system = (
-        "You are an expert Instagram copywriter. Respond ONLY with a single JSON "
-        f"object matching this schema exactly: {schema}. No prose, no code fences."
+        "You are an expert Instagram copywriter who writes warm, authentic, and humanly captions. "
+        "You write like you're sharing a genuine moment with friends, not describing an image. "
+        "Your captions feel personal, emotional, and relatable. "
+        "Respond ONLY with a single JSON object matching this schema exactly: {schema}. No prose, no code fences."
     )
     n = cfg.hashtags.max_count
     user = (
-        f"Write an Instagram post for this creative brief:\n"
+        f"Write a warm, authentic Instagram caption for this romantic moment:\n"
         f"{brief.model_dump_json(indent=2)}\n\n"
         f"Requirements:\n"
-        f"- Tone/voice: {cfg.caption.tone}.\n"
-        f"- The FIRST line must work as a standalone hook.\n"
-        f"- At most {cfg.caption.emoji_budget} emoji total.\n"
+        f"- Tone/voice: {cfg.caption.tone}. Be personal and genuine, like sharing with close friends.\n"
+        f"- The FIRST line must work as a compelling hook that draws people in emotionally.\n"
+        f"- Write about the FEELING and MOMENT, not a technical description of the image.\n"
+        f"- Use conversational language: contractions, natural phrasing, authentic emotion.\n"
+        f"- NO generic clichés. Make it specific to what's happening in this moment.\n"
+        f"- At most {cfg.caption.emoji_budget} emoji total (use sparingly for emphasis).\n"
         f"- Do NOT invent @mentions of accounts.\n"
         f"- Keep the whole caption well under {cfg.caption.max_length} characters.\n"
-        f"- Provide {cfg.hashtags.min_count}-{n} hashtags, each labelled with a tier: "
+        f"- Provide {cfg.hashtags.min_count}-{n} relevant hashtags, each labelled with a tier: "
         f"~30% 'broad' (>1M posts), ~50% 'mid', ~20% 'niche'.\n"
-        f"- alt_text: one factual sentence describing the image for accessibility.\n"
+        f"- alt_text: one factual sentence describing the image for accessibility (not poetic, just descriptive).\n"
+        f"\nMake this feel like a real moment shared authentically, not a staged product description."
     )
     if error_feedback:
         user += f"\nYour previous reply was invalid: {error_feedback}\nFix it and reply with valid JSON only."
@@ -376,10 +382,11 @@ def _build_messages(brief: Brief, cfg: Config, error_feedback: str | None) -> li
 def _fallback_caption(brief: Brief, cfg: Config, banned: set[str]) -> CaptionResult:
     """Deterministic template so a run never dies on LLM formatting."""
     log.warning("using deterministic fallback caption")
-    hook = f"{brief.subject.capitalize()} in {brief.lighting}."
+    hook = f"This moment right here. {brief.mood.capitalize()} and real."
     body = (
-        f"{hook}\n\n{brief.mood.capitalize()}, {brief.composition}. "
-        f"A study in {brief.color_palette}."
+        f"{hook}\n\n"
+        f"In {brief.setting}, under {brief.lighting}. "
+        f"Just us, just this. {brief.composition}."
     )
     raw = [
         _RawHashtag(tag=w, tier="mid")
