@@ -343,5 +343,55 @@
     "post_id": "18143807125564482",
     "post_url": "https://www.instagram.com/p/Dcd5B_PG5jE/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260825T145407Z",
+    "timestamp": "2026-08-25T14:54:07.594967+00:00",
+    "brief": {
+      "subject": "A couple sitting side by side on a wooden bench near the edge of a still pond, their reflections forming a perfect mirror-like image, their shadows gently merging behind them as the sun sets in the background, casting a soft golden hue over the scene.",
+      "setting": "Still pond reflection near a wooden bench",
+      "lighting": "Soft daylight creating perfect reflections, casting a soft golden hue over the scene",
+      "mood": "mysterious, tranquil, and loving",
+      "composition": "Two figures sitting side by side, their reflections forming a perfect mirror-like image, shadows gently merging behind them",
+      "color_palette": "Soft golden tones, warm tones",
+      "time_of_day": "Sunset",
+      "style_modifiers": [
+        "high-quality",
+        "photorealistic",
+        "romantic",
+        "deep-emotion",
+        "courageous",
+        "natural-emotions"
+      ]
+    },
+    "positive_prompt": "A couple sitting side by side on a wooden bench near the edge of a still pond, their reflections forming a perfect mirror-like image, their shadows gently merging behind them as the sun sets in the background, casting a soft golden hue over the scene., Still pond reflection near a wooden bench, Soft daylight creating perfect reflections, casting a soft golden hue over the scene, mysterious, tranquil, and loving, Two figures sitting side by side, their reflections forming a perfect mirror-like image, shadows gently merging behind them, Soft golden tones, warm tones, Sunset, high-quality, photorealistic, romantic, deep-emotion, courageous, natural-emotions, high detail, professional photography",
+    "negative_prompt": "lowres, blurry, deformed, disfigured, text, watermark, signature, jpeg artifacts, oversaturated, extra limbs, bad anatomy, ugly",
+    "seed": 1799173550,
+    "image_model": "stabilityai/sd-turbo",
+    "device": "cpu",
+    "image_sha256": "abb0a2fe17cdf4400e621b9b7f78e1f2323e7e7f18bb68ad59a877eff17855c1",
+    "image_path": "out/20260825T145407Z.jpg",
+    "caption": "Sitting side by side like two souls in a perfect mirror, the sun dips below the horizon, painting the pond with a soft, golden glow. It's like finding a moment of pure magic, just for two. #deepemotion #photorealistic #courageous #romantic\n\n#deepemotion #photorealistic #courageous #romantic #romanticsunset #sunsetreflection #couplephotography #mirrorreflection #woodenbench #naturephotography #naturallight #naturalbeauty #autogram #slowdesign",
+    "alt_text": "A couple sitting side by side on a wooden bench near a still pond, their reflections form a perfect mirror-like image, shadows gently merging behind them as the sun sets in the background, casting a soft golden hue over the scene.",
+    "hashtags": [
+      "#deepemotion",
+      "#photorealistic",
+      "#courageous",
+      "#romantic",
+      "#romanticsunset",
+      "#sunsetreflection",
+      "#couplephotography",
+      "#mirrorreflection",
+      "#woodenbench",
+      "#naturephotography",
+      "#naturallight",
+      "#naturalbeauty",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "18412319899159998",
+    "post_url": "https://www.instagram.com/p/Dcd5z2VIDeP/",
+    "status": "posted"
   }
 ]
