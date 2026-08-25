@@ -548,5 +548,57 @@
     "post_id": "18164514604473185",
     "post_url": "https://www.instagram.com/p/DceVUu-CRNU/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260825T210118Z",
+    "timestamp": "2026-08-25T21:01:18.155942+00:00",
+    "brief": {
+      "subject": "high-quality, photorealistic romantic image of a mid-20s South Asian woman and a late-20s South Asian man standing in a sunlit city rooftop garden gazing into each other's eyes, their shadows stretching gracefully behind them as the golden hour light casts a warm glow over the scene",
+      "setting": "Rooftop city sunset",
+      "lighting": "Warm golden hour light with city lights emerging",
+      "mood": "aspirational, modern, romantic, deep and passionate",
+      "composition": "Aerial drone perspective, focus on the couple's intertwined shadows and the city skyline",
+      "color_palette": "vibrant summer colors, warm golden hues, soft golden hue",
+      "time_of_day": "golden hour",
+      "style_modifiers": [
+        "cinematic",
+        "professional photography aesthetics"
+      ],
+      "location_name": "Rooftop city sunset",
+      "interaction": "forehead-to-forehead connection"
+    },
+    "positive_prompt": "candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair, forehead-to-forehead connection, high-quality, photorealistic romantic image of a mid-20s South Asian woman and a late-20s South Asian man standing in a sunlit city rooftop garden gazing into each other's eyes, their shadows stretching gracefully behind them as the golden hour light casts a warm glow over the scene, in Rooftop city sunset, Warm golden hour light with city lights emerging, aspirational, modern, romantic, deep and passionate, Aerial drone perspective, focus on the couple's intertwined shadows and the city skyline, vibrant summer colors, warm golden hues, soft golden hue, golden hour, cinematic, professional photography aesthetics, shot on DSLR, 85mm lens, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly",
+    "seed": 4021863259,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "4e026f2be17b3eb6caa5e7af303884ae70c7acf1a8cd75a6c599d79679233225",
+    "image_path": "out/20260825T210118Z.jpg",
+    "caption": "Lost in each other's eyes, the golden hour light amplifies our connection. Perfect moment captured for all to see. #RooftopCitySunset #CinematicPhotography #ProfessionalAesthetics #SouthAsianLove #LoveOnRooftop #PhotorealisticLove #GoldenHourMagic #CoupleConnection #CitySkyscape #RomeoAndJuliet #ShadowsOfLove #PhotographyLovers #AerialDroneViews #ModernRomance #LoveInMotion #AspirationalLove #SouthAsianRomance #CinematicLove\n\n#RooftopCitySunset #CinematicPhotography #ProfessionalAesthetics #SouthAsianLove #LoveOnRooftop #PhotorealisticLove #GoldenHourMagic #CoupleConnection #CitySkyscape #RomeoAndJuliet #ShadowsOfLove #PhotographyLovers #AerialDroneViews #ModernRomance #LoveInMotion #AspirationalLove #SouthAsianRomance #CinematicLove",
+    "alt_text": "Photorealistic romantic image of a mid-20s South Asian woman and a late-20s South Asian man standing in a sunlit city rooftop garden gazing into each other's eyes, their shadows stretching gracefully behind them as the golden hour light casts a warm glow over the scene.",
+    "hashtags": [
+      "#RooftopCitySunset",
+      "#CinematicPhotography",
+      "#ProfessionalAesthetics",
+      "#SouthAsianLove",
+      "#LoveOnRooftop",
+      "#PhotorealisticLove",
+      "#GoldenHourMagic",
+      "#CoupleConnection",
+      "#CitySkyscape",
+      "#RomeoAndJuliet",
+      "#ShadowsOfLove",
+      "#PhotographyLovers",
+      "#AerialDroneViews",
+      "#ModernRomance",
+      "#LoveInMotion",
+      "#AspirationalLove",
+      "#SouthAsianRomance",
+      "#CinematicLove"
+    ],
+    "backend": "graph",
+    "post_id": "18046908191603973",
+    "post_url": "https://www.instagram.com/p/DcekfhAlEjt/",
+    "status": "posted"
   }
 ]
