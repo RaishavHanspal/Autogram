@@ -648,5 +648,61 @@
     "post_id": "18108013760124275",
     "post_url": "https://www.instagram.com/p/Dceox8mnaS6/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260825T224110Z",
+    "timestamp": "2026-08-25T22:41:10.799466+00:00",
+    "brief": {
+      "subject": "Mid-20s South Asian woman and late-20s South Asian man standing in a sunlit wildflower field, with their expressions of deep affection and natural beauty.",
+      "setting": "Summer wildflower field",
+      "lighting": "Warm golden summer light with soft diffusion",
+      "mood": "joyful, free, abundant, loving",
+      "composition": "Rule of thirds with the couple off-center, the man slightly to the left of the woman, framing the wildflowers and butterflies with soft, natural beauty in the background.",
+      "color_palette": "Warm tones of golden yellow, soft green, and soft pink, with deep brown and rich olive for the skin tones and wildflowers.",
+      "time_of_day": "Summer afternoon",
+      "style_modifiers": [
+        "cinematic",
+        "professional",
+        "vintage film desaturated",
+        "vintage aesthetic",
+        "soft diffusion",
+        "natural beauty"
+      ],
+      "location_name": "Summer wildflower field",
+      "interaction": "sharing a secret or whispering"
+    },
+    "positive_prompt": "candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair, sharing a secret or whispering, Mid-20s South Asian woman and late-20s South Asian man standing in a sunlit wildflower field, with their expressions of deep affection and natural beauty., in Summer wildflower field, Warm golden summer light with soft diffusion, joyful, free, abundant, loving, Rule of thirds with the couple off-center, the man slightly to the left of the woman, framing the wildflowers and butterflies with soft, natural beauty in the background., Warm tones of golden yellow, soft green, and soft pink, with deep brown and rich olive for the skin tones and wildflowers., Summer afternoon, cinematic, professional, vintage film desaturated, vintage aesthetic, soft diffusion, natural beauty, shot on DSLR, 85mm lens, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly",
+    "seed": 207474837,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "dd831c1c5f540fb90a90bb2077f4350d342b61eb679386f87be2427698c40dfc",
+    "image_path": "out/20260825T224110Z.jpg",
+    "caption": "Feeling so grateful to be here, just soaking in the warm golden light and natural beauty. 🌻️ Our expressions speak volumes, the way the wildflowers and butterflies frame us. Perfect summer afternoon, a moment to cherish. #cinematicgram #photothatmakesyourday #vintageaesthetic #vintagefilm #softdiffusion #professionalphotography #summerwildflowerfields #instagood #instaphoto #photographylovers #photographylife #wildflowerwhisper #sunlightmagic #lovingmoment #beautifulcouple #whisperingsecrets #naturalbeauty #loving #summer #photographymoment #photographylovers #beauty #naturephotography #instaflavours #photooftheday #photographymoment\n\n#cinematicgram #photothatmakesyourday #vintageaesthetic #vintagefilm #softdiffusion #professionalphotography #summerwildflowerfields #instagood #instaphoto #photographylovers #photographylife #wildflowerwhisper #sunlightmagic #lovingmoment #beautifulcouple #whisperingsecrets #naturalbeauty #loving",
+    "alt_text": "A mid-20s South Asian woman and late-20s South Asian man standing in a sunlit wildflower field, their expressions of deep affection and natural beauty are perfectly framed by the wildflowers and butterflies in a summer afternoon setting.",
+    "hashtags": [
+      "#cinematicgram",
+      "#photothatmakesyourday",
+      "#vintageaesthetic",
+      "#vintagefilm",
+      "#softdiffusion",
+      "#professionalphotography",
+      "#summerwildflowerfields",
+      "#instagood",
+      "#instaphoto",
+      "#photographylovers",
+      "#photographylife",
+      "#wildflowerwhisper",
+      "#sunlightmagic",
+      "#lovingmoment",
+      "#beautifulcouple",
+      "#whisperingsecrets",
+      "#naturalbeauty",
+      "#loving"
+    ],
+    "backend": "graph",
+    "post_id": "18142380850491530",
+    "post_url": "https://www.instagram.com/p/Dcev5oCln6y/",
+    "status": "posted"
   }
 ]
