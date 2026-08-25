@@ -297,5 +297,51 @@
     "post_id": "18025970042895376",
     "post_url": "https://www.instagram.com/p/Dcd4LT3HDlW/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260825T144750Z",
+    "timestamp": "2026-08-25T14:47:50.145689+00:00",
+    "brief": {
+      "subject": "high-quality, photorealistic romantic images of couples deeply in love, with crystal-clear, expressive faces, natural emotions, realistic skin and details, cinematic lighting, beautiful backgrounds, and professional photography aesthetics. (variation 550)",
+      "setting": "high-quality, photorealistic romantic images of couples deeply in love, with crystal-clear, expressive faces, natural emotions, realistic skin and details, cinematic lighting, beautiful backgrounds, and professional photography aesthetics.",
+      "lighting": "winter light",
+      "mood": "serene",
+      "composition": "dutch angle, medium shot",
+      "color_palette": "muted neutral tones",
+      "time_of_day": "morning",
+      "style_modifiers": [
+        "16mm wide",
+        "photographic"
+      ]
+    },
+    "positive_prompt": "high-quality, photorealistic romantic images of couples deeply in love, with crystal-clear, expressive faces, natural emotions, realistic skin and details, cinematic lighting, beautiful backgrounds, and professional photography aesthetics. (variation 550), high-quality, photorealistic romantic images of couples deeply in love, with crystal-clear, expressive faces, natural emotions, realistic skin and details, cinematic lighting, beautiful backgrounds, and professional photography aesthetics., winter light, serene, dutch angle, medium shot, muted neutral tones, morning, 16mm wide, photographic, high detail, professional photography",
+    "negative_prompt": "lowres, blurry, deformed, disfigured, text, watermark, signature, jpeg artifacts, oversaturated, extra limbs, bad anatomy, ugly",
+    "seed": 1799173550,
+    "image_model": "stabilityai/sd-turbo",
+    "device": "cpu",
+    "image_sha256": "32d5c37739a34bf011b12b14b66c9b48febb8b3c2203fa2092d5c84d90e4025e",
+    "image_path": "out/20260825T144750Z.jpg",
+    "caption": "Witness the serenity of dawn as two hearts find their perfect fit. Their eyes speak volumes, the soft winter light framing them in warm, muted tones. #Photographic #16mmWide #LoveInFocus\n\n#Photographic #LoveInFocus #WinterLight #SoftTextures #CinematicAesthetics #RelatableRomance #Photorealistic #DeepEmotions #NaturalExpression #ProfessionalQuality #CouplesLove #PerfectMatch #autogram #slowdesign",
+    "alt_text": "Photorealistic romantic image of two deeply in love couples, captured in morning winter light with muted neutral tones and a dutch angle composition.",
+    "hashtags": [
+      "#Photographic",
+      "#LoveInFocus",
+      "#WinterLight",
+      "#SoftTextures",
+      "#CinematicAesthetics",
+      "#RelatableRomance",
+      "#Photorealistic",
+      "#DeepEmotions",
+      "#NaturalExpression",
+      "#ProfessionalQuality",
+      "#CouplesLove",
+      "#PerfectMatch",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "18143807125564482",
+    "post_url": "https://www.instagram.com/p/Dcd5B_PG5jE/",
+    "status": "posted"
   }
 ]
