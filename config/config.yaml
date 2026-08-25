@@ -89,5 +89,3 @@ state:
   history_path: "state/history.json"
   session_path: "state/ig_session.json"   # instagrapi session settings (gitignored)
   out_dir: "out"
-
- 
