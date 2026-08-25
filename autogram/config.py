@@ -55,7 +55,7 @@ class ImageConfig(BaseModel):
 
 
 class PostprocConfig(BaseModel):
-    aspect: str = "1:1"
+    aspect: str = "4:5"
     jpeg_quality: int = 92
     unsharp_radius: float = 1.2
     unsharp_percent: int = 80
