@@ -19,7 +19,7 @@ def test_env_override(monkeypatch, tmp_path):
 def test_defaults_when_no_file(tmp_path):
     cfg = load_config(tmp_path / "missing.yaml")
     assert isinstance(cfg, Config)
-    assert cfg.image.model == "stabilityai/sd-turbo"
+    assert cfg.image.model == "Lykon/dreamshaper-8"
 
 
 def test_invalid_aspect_rejected():
@@ -38,3 +38,4 @@ def test_repo_config_loads():
     cfg = load_config("config/config.yaml")
     assert cfg.theme
     assert cfg.brief.axes  # axes present
+ 
