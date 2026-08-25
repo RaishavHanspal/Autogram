@@ -295,4 +295,3 @@ is recorded in history.
 
 MIT — see [LICENSE](LICENSE). You are responsible for complying with Instagram's
 and Meta's terms for whichever backend you choose.
- 
