@@ -1,13 +1,18 @@
 """Creative-brief variation: theme -> a fresh, non-repeating brief (LLM).
 
-Variety is guaranteed three ways:
-  1. A seeded RNG (run date + config salt) pre-selects axis hints (camera
-     angle, season, focal length, subject scale) injected into the prompt.
+Variety is guaranteed several ways:
+  1. A seeded RNG (per-run stamp + config salt) pre-selects axis hints (camera
+     angle, season, focal length, subject scale) plus a photographic style
+     (interaction, mood, composition, lighting, color grading) injected into
+     both the LLM prompt and, deterministically, the image prompt.
   2. The prompt includes the last N briefs and demands explicit divergence.
   3. Near-duplicate subjects (rapidfuzz token_set_ratio > threshold) are
      rejected and retried, up to max_retries.
-  4. Character descriptors and location data loaded from characters.json
-     ensure consistent couple portrayal and never-repeated scenic locations.
+  4. A fixed character block loaded from characters.json is injected directly
+     into the Stable-Diffusion prompt, keeping the SAME couple across every
+     image while the location and photographic style rotate every run.
+  5. Locations are rotated using recorded history so a place is not reused
+     until the pool is exhausted.
 """
 
 from __future__ import annotations
@@ -16,7 +21,6 @@ import hashlib
 import json
 import random
 import re
-from pathlib import Path
 from typing import Any
 
 from pydantic import BaseModel, Field, ValidationError
@@ -38,10 +42,14 @@ class Brief(BaseModel):
     color_palette: str
     time_of_day: str
     style_modifiers: list[str] = Field(default_factory=list)
+    # Structured scene metadata (set in code, not by the LLM) so location
+    # rotation is recorded to history and the couple's interaction varies.
+    location_name: str = ""
+    interaction: str = ""
 
 
 def compute_seed(run_date: str, salt: str) -> int:
-    """Deterministic 31-bit seed from the run date (YYYY-MM-DD) and salt."""
+    """Deterministic 31-bit seed from an input string (date or stamp) and salt."""
     digest = hashlib.sha256(f"{run_date}|{salt}".encode()).hexdigest()
     return int(digest[:8], 16)
 
@@ -65,44 +73,104 @@ def is_near_duplicate(subject: str, history_subjects: list[str], threshold: floa
 
 
 def load_characters_data(path: str = "config/characters.json") -> dict[str, Any]:
-    """Load character descriptors and location data from JSON."""
+    """Load character descriptors, locations, and style trends from JSON."""
     try:
         with open(path, encoding="utf-8") as fh:
             return json.load(fh)
     except (FileNotFoundError, json.JSONDecodeError) as exc:
-        log.warning("characters.json not found or invalid: %s, using defaults", exc)
+        log.warning("characters.json not found or invalid: %s; using defaults", exc)
         return {"characters": {}, "locations": {}}
 
 
 def flatten_locations(locations_dict: dict[str, list[dict[str, str]]]) -> list[dict[str, str]]:
     """Flatten nested location categories into a single list."""
-    all_locations = []
-    for category, scenarios in locations_dict.items():
+    all_locations: list[dict[str, str]] = []
+    for scenarios in locations_dict.values():
         if isinstance(scenarios, list):
             all_locations.extend(scenarios)
     return all_locations
 
 
 def select_unique_location(
-    rng: random.Random, 
-    all_locations: list[dict[str, str]], 
-    history_locations: list[str]
+    rng: random.Random,
+    all_locations: list[dict[str, str]],
+    history_locations: list[str],
 ) -> dict[str, str] | None:
-    """Select a location not previously used. Return None if all exhausted."""
-    available = [
-        loc for loc in all_locations 
-        if loc.get("name", "") not in history_locations
-    ]
+    """Select a location not previously used. Cycle when the pool is exhausted."""
+    available = [loc for loc in all_locations if loc.get("name", "") not in history_locations]
     if not available:
-        log.warning("all locations exhausted; cycling through all locations")
+        log.warning("all locations used within history window; cycling through all locations")
         available = all_locations
     return rng.choice(available) if available else None
 
 
-def render_prompts(brief: Brief, cfg: Config) -> tuple[str, str]:
-    """Render (positive, negative) Stable Diffusion prompts from the brief."""
+def _pick(rng: random.Random, data: dict[str, Any], key: str) -> str:
+    """Pick one value from a top-level list in characters.json, or ''."""
+    values = data.get(key)
+    if isinstance(values, list) and values:
+        return str(rng.choice(values))
+    return ""
+
+
+def _pick_trend(rng: random.Random, trends: dict[str, Any], key: str) -> str:
+    values = trends.get(key)
+    if isinstance(values, list) and values:
+        return str(rng.choice(values))
+    return ""
+
+
+def select_style(rng: random.Random, characters_data: dict[str, Any]) -> dict[str, str]:
+    """Select a photographic style + interaction combination for this run.
+
+    Combined with location rotation and a unique per-run seed this yields an
+    effectively non-repeating combinatorial space (locations x interactions x
+    moods x compositions x lighting x grading), so the platform can produce
+    large volumes of content without duplication.
+    """
+    trends = characters_data.get("photography_trends", {})
+    if not isinstance(trends, dict):
+        trends = {}
+    return {
+        "interaction": _pick(rng, characters_data, "interaction_styles"),
+        "emotion": _pick(rng, characters_data, "moods_and_emotions"),
+        "composition": _pick_trend(rng, trends, "compositions"),
+        "lighting_style": _pick_trend(rng, trends, "lighting_styles"),
+        "color_grading": _pick_trend(rng, trends, "color_grading"),
+        "depth_of_field": _pick_trend(rng, trends, "depth_of_field"),
+    }
+
+
+def build_character_block(characters_data: dict[str, Any]) -> str:
+    """Build a compact, deterministic couple description for the image prompt.
+
+    Deterministic (no RNG) so the SAME recognizable couple appears in every
+    image. Kept concise to survive the CLIP 77-token limit on SD models while
+    still anchoring identity (FLUX on GPU handles the full detail comfortably).
+    """
+    chars = characters_data.get("characters", {})
+    female = chars.get("female", {}) if isinstance(chars, dict) else {}
+    male = chars.get("male", {}) if isinstance(chars, dict) else {}
+    if not female and not male:
+        return ""
+    return (
+        "the same recognizable romantic couple: "
+        "a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, "
+        "high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; "
+        "and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, "
+        "defined square jawline, short groomed dark beard, thick black hair"
+    )
+
+
+def render_prompts(brief: Brief, cfg: Config, characters_block: str = "") -> tuple[str, str]:
+    """Render (positive, negative) Stable Diffusion prompts from the brief.
+
+    ``characters_block`` is injected first so the couple's identity dominates
+    the prompt (kept consistent across runs); the brief supplies the varying
+    scene, and the config template appends photoreal quality cues.
+    """
     fields: dict[str, Any] = brief.model_dump()
     fields["style_modifiers"] = ", ".join(brief.style_modifiers)
+    fields["characters"] = characters_block
     positive = cfg.image.positive_template.format(**fields)
     negative = cfg.image.negative_template
     # Collapse any accidental double commas/space from empty fields.
@@ -117,6 +185,7 @@ def _build_messages(
     error_feedback: str | None,
     characters_data: dict[str, Any],
     selected_location: dict[str, str] | None,
+    style: dict[str, str],
 ) -> list[dict[str, str]]:
     schema = (
         '{"subject": "string", "setting": "string", "lighting": "string", '
@@ -125,17 +194,17 @@ def _build_messages(
     )
     system = (
         "You are an art director generating a single creative brief for one "
-        "photographic image of a romantic South Asian couple. Respond ONLY with a JSON object matching this schema "
-        f"exactly: {schema}. No prose, no code fences."
+        "photorealistic image of a romantic South Asian couple. Respond ONLY with a "
+        f"JSON object matching this schema exactly: {schema}. No prose, no code fences."
     )
-    
-    # Build character descriptor section
+
+    # Build character descriptor section.
     char_section = ""
     if characters_data.get("characters"):
         female = characters_data["characters"].get("female", {})
         male = characters_data["characters"].get("male", {})
         char_section = (
-            f"\nCOUPLE DESCRIPTORS:\n"
+            "\nCOUPLE DESCRIPTORS (keep these two people identical every time):\n"
             f"Female: {female.get('identity', '')}. "
             f"Features: {female.get('facial_features', '')}. "
             f"Hair: {female.get('hair', '')}. "
@@ -145,18 +214,30 @@ def _build_messages(
             f"Hair: {male.get('hair', '')}. "
             f"Beard: {male.get('facial_hair', '')}.\n"
         )
-    
-    # Build location section
+
+    # Build location section.
     location_section = ""
     if selected_location:
         location_section = (
-            f"\nLOCATION/SETTING:\n"
+            "\nLOCATION/SETTING (place the couple here):\n"
             f"Name: {selected_location.get('name', '')}\n"
             f"Description: {selected_location.get('description', '')}\n"
             f"Lighting: {selected_location.get('lighting', '')}\n"
             f"Mood: {selected_location.get('mood', '')}\n"
         )
-    
+
+    style_section = ""
+    if any(style.values()):
+        style_section = (
+            "\nPHOTOGRAPHIC DIRECTION (weave these in):\n"
+            f"Interaction: {style.get('interaction', '')}\n"
+            f"Emotion: {style.get('emotion', '')}\n"
+            f"Composition: {style.get('composition', '')}\n"
+            f"Lighting style: {style.get('lighting_style', '')}\n"
+            f"Color grading: {style.get('color_grading', '')}\n"
+            f"Depth of field: {style.get('depth_of_field', '')}\n"
+        )
+
     hints = "\n".join(f"- {k.replace('_', ' ')}: {v}" for k, v in axis_hints.items())
     prev_lines = (
         "\n".join(f"- {b.get('subject', '?')} / {b.get('mood', '?')}" for b in recent_briefs)
@@ -166,11 +247,13 @@ def _build_messages(
         f"Standing theme (stay on-brand): {cfg.theme}\n"
         f"{char_section}"
         f"{location_section}"
+        f"{style_section}"
         f"\nIncorporate these pre-selected creative constraints:\n{hints}\n\n"
         f"These are the most recent briefs already used — your brief MUST be "
         f"clearly different in subject and composition from ALL of them:\n{prev_lines}\n\n"
-        f"Produce one fresh, specific, visually concrete brief featuring the couple in the described location. "
-        f"The 'subject' must be a distinct scene, not a rephrasing of a previous one."
+        f"Produce one fresh, specific, visually concrete brief featuring the couple in the "
+        f"described location. The 'subject' must be a distinct scene, not a rephrasing of a "
+        f"previous one."
     )
     if error_feedback:
         user += (
@@ -182,30 +265,65 @@ def _build_messages(
     ]
 
 
-def _fallback_brief(cfg: Config, axis_hints: dict[str, str], seed: int) -> Brief:
+def _apply_scene(
+    brief: Brief,
+    selected_location: dict[str, str] | None,
+    style: dict[str, str],
+) -> Brief:
+    """Stamp guaranteed scene variety onto a brief (place + interaction).
+
+    Done in code (not left to the LLM) so location rotation is recorded and the
+    couple's pose/interaction genuinely changes every run regardless of what the
+    model returned.
+    """
+    if selected_location:
+        brief.location_name = selected_location.get("name", "")
+        # A concise place cue keeps the SD prompt within the CLIP token budget.
+        if brief.location_name:
+            brief.setting = brief.location_name
+        loc_lighting = selected_location.get("lighting", "")
+        if loc_lighting:
+            brief.lighting = loc_lighting
+    interaction = style.get("interaction", "")
+    if interaction:
+        brief.interaction = interaction
+    return brief
+
+
+def _fallback_brief(
+    cfg: Config,
+    axis_hints: dict[str, str],
+    seed: int,
+    selected_location: dict[str, str] | None,
+    style: dict[str, str],
+) -> Brief:
     """Deterministic brief if the LLM never returns valid JSON."""
     log.warning("using deterministic fallback brief")
-    return Brief(
+    brief = Brief(
         subject=f"{cfg.theme} (variation {seed % 1000})",
         setting=cfg.theme,
         lighting=axis_hints.get("season", "soft") + " light",
-        mood="serene",
-        composition=axis_hints.get("camera_angle", "eye-level")
-        + ", "
-        + axis_hints.get("subject_scale", "medium shot"),
-        color_palette="muted neutral tones",
+        mood=style.get("emotion") or "serene",
+        composition=style.get("composition")
+        or (
+            axis_hints.get("camera_angle", "eye-level")
+            + ", "
+            + axis_hints.get("subject_scale", "medium shot")
+        ),
+        color_palette=style.get("color_grading") or "muted neutral tones",
         time_of_day=axis_hints.get("time_of_day", "morning"),
         style_modifiers=[axis_hints.get("focal_length", "35mm"), "photographic"],
     )
+    return _apply_scene(brief, selected_location, style)
 
 
 def extract_location_from_history(history_briefs: list[dict[str, Any]]) -> list[str]:
-    """Extract location names from recent briefs if available."""
-    locations = []
+    """Extract location names from recent briefs so they can be rotated out."""
+    locations: list[str] = []
     for brief in history_briefs:
-        # Check if location metadata exists in the brief
-        if "location_name" in brief:
-            locations.append(brief["location_name"])
+        name = brief.get("location_name")
+        if name:
+            locations.append(str(name))
     return locations
 
 
@@ -222,17 +340,19 @@ def generate_brief(
     rng = random.Random(compute_seed(run_date, cfg.seed_salt) ^ seed)
     axis_hints = select_axis_hints(rng, cfg.brief.axes)
     log.info("axis hints: %s", axis_hints)
-    
-    # Load character and location data
+
+    # Load character/location/style data and rotate a fresh location + style.
     characters_data = load_characters_data()
     all_locations = flatten_locations(characters_data.get("locations", {}))
     history_locations = extract_location_from_history(recent_briefs)
     selected_location = select_unique_location(rng, all_locations, history_locations)
-    
+    style = select_style(rng, characters_data)
+
     if selected_location:
         log.info("selected location: %s", selected_location.get("name", "unknown"))
     else:
         log.warning("no locations available or all exhausted")
+    log.info("style: %s", {k: v for k, v in style.items() if v})
 
     error_feedback: str | None = None
     for attempt in range(1, cfg.brief.max_retries + 1):
@@ -240,8 +360,13 @@ def generate_brief(
             raw = client.chat_json(
                 model=model,
                 messages=_build_messages(
-                    cfg, axis_hints, recent_briefs, error_feedback, 
-                    characters_data, selected_location
+                    cfg,
+                    axis_hints,
+                    recent_briefs,
+                    error_feedback,
+                    characters_data,
+                    selected_location,
+                    style,
                 ),
                 seed=seed + attempt,  # perturb so a retry actually diverges
                 temperature=cfg.llm.temperature,
@@ -262,7 +387,9 @@ def generate_brief(
             log.warning("brief attempt %d rejected as near-duplicate", attempt)
             continue
 
-        log.info("brief accepted: %s", brief.subject)
+        brief = _apply_scene(brief, selected_location, style)
+        log.info("brief accepted: %s @ %s", brief.subject, brief.location_name or "(no location)")
         return brief
 
-    return _fallback_brief(cfg, axis_hints, seed)
+    return _fallback_brief(cfg, axis_hints, seed, selected_location, style)
+ 
