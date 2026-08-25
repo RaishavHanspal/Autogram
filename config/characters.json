@@ -1,0 +1,359 @@
+{
+  "characters": {
+    "female": {
+      "identity": "Mid-20s South Asian woman with warm, rich olive skin tone and natural subtle golden undertones",
+      "facial_features": "Soft almond-shaped dark brown eyes, gently defined arched dark eyebrows, high cheekbones, a straight slender nose, and full, naturally pink lips with a warm, genuine smile",
+      "hair": "Long, wavy jet-black hair with natural shine, styled in a loose side-swept half-updo with soft tendrils framing the face",
+      "accessories": "Small, subtle dark red bindi placed centered on the forehead",
+      "color_palette": ["rich deep burgundy", "warm maroon", "muted gold accents"],
+      "texture": "Natural skin micro-texture with soft natural highlights and shadow depth under warm ambient lighting"
+    },
+    "male": {
+      "identity": "Late-20s South Asian man with smooth wheatish-tan skin tone and warm undertones",
+      "facial_features": "Deep-set dark brown oval eyes, thick natural straight black eyebrows, a prominent straight bridge nose, defined square jawline, and a soft, affectionate expression",
+      "hair": "Neatly styled, thick black hair with short tapered sides and volume on top swept slightly to the side",
+      "facial_hair": "Short, well-groomed dark beard and mustache along the jawline",
+      "color_palette": ["deep maroon", "dark mahogany", "warm ambient amber light"],
+      "texture": "Realistic skin texture with visible pores, matte finish, and sharp facial structural lines"
+    }
+  },
+  "locations": {
+    "mountain_scenarios": [
+      {
+        "name": "Alpine meadow with wildflowers",
+        "description": "Couple in blooming alpine meadow surrounded by purple and yellow wildflowers, snow-capped peaks in misty background",
+        "lighting": "Golden hour sunlight filtering through thin clouds",
+        "mood": "serene, adventurous, intimate"
+      },
+      {
+        "name": "Mountain ridge at sunset",
+        "description": "Couple standing on a rocky mountain ridge overlooking vast valleys, dramatic sunset sky with golden and orange hues",
+        "lighting": "Warm golden and amber sunset lighting",
+        "mood": "powerful, romantic, awe-inspired"
+      },
+      {
+        "name": "Hidden mountain lake",
+        "description": "Couple by a pristine alpine lake with mirror-like reflections, surrounded by dense pine forests and towering peaks",
+        "lighting": "Soft overcast mountain light with cool reflections",
+        "mood": "peaceful, contemplative, connected"
+      },
+      {
+        "name": "Mountain cabin in snow",
+        "description": "Couple outside cozy wooden mountain cabin, surrounded by fresh snow, warm golden cabin lights glowing behind them",
+        "lighting": "Cool daylight with warm cabin glow",
+        "mood": "warm, intimate, secluded"
+      }
+    ],
+    "beach_scenarios": [
+      {
+        "name": "Tropical beach at golden hour",
+        "description": "Couple walking barefoot on pristine white sand beach, turquoise ocean waves, palm trees, golden hour light",
+        "lighting": "Warm golden hour sunlight creating long shadows",
+        "mood": "romantic, carefree, tropical"
+      },
+      {
+        "name": "Rocky beach with tide pools",
+        "description": "Couple among dramatic rocky outcrops and tide pools, crashing waves, barnacles and sea life visible",
+        "lighting": "Dramatic coastal light with spray mist",
+        "mood": "adventurous, wild, connected to nature"
+      },
+      {
+        "name": "Sunset pier",
+        "description": "Couple on wooden pier extending into the ocean, vibrant sunset reflected in calm water, seagulls flying",
+        "lighting": "Deep orange and pink sunset light",
+        "mood": "romantic, dreamy, reflective"
+      },
+      {
+        "name": "Beach cave exploration",
+        "description": "Couple exploring natural sea cave, waves entering, sea stacks visible outside, wet rock formations",
+        "lighting": "Natural light from cave opening creating dramatic contrasts",
+        "mood": "exploratory, intimate, mysterious"
+      },
+      {
+        "name": "Bioluminescent beach at night",
+        "description": "Couple on dark beach where waves glow with bioluminescent plankton, creating ethereal blue-green light",
+        "lighting": "Soft bioluminescent glow from ocean",
+        "mood": "magical, mysterious, otherworldly"
+      }
+    ],
+    "cave_scenarios": [
+      {
+        "name": "Crystal cave cavern",
+        "description": "Couple inside spectacular crystal-studded cave, natural formations reflecting light in kaleidoscopic patterns",
+        "lighting": "Soft spotlight-like light revealing crystal formations",
+        "mood": "magical, wonder-filled, ethereal"
+      },
+      {
+        "name": "Waterfall cave entrance",
+        "description": "Couple standing at cave entrance with flowing waterfall, mist rising, light streaming through opening",
+        "lighting": "Backlighting from cave entrance with soft waterfall spray",
+        "mood": "dramatic, powerful, transformative"
+      },
+      {
+        "name": "Underground river cave",
+        "description": "Couple by bioluminescent underground river, stalactites and stalagmites creating dramatic formations overhead",
+        "lighting": "Cool bioluminescent and reflective water light",
+        "mood": "mysterious, exploratory, sacred"
+      }
+    ],
+    "river_scenarios": [
+      {
+        "name": "Riverside bend with autumn colors",
+        "description": "Couple by gentle river bend, overhanging trees with golden and red autumn foliage reflecting in still water",
+        "lighting": "Soft autumn afternoon light filtered through leaves",
+        "mood": "nostalgic, romantic, transitional"
+      },
+      {
+        "name": "Rushing river gorge",
+        "description": "Couple on rocky outcrop in narrow river gorge, white water rapids, dramatic stone walls towering above",
+        "lighting": "Cool natural light with white water highlights",
+        "mood": "energetic, wild, thrilling"
+      },
+      {
+        "name": "Misty river valley at dawn",
+        "description": "Couple walking along misty river path, fog rising from water, dense forest, first light of dawn",
+        "lighting": "Soft diffused dawn light through mist",
+        "mood": "peaceful, contemplative, magical"
+      },
+      {
+        "name": "River with stepping stones",
+        "description": "Couple on natural stepping stones crossing crystal clear river, pebbles visible underwater, forest backdrop",
+        "lighting": "Bright natural daylight with water transparency",
+        "mood": "playful, adventurous, connected"
+      }
+    ],
+    "forest_scenarios": [
+      {
+        "name": "Dense forest canopy light",
+        "description": "Couple in old-growth forest, dappled sunlight filtering through dense canopy, moss-covered ground and ancient trees",
+        "lighting": "Soft filtered sunlight creating dappled patterns",
+        "mood": "mysterious, grounded, timeless"
+      },
+      {
+        "name": "Sunlit forest clearing",
+        "description": "Couple in circular forest clearing filled with wildflowers and soft grass, surrounded by tall trees creating natural frame",
+        "lighting": "Warm sunlight from above creating spotlight effect",
+        "mood": "intimate, sacred, peaceful"
+      },
+      {
+        "name": "Misty forest morning",
+        "description": "Couple walking forest path shrouded in thick morning mist, only silhouettes and nearby trees visible",
+        "lighting": "Ethereal misty diffused light",
+        "mood": "romantic, dreamlike, ephemeral"
+      },
+      {
+        "name": "Forest waterfall",
+        "description": "Couple near hidden forest waterfall cascading into natural pool, lush green vegetation, spray mist visible",
+        "lighting": "Soft light from waterfall mist and surrounding foliage",
+        "mood": "rejuvenating, magical, adventurous"
+      }
+    ],
+    "urban_scenarios": [
+      {
+        "name": "Rooftop city sunset",
+        "description": "Couple on modern building rooftop overlooking sprawling cityscape, golden hour light, buildings silhouetted against sky",
+        "lighting": "Warm golden hour light with city lights emerging",
+        "mood": "aspirational, modern, romantic"
+      },
+      {
+        "name": "Vintage architecture alley",
+        "description": "Couple in narrow cobblestone alley with historic stone buildings, ivy-covered walls, lantern-style lighting",
+        "lighting": "Soft golden light casting long shadows",
+        "mood": "nostalgic, classic, romantic"
+      },
+      {
+        "name": "Industrial warehouse interior",
+        "description": "Couple in spacious warehouse with exposed brick, large industrial windows with light rays, minimalist background",
+        "lighting": "Dramatic window light creating geometric shadows",
+        "mood": "contemporary, artistic, bold"
+      },
+      {
+        "name": "Rain-soaked city street",
+        "description": "Couple under umbrella on glistening wet street, neon signs reflecting in puddles, city lights blurred in background",
+        "lighting": "Cool neon and reflected light with wet surface reflections",
+        "mood": "romantic, moody, cinematic"
+      }
+    ],
+    "garden_scenarios": [
+      {
+        "name": "Rose garden in bloom",
+        "description": "Couple among hundreds of blooming roses in full color, romantic garden pathways, garden architecture visible",
+        "lighting": "Soft daylight with petals glowing",
+        "mood": "romantic, lush, sensory"
+      },
+      {
+        "name": "Japanese zen garden",
+        "description": "Couple in minimalist Japanese garden with raked gravel, still pond, sculpted trees, stone lanterns",
+        "lighting": "Balanced natural diffused light",
+        "mood": "serene, balanced, contemplative"
+      },
+      {
+        "name": "Secret garden nook",
+        "description": "Couple in hidden garden alcove surrounded by dense flowering bushes, stone wall behind, private intimate space",
+        "lighting": "Soft filtered light through flowering vines",
+        "mood": "secluded, intimate, romantic"
+      },
+      {
+        "name": "Garden with fountain",
+        "description": "Couple near ornate fountain in classical garden setting, manicured hedges, Renaissance-style architecture",
+        "lighting": "Warm golden afternoon light",
+        "mood": "elegant, classical, romantic"
+      }
+    ],
+    "seasonal_scenarios": [
+      {
+        "name": "Spring cherry blossom festival",
+        "description": "Couple under blooming cherry trees with falling petals, pink flowers creating frame, festival lanterns in background",
+        "lighting": "Soft spring daylight with petal translucence",
+        "mood": "celebratory, romantic, transient"
+      },
+      {
+        "name": "Autumn forest carpet",
+        "description": "Couple walking through forest carpeted in golden-red leaves, trees creating colorful canopy overhead",
+        "lighting": "Warm autumn sunlight through colored foliage",
+        "mood": "nostalgic, warm, reflective"
+      },
+      {
+        "name": "Winter snow landscape",
+        "description": "Couple in snow-covered landscape, evergreen trees with snow branches, icicles catching light",
+        "lighting": "Cool clear winter light with snow sparkle",
+        "mood": "pure, quiet, serene"
+      },
+      {
+        "name": "Summer wildflower field",
+        "description": "Couple in endless field of wildflowers, bees and butterflies visible, warm hazy summer air",
+        "lighting": "Warm golden summer light with soft diffusion",
+        "mood": "joyful, free, abundant"
+      }
+    ],
+    "water_reflection_scenarios": [
+      {
+        "name": "Still pond reflection",
+        "description": "Couple by perfectly still pond creating mirror-like reflection of both couple and sky",
+        "lighting": "Soft daylight creating perfect reflections",
+        "mood": "meditative, symmetric, romantic"
+      },
+      {
+        "name": "Rain reflection",
+        "description": "Couple reflected in rain puddles, wet ground creating multiple mirror images, rain creating atmospheric effect",
+        "lighting": "Cool overcast light with puddle reflections",
+        "mood": "poetic, moody, introspective"
+      }
+    ],
+    "cultural_scenarios": [
+      {
+        "name": "Indian palace courtyard",
+        "description": "Couple in ornate palace courtyard with intricate tile work, arched architecture, fountains, marble details",
+        "lighting": "Golden hour light highlighting architectural details",
+        "mood": "regal, elegant, heritage"
+      },
+      {
+        "name": "Temple garden setting",
+        "description": "Couple in serene temple garden with prayer bells, stone steps, ancient walls, spiritual atmosphere",
+        "lighting": "Diffused spiritual light creating reverent mood",
+        "mood": "spiritual, peaceful, connected"
+      },
+      {
+        "name": "Market alley at dusk",
+        "description": "Couple in vibrant traditional market with hanging flowers, decorative elements, warm vendor lights",
+        "lighting": "Warm golden market lights and dusk glow",
+        "mood": "vibrant, lively, authentic"
+      }
+    ]
+  },
+  "photography_trends": {
+    "compositions": [
+      "leading lines (path, river, fence)",
+      "rule of thirds with subject off-center",
+      "centered symmetrical composition",
+      "frame within frame (trees framing couple)",
+      "over-the-shoulder perspective",
+      "aerial drone perspective",
+      "macro intimate close-up of hands/faces",
+      "wide establishing shot showing environment",
+      "silhouette against bright background",
+      "negative space with subject small in frame",
+      "diagonal composition creating dynamic tension",
+      "layered depth with foreground middle and background"
+    ],
+    "lighting_styles": [
+      "golden hour warm backlighting",
+      "soft overcast diffused light",
+      "dramatic side-lighting creating contrast",
+      "rim lighting creating glow around subjects",
+      "window light natural indoor glow",
+      "candlelight intimate warm ambience",
+      "neon colored light contemporary feel",
+      "bioluminescent ethereal glow",
+      "low-key moody atmospheric lighting",
+      "high-key bright airy feeling",
+      "cool blue hour twilight light",
+      "harsh direct sunlight with strong shadows"
+    ],
+    "color_grading": [
+      "warm earthy tones with muted saturation",
+      "cool blue and teal cinematic look",
+      "vibrant saturated tropical colors",
+      "vintage film desaturated aesthetic",
+      "split tone cool shadows warm highlights",
+      "high contrast black and white conversion",
+      "moody dark romantic grading",
+      "bright airy light and airy look",
+      "lifted blacks soft dreamy quality",
+      "crushed blacks dramatic look"
+    ],
+    "depth_of_field": [
+      "shallow depth with bokeh background",
+      "medium depth with partial background focus",
+      "deep focus entire scene sharp",
+      "tilt shift miniature effect",
+      "focus on foreground couple only",
+      "focus on background environment"
+    ],
+    "camera_techniques": [
+      "movement blur suggesting motion",
+      "freeze frame capturing moment",
+      "multiple exposures blend",
+      "light painting effects",
+      "lens flare from sun",
+      "chromatic aberration artistic effect",
+      "motion within frame showing action",
+      "static composed contemplative frame",
+      "Dutch angle for dynamic tension",
+      "straight horizon for stability",
+      "extreme wide angle environmental",
+      "telephoto compressed perspective"
+    ]
+  },
+  "interaction_styles": [
+    "intimate embrace from behind",
+    "hand-holding walking together",
+    "forehead-to-forehead connection",
+    "dancing or movement together",
+    "sitting close with heads touching",
+    "playful piggyback or lift",
+    "gazing into each other's eyes",
+    "both looking toward future landscape",
+    "lying down together on ground",
+    "standing apart but connected visually",
+    "sharing a secret or whispering",
+    "laughing joyfully together",
+    "quiet contemplation side-by-side",
+    "protective embrace",
+    "dancing in rain or natural elements"
+  ],
+  "moods_and_emotions": [
+    "deeply romantic and passionate",
+    "playful and joyful",
+    "quiet and contemplative",
+    "adventurous and free",
+    "peaceful and serene",
+    "dramatic and intense",
+    "tender and vulnerable",
+    "celebratory and exuberant",
+    "nostalgic and reflective",
+    "spiritual and connected",
+    "modern and aspirational",
+    "vintage and timeless"
+  ]
+}
