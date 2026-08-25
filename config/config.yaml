@@ -45,7 +45,7 @@ image:
   negative_template: "lowres, blurry, deformed, disfigured, text, watermark, signature, jpeg artifacts, oversaturated, extra limbs, bad anatomy, ugly"
 
 postproc:
-  aspect: "1:1"                # one of: "1:1", "4:5", "1.91:1"
+  aspect: "4:5"                # one of: "1:1", "4:5", "1.91:1"
   jpeg_quality: 92
   unsharp_radius: 1.2
   unsharp_percent: 80
