@@ -194,5 +194,56 @@
     "post_id": "17901136848557925",
     "post_url": "https://www.instagram.com/p/Dcdze8LFjHz/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260825T140618Z",
+    "timestamp": "2026-08-25T14:06:18.958474+00:00",
+    "brief": {
+      "subject": "A couple standing on a snowy hillside, with the sun setting in the background, their shadows stretching long behind them, and a single, glowing winter star-shaped light ornament suspended in the sky between them.",
+      "setting": "A secluded snowy hillside with a few scattered winter flowers and bushes, the sky filled with a warm golden hue from the setting sun, and a single winter star-shaped light ornament floating in the air.",
+      "lighting": "Cinematic winter lighting, with a warm golden hue from the setting sun and a single, glowing winter star-shaped light ornament casting a soft, ethereal glow in the sky.",
+      "mood": "Passionate, tender, and loving, with a sense of emotional depth and connection, the lighting and background creating a magical and ethereal atmosphere.",
+      "composition": "The couple is positioned at a Dutch angle, their shadows stretching long behind them, and the single star-shaped light ornament is the focal point in the sky.",
+      "color_palette": "Warm golden hues and the contrast of the snowy hillside against the glowing star.",
+      "time_of_day": "Winter sunset with a single glowing star.",
+      "style_modifiers": [
+        "Dutch angle",
+        "Photorealistic",
+        "Cinematic"
+      ]
+    },
+    "positive_prompt": "A couple standing on a snowy hillside, with the sun setting in the background, their shadows stretching long behind them, and a single, glowing winter star-shaped light ornament suspended in the sky between them., A secluded snowy hillside with a few scattered winter flowers and bushes, the sky filled with a warm golden hue from the setting sun, and a single winter star-shaped light ornament floating in the air., Cinematic winter lighting, with a warm golden hue from the setting sun and a single, glowing winter star-shaped light ornament casting a soft, ethereal glow in the sky., Passionate, tender, and loving, with a sense of emotional depth and connection, the lighting and background creating a magical and ethereal atmosphere., The couple is positioned at a Dutch angle, their shadows stretching long behind them, and the single star-shaped light ornament is the focal point in the sky., Warm golden hues and the contrast of the snowy hillside against the glowing star., Winter sunset with a single glowing star., Dutch angle, Photorealistic, Cinematic, high detail, professional photography",
+    "negative_prompt": "lowres, blurry, deformed, disfigured, text, watermark, signature, jpeg artifacts, oversaturated, extra limbs, bad anatomy, ugly",
+    "seed": 1799173550,
+    "image_model": "stabilityai/sd-turbo",
+    "device": "cpu",
+    "image_sha256": "eeaf20c0159e7cbad2c21bfbce8091661a76441519473e6ae0502fcff32494e0",
+    "image_path": "out/20260825T140618Z.jpg",
+    "caption": "A couple standing on a snowy hillside, with the sun setting in the background, their shadows stretching long behind them, and a single, glowing winter star-shaped light ornament suspended in the sky between them. in Cinematic winter lighting, with a warm golden hue from the setting sun and a single, glowing winter star-shaped light ornament casting a soft, ethereal glow in the sky..\n\nPassionate, tender, and loving, with a sense of emotional depth and connection, the lighting and background creating a magical and ethereal atmosphere., The couple is positioned at a Dutch angle, their shadows stretching long behind them, and the single star-shaped light ornament is the focal point in the sky.. A study in Warm golden hues and the contrast of the snowy hillside against the glowing star..\n\n#couple #standing #on #snowy #hillside #with #the #sun #setting #in #background #their #shadows #stretching #long #behind #them #and",
+    "alt_text": "A couple standing on a snowy hillside, with the sun setting in the background, their shadows stretching long behind them, and a single, glowing winter star-shaped light ornament suspended in the sky between them., A secluded snowy hillside with a few scattered winter flowers and bushes, the sky filled with a warm golden hue from the setting sun, and a single winter star-shaped light ornament floating in the air., Cinematic winter lighting, with a warm golden hue from the setting sun and a single, glowing winter star-shaped light ornament casting a soft, ethereal glow in the sky..",
+    "hashtags": [
+      "#couple",
+      "#standing",
+      "#on",
+      "#snowy",
+      "#hillside",
+      "#with",
+      "#the",
+      "#sun",
+      "#setting",
+      "#in",
+      "#background",
+      "#their",
+      "#shadows",
+      "#stretching",
+      "#long",
+      "#behind",
+      "#them",
+      "#and"
+    ],
+    "backend": "graph",
+    "post_id": "18047889050647463",
+    "post_url": "https://www.instagram.com/p/Dcd0W1mFiua/",
+    "status": "posted"
   }
 ]
