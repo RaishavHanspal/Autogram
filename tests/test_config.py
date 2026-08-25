@@ -38,4 +38,3 @@ def test_repo_config_loads():
     cfg = load_config("config/config.yaml")
     assert cfg.theme
     assert cfg.brief.axes  # axes present
- 
