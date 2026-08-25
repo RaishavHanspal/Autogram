@@ -15,7 +15,14 @@ from pathlib import Path
 from typing import Any
 
 from . import __version__
-from .brief import Brief, compute_seed, generate_brief, render_prompts
+from .brief import (
+    Brief,
+    build_character_block,
+    compute_seed,
+    generate_brief,
+    load_characters_data,
+    render_prompts,
+)
 from .caption import (
     OllamaClient,
     compose_final_caption,
@@ -111,11 +118,15 @@ def run_pipeline(args: argparse.Namespace, cfg: Config, secrets: Secrets) -> int
         cfg.theme = args.description
         log.info("theme overridden via --description")
 
-    seed = args.seed if args.seed is not None else compute_seed(run_date, cfg.seed_salt)
+    # Seed from the per-second run stamp (not the calendar day) so repeated runs
+    # — the schedule fires several times a day — never reuse a seed and never
+    # regenerate an identical image. --seed still forces full reproducibility.
+    seed = args.seed if args.seed is not None else compute_seed(stamp, cfg.seed_salt)
     log.info(
-        "run seed=%d date=%s dry_run=%s image_only=%s",
+        "run seed=%d date=%s stamp=%s dry_run=%s image_only=%s",
         seed,
         run_date,
+        stamp,
         args.dry_run,
         args.image_only,
     )
@@ -150,7 +161,10 @@ def run_pipeline(args: argparse.Namespace, cfg: Config, secrets: Secrets) -> int
         except Exception as exc:  # noqa: BLE001
             raise PipelineError(ExitCode.BRIEF, f"brief generation failed: {exc}") from exc
 
-        positive, negative = render_prompts(brief, cfg)
+        # Inject the fixed couple description directly into the image prompt so
+        # the SAME characters appear every time, independent of the LLM.
+        characters_block = build_character_block(load_characters_data())
+        positive, negative = render_prompts(brief, cfg, characters_block=characters_block)
         log.info("positive prompt: %s", positive)
 
         # --- image ---
@@ -349,3 +363,5 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
+
+ 
