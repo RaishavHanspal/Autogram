@@ -437,5 +437,55 @@
     "post_id": "18127746904780068",
     "post_url": "https://www.instagram.com/p/Dcd6x13IMTz/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260825T170244Z",
+    "timestamp": "2026-08-25T17:02:44.436292+00:00",
+    "brief": {
+      "subject": "A couple standing on a bioluminescent beach at night, with their reflections creating an ethereal mirrored image.",
+      "setting": "Bioluminescent beach at night",
+      "lighting": "Soft bioluminescent glow from ocean",
+      "mood": "Magical, mysterious, otherworldly with a sense of depth and wonder.",
+      "composition": "Aerial drone perspective, focusing on the couple's mirrored image on the beach, capturing the bioluminescent glow and their tender, playful interaction.",
+      "color_palette": "Split tone with cool shadows and warm highlights, creating a magical contrast between the natural light and the bioluminescence.",
+      "time_of_day": "Night, with the sun setting in the background casting a warm golden hue.",
+      "style_modifiers": [
+        "dutch_angle",
+        "macro_focal_length",
+        "extreme_close_up",
+        "professional_photography_aesthetics"
+      ],
+      "location_name": "Bioluminescent beach at night",
+      "interaction": "playful piggyback or lift"
+    },
+    "positive_prompt": "candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair, playful piggyback or lift, A couple standing on a bioluminescent beach at night, with their reflections creating an ethereal mirrored image., in Bioluminescent beach at night, Soft bioluminescent glow from ocean, Magical, mysterious, otherworldly with a sense of depth and wonder., Aerial drone perspective, focusing on the couple's mirrored image on the beach, capturing the bioluminescent glow and their tender, playful interaction., Split tone with cool shadows and warm highlights, creating a magical contrast between the natural light and the bioluminescence., Night, with the sun setting in the background casting a warm golden hue., dutch_angle, macro_focal_length, extreme_close_up, professional_photography_aesthetics, shot on DSLR, 85mm lens, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly",
+    "seed": 3248256320,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "9bd0b906fc9fe0469d0df196a940846e5ea24a8626fe24d4218c3ba7a97c09df",
+    "image_path": "out/20260825T170244Z.jpg",
+    "caption": "Winding our way to this magical bioluminescent beach, I couldn't help but feel like we were the only two in the world. Our reflections creating an ethereal mirrored image. So magical and mysterious, otherworldly. The deep, warm wonder of it all. 💕\n\n#bioluminescentbeach #naturephotography #dreamybeach #romantictrip #loveatbioluminescentbeach #amazingnature #magicalmoment #dreamysunset #romanticplayful #loveinnature #dreamynight #loveinamazingnature #autogram #slowdesign",
+    "alt_text": "A couple standing on a bioluminescent beach at night, their reflections creating an ethereal mirrored image. Soft bioluminescent glow from the ocean.",
+    "hashtags": [
+      "#bioluminescentbeach",
+      "#naturephotography",
+      "#dreamybeach",
+      "#romantictrip",
+      "#loveatbioluminescentbeach",
+      "#amazingnature",
+      "#magicalmoment",
+      "#dreamysunset",
+      "#romanticplayful",
+      "#loveinnature",
+      "#dreamynight",
+      "#loveinamazingnature",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "18090484295540327",
+    "post_url": "https://www.instagram.com/p/DceJOMFn1Lg/",
+    "status": "posted"
   }
 ]
