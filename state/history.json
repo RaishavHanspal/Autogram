@@ -95,5 +95,56 @@
     "post_id": "17941350201336291",
     "post_url": "https://www.instagram.com/p/DcdmgkpFsmi/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260825T135052Z",
+    "timestamp": "2026-08-25T13:50:52.872590+00:00",
+    "brief": {
+      "subject": "A couple standing on a snowy hillside, their shadows stretching long behind them, with the sun setting in the background casting a warm golden hue over the scene.",
+      "setting": "A winter landscape with a snowy hillside, a warm sunset in the background, and the couple standing in front of a cozy cabin in the distance.",
+      "lighting": "Cinematic wide-angle lighting with a warm golden hue from the setting sun, creating a soft, diffused light that illuminates the couple and the surroundings.",
+      "mood": "Passionate, tender, and loving, with a sense of adventure and the beauty of the natural world.",
+      "composition": "The couple is centered in the frame, facing each other with their hands gently resting on the hillside. The warm golden glow from the sun sets the scene, and the couple's silhouettes against the snowy background add depth and contrast to the image.",
+      "color_palette": "Warm golden, snowy white, and soft shadows with hints of blue from the evening sky.",
+      "time_of_day": "Evening, just after sunset.",
+      "style_modifiers": [
+        "Dutch angle",
+        "Wide-angle lens",
+        "High-resolution photography"
+      ]
+    },
+    "positive_prompt": "A couple standing on a snowy hillside, their shadows stretching long behind them, with the sun setting in the background casting a warm golden hue over the scene., A winter landscape with a snowy hillside, a warm sunset in the background, and the couple standing in front of a cozy cabin in the distance., Cinematic wide-angle lighting with a warm golden hue from the setting sun, creating a soft, diffused light that illuminates the couple and the surroundings., Passionate, tender, and loving, with a sense of adventure and the beauty of the natural world., The couple is centered in the frame, facing each other with their hands gently resting on the hillside. The warm golden glow from the sun sets the scene, and the couple's silhouettes against the snowy background add depth and contrast to the image., Warm golden, snowy white, and soft shadows with hints of blue from the evening sky., Evening, just after sunset., Dutch angle, Wide-angle lens, High-resolution photography, high detail, professional photography",
+    "negative_prompt": "lowres, blurry, deformed, disfigured, text, watermark, signature, jpeg artifacts, oversaturated, extra limbs, bad anatomy, ugly",
+    "seed": 1799173550,
+    "image_model": "stabilityai/sd-turbo",
+    "device": "cpu",
+    "image_sha256": "c4db81ed3675ebea6428b8a9e4d99db2eb3546fb66bd79fea6dc2a31f356a9ca",
+    "image_path": "out/20260825T135052Z.jpg",
+    "caption": "A couple standing on a snowy hillside, their shadows stretching long behind them, with the sun setting in the background casting a warm golden hue over the scene. in Cinematic wide-angle lighting with a warm golden hue from the setting sun, creating a soft, diffused light that illuminates the couple and the surroundings..\n\nPassionate, tender, and loving, with a sense of adventure and the beauty of the natural world., The couple is centered in the frame, facing each other with their hands gently resting on the hillside. The warm golden glow from the sun sets the scene, and the couple's silhouettes against the snowy background add depth and contrast to the image.. A study in Warm golden, snowy white, and soft shadows with hints of blue from the evening sky..\n\n#couple #standing #on #snowy #hillside #their #shadows #stretching #long #behind #them #with #the #sun #setting #in #background #casting",
+    "alt_text": "A couple standing on a snowy hillside, their shadows stretching long behind them, with the sun setting in the background casting a warm golden hue over the scene., A winter landscape with a snowy hillside, a warm sunset in the background, and the couple standing in front of a cozy cabin in the distance., Cinematic wide-angle lighting with a warm golden hue from the setting sun, creating a soft, diffused light that illuminates the couple and the surroundings..",
+    "hashtags": [
+      "#couple",
+      "#standing",
+      "#on",
+      "#snowy",
+      "#hillside",
+      "#their",
+      "#shadows",
+      "#stretching",
+      "#long",
+      "#behind",
+      "#them",
+      "#with",
+      "#the",
+      "#sun",
+      "#setting",
+      "#in",
+      "#background",
+      "#casting"
+    ],
+    "backend": "graph",
+    "post_id": "18098479649014090",
+    "post_url": "https://www.instagram.com/p/DcdykVvmKRB/",
+    "status": "posted"
   }
 ]
