@@ -392,4 +392,3 @@ def generate_brief(
         return brief
 
     return _fallback_brief(cfg, axis_hints, seed, selected_location, style)
- 
