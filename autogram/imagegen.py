@@ -138,4 +138,3 @@ class ImageGenerator:
             seed=seed,
         )
         return GeneratedImage(image=image, meta=meta)
- 
