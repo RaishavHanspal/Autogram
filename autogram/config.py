@@ -44,14 +44,30 @@ class LlmConfig(BaseModel):
 
 
 class ImageConfig(BaseModel):
-    model: str = "stabilityai/sd-turbo"
+    # CPU default: a photoreal SD1.5 checkpoint (diffusers format). Much more
+    # realistic than sd-turbo at the cost of more sampling steps (minutes on a
+    # free CPU runner, still well within the 60-min job budget).
+    model: str = "Lykon/dreamshaper-8"
     hq_model: str = "black-forest-labs/FLUX.1-schnell"
-    steps: int = 2
-    guidance_scale: float = 0.0
+    steps: int = 26  # CPU photoreal model wants ~20-30 steps
+    guidance_scale: float = 6.5  # and real CFG (turbo/schnell want 0.0)
+    # Sampling used only on the GPU/FLUX path (schnell is distilled: 4 steps, CFG 0).
+    hq_steps: int = 4
+    hq_guidance_scale: float = 0.0
     width: int = 512
     height: int = 512
-    positive_template: str = "{subject}, {setting}, {lighting}, {mood}, {composition}, {color_palette}, {time_of_day}, {style_modifiers}"
-    negative_template: str = "lowres, blurry, deformed, text, watermark"
+    positive_template: str = (
+        "candid photograph of {characters}, {interaction}, {subject}, in {setting}, "
+        "{lighting}, {mood}, {composition}, {color_palette}, {time_of_day}, "
+        "{style_modifiers}, shot on DSLR, 85mm lens, natural skin texture, "
+        "realistic, highly detailed, sharp focus, professional photography, 8k"
+    )
+    negative_template: str = (
+        "illustration, painting, drawing, cartoon, anime, 3d render, cgi, "
+        "plastic skin, deformed, disfigured, mutated hands, extra fingers, "
+        "extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, "
+        "jpeg artifacts, oversaturated, ugly"
+    )
 
 
 class PostprocConfig(BaseModel):
@@ -192,3 +208,4 @@ def load_config(path: str | Path | None = None) -> Config:
 
 def load_secrets() -> Secrets:
     return Secrets()
+ 
