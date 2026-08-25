@@ -208,4 +208,3 @@ def load_config(path: str | Path | None = None) -> Config:
 
 def load_secrets() -> Secrets:
     return Secrets()
- 
