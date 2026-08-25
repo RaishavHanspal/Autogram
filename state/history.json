@@ -146,5 +146,53 @@
     "post_id": "18098479649014090",
     "post_url": "https://www.instagram.com/p/DcdykVvmKRB/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260825T135852Z",
+    "timestamp": "2026-08-25T13:58:52.028604+00:00",
+    "brief": {
+      "subject": "A couple standing in a winter garden, with the backdrop of a snow-covered hedge and a few scattered winter flowers, one person holding a small, glowing snowflake-shaped light ornament, the other with their arm around their partner's shoulders, gazing into each other's eyes with a deep, emotional connection.",
+      "setting": "A winter garden with snow-covered hedges and scattered winter flowers, the scene is lit by the warm golden hue of a setting sun, creating a romantic and tender atmosphere.",
+      "lighting": "The scene is lit by the warm golden hue of a setting sun, casting a soft, diffused light across the couple and their surroundings.",
+      "mood": "Passionate, tender, and loving, with a sense of emotional depth and connection.",
+      "composition": "The couple is in a Dutch angle, with the arms around each other forming an 'X' shape, and their eyes meeting head-on, creating a focal point of connection.",
+      "color_palette": "Soft pastels and warm golden hues, with accents of white from the snow and scattered flowers.",
+      "time_of_day": "Setting sun, winter.",
+      "style_modifiers": [
+        "High-Quality",
+        "Photorealistic",
+        "Cinematic",
+        "Expressive Faces"
+      ]
+    },
+    "positive_prompt": "A couple standing in a winter garden, with the backdrop of a snow-covered hedge and a few scattered winter flowers, one person holding a small, glowing snowflake-shaped light ornament, the other with their arm around their partner's shoulders, gazing into each other's eyes with a deep, emotional connection., A winter garden with snow-covered hedges and scattered winter flowers, the scene is lit by the warm golden hue of a setting sun, creating a romantic and tender atmosphere., The scene is lit by the warm golden hue of a setting sun, casting a soft, diffused light across the couple and their surroundings., Passionate, tender, and loving, with a sense of emotional depth and connection., The couple is in a Dutch angle, with the arms around each other forming an 'X' shape, and their eyes meeting head-on, creating a focal point of connection., Soft pastels and warm golden hues, with accents of white from the snow and scattered flowers., Setting sun, winter., High-Quality, Photorealistic, Cinematic, Expressive Faces, high detail, professional photography",
+    "negative_prompt": "lowres, blurry, deformed, disfigured, text, watermark, signature, jpeg artifacts, oversaturated, extra limbs, bad anatomy, ugly",
+    "seed": 1799173550,
+    "image_model": "stabilityai/sd-turbo",
+    "device": "cpu",
+    "image_sha256": "e274c8b82e6b54d01a4c0bedaa056d9b8114641247c077344ff173068361e210",
+    "image_path": "out/20260825T135852Z.jpg",
+    "caption": "A couple in a Dutch angle, gazing into each other's eyes with a deep, emotional connection, set against a winter garden with a setting sun's warm glow and scattered flowers.\n\n#winter #couples #emotionalconnection #nature #photorealistic #highquality #cinematic #expressivefaces #setingsun #netherlands #wintergarden #dutchangle #autogram #slowdesign",
+    "alt_text": "A couple in a Dutch angle, gazing into each other's eyes with a deep, emotional connection, set against a winter garden with a setting sun's warm glow and scattered flowers.",
+    "hashtags": [
+      "#winter",
+      "#couples",
+      "#emotionalconnection",
+      "#nature",
+      "#photorealistic",
+      "#highquality",
+      "#cinematic",
+      "#expressivefaces",
+      "#setingsun",
+      "#netherlands",
+      "#wintergarden",
+      "#dutchangle",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "17901136848557925",
+    "post_url": "https://www.instagram.com/p/Dcdze8LFjHz/",
+    "status": "posted"
   }
 ]
