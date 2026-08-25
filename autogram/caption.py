@@ -351,7 +351,8 @@ def _build_messages(brief: Brief, cfg: Config, error_feedback: str | None) -> li
         "You are an expert Instagram copywriter who writes warm, authentic, and humanly captions. "
         "You write like you're sharing a genuine moment with friends, not describing an image. "
         "Your captions feel personal, emotional, and relatable. "
-        "Respond ONLY with a single JSON object matching this schema exactly: {schema}. No prose, no code fences."
+        f"Respond ONLY with a single JSON object matching this schema exactly: {schema}. "
+        "No prose, no code fences."
     )
     n = cfg.hashtags.max_count
     user = (
