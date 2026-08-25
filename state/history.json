@@ -704,5 +704,53 @@
     "post_id": "18142380850491530",
     "post_url": "https://www.instagram.com/p/Dcev5oCln6y/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260825T233234Z",
+    "timestamp": "2026-08-25T23:32:34.546217+00:00",
+    "brief": {
+      "subject": "Mid-20s South Asian woman and late-20s South Asian man standing on a rocky mountain ridge, gazing into each other's eyes with the setting sun casting a golden and orange glow over their intertwined hands and the landscape, their expressive faces and natural smiles contrasting with the dramatic sky and rugged terrain, creating a sense of passionate and awe-inspired romance.",
+      "setting": "Mountain ridge at sunset",
+      "lighting": "Warm golden and amber sunset lighting",
+      "mood": "powerful, romantic, awe-inspired",
+      "composition": "over-the-shoulder perspective, low angle, medium shot with tilt-shift miniature effect",
+      "color_palette": "high contrast black and white conversion with golden and orange highlights",
+      "time_of_day": "sunset",
+      "style_modifiers": [
+        "neon colored light contemporary feel",
+        "cinematic lighting"
+      ],
+      "location_name": "Mountain ridge at sunset",
+      "interaction": "hand-holding walking together"
+    },
+    "positive_prompt": "candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair, hand-holding walking together, Mid-20s South Asian woman and late-20s South Asian man standing on a rocky mountain ridge, gazing into each other's eyes with the setting sun casting a golden and orange glow over their intertwined hands and the landscape, their expressive faces and natural smiles contrasting with the dramatic sky and rugged terrain, creating a sense of passionate and awe-inspired romance., in Mountain ridge at sunset, Warm golden and amber sunset lighting, powerful, romantic, awe-inspired, over-the-shoulder perspective, low angle, medium shot with tilt-shift miniature effect, high contrast black and white conversion with golden and orange highlights, sunset, neon colored light contemporary feel, cinematic lighting, shot on DSLR, 85mm lens, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly",
+    "seed": 2500844169,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "99939d537c7920152f5d6d10cc4a18be51260efc647d7b0e99882ed757338e9a",
+    "image_path": "out/20260825T233234Z.jpg",
+    "caption": "Golden shadows and smiles - such a sweet moment. Can't help but feel the warmth and romance of their connection tonight. #cinematic #romance #momentsofmagic #love #instamoment #mountainmagic #photographymoment #loveatthesunset #sunsetmagic #amazingviews #handsintheair #lovewhenyoulook\n\n#cinematic #romance #momentsofmagic #love #instamoment #mountainmagic #photographymoment #loveatthesunset #sunsetmagic #amazingviews #handsintheair #lovewhenyoulook #autogram #slowdesign",
+    "alt_text": "A mid-20s South Asian woman and late-20s South Asian man standing on a rocky mountain ridge, hand in hand, gazing into each other's eyes with the setting sun casting a golden glow over their intertwined hands and the landscape. Their expressive faces and natural smiles contrast with the dramatic sky and rugged terrain, creating a sense of passionate and awe-inspired romance.",
+    "hashtags": [
+      "#cinematic",
+      "#romance",
+      "#momentsofmagic",
+      "#love",
+      "#instamoment",
+      "#mountainmagic",
+      "#photographymoment",
+      "#loveatthesunset",
+      "#sunsetmagic",
+      "#amazingviews",
+      "#handsintheair",
+      "#lovewhenyoulook",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "18091507937643365",
+    "post_url": "https://www.instagram.com/p/Dce1xIvnyeO/",
+    "status": "posted"
   }
 ]
