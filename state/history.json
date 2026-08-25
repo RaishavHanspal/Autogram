@@ -44,5 +44,56 @@
     "post_id": "18115591399939650",
     "post_url": "https://www.instagram.com/p/DcdlmGioIF2/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260825T120519Z",
+    "timestamp": "2026-08-25T12:05:19.534240+00:00",
+    "brief": {
+      "subject": "A smiling couple in winter clothing, one person holding a small, glowing snowflake-shaped light ornament, the other holding hands and looking up with a blissful smile.",
+      "setting": "The winter landscape is in the background, with the snow-covered trees and the frozen river, creating a tranquil and serene scene. The couple is positioned in the foreground, with the snowflakes illuminating their faces and the light ornament.",
+      "lighting": "The lighting is winter-warm colors (like warm white and pale blue hues), with the snowflakes and light ornament providing a soft, gentle glow. The background is dimly lit to create a separation between the couple and the landscape.",
+      "mood": "Cheerful, warm, and serene, capturing the happiness and joy of love during the winter.",
+      "composition": "The couple is shot in a slightly angled position (dutch angle) from the side, facing each other with their arms around each other, emphasizing their connection and love. The snowflakes are prominently featured in the frame, acting as a visual symbol of their love and the season.",
+      "color_palette": "Warm winter tones like pale blue, soft grey, and warm white, with accents of soft yellow and the warm glow from the snowflake-shaped light ornament.",
+      "time_of_day": "Sunset, creating a golden hour light that enhances the softness of the snowflakes and the overall warm glow.",
+      "style_modifiers": [
+        "Dutch Angle",
+        "Wide Angle",
+        "Warm Winter Colors"
+      ]
+    },
+    "positive_prompt": "A smiling couple in winter clothing, one person holding a small, glowing snowflake-shaped light ornament, the other holding hands and looking up with a blissful smile., The winter landscape is in the background, with the snow-covered trees and the frozen river, creating a tranquil and serene scene. The couple is positioned in the foreground, with the snowflakes illuminating their faces and the light ornament., The lighting is winter-warm colors (like warm white and pale blue hues), with the snowflakes and light ornament providing a soft, gentle glow. The background is dimly lit to create a separation between the couple and the landscape., Cheerful, warm, and serene, capturing the happiness and joy of love during the winter., The couple is shot in a slightly angled position (dutch angle) from the side, facing each other with their arms around each other, emphasizing their connection and love. The snowflakes are prominently featured in the frame, acting as a visual symbol of their love and the season., Warm winter tones like pale blue, soft grey, and warm white, with accents of soft yellow and the warm glow from the snowflake-shaped light ornament., Sunset, creating a golden hour light that enhances the softness of the snowflakes and the overall warm glow., Dutch Angle, Wide Angle, Warm Winter Colors, high detail, professional photography",
+    "negative_prompt": "lowres, blurry, deformed, disfigured, text, watermark, signature, jpeg artifacts, oversaturated, extra limbs, bad anatomy, ugly",
+    "seed": 1799173550,
+    "image_model": "stabilityai/sd-turbo",
+    "device": "cpu",
+    "image_sha256": "f8d47c2f8582b524446b63f77dbc2dae280fc4a14d059f24a9a3e75056bd9463",
+    "image_path": "out/20260825T120519Z.jpg",
+    "caption": "A smiling couple in winter clothing, one person holding a small, glowing snowflake-shaped light ornament, the other holding hands and looking up with a blissful smile. in The lighting is winter-warm colors (like warm white and pale blue hues), with the snowflakes and light ornament providing a soft, gentle glow. The background is dimly lit to create a separation between the couple and the landscape..\n\nCheerful, warm, and serene, capturing the happiness and joy of love during the winter., The couple is shot in a slightly angled position (dutch angle) from the side, facing each other with their arms around each other, emphasizing their connection and love. The snowflakes are prominently featured in the frame, acting as a visual symbol of their love and the season.. A study in Warm winter tones like pale blue, soft grey, and warm white, with accents of soft yellow and the warm glow from the snowflake-shaped light ornament..\n\n#smiling #couple #in #winter #clothing #one #person #holding #small #glowing #snowflake #shaped #light #ornament #the #other #hands #and",
+    "alt_text": "A smiling couple in winter clothing, one person holding a small, glowing snowflake-shaped light ornament, the other holding hands and looking up with a blissful smile., The winter landscape is in the background, with the snow-covered trees and the frozen river, creating a tranquil and serene scene. The couple is positioned in the foreground, with the snowflakes illuminating their faces and the light ornament., The lighting is winter-warm colors (like warm white and pale blue hues), with the snowflakes and light ornament providing a soft, gentle glow. The background is dimly lit to create a separation between the couple and the landscape..",
+    "hashtags": [
+      "#smiling",
+      "#couple",
+      "#in",
+      "#winter",
+      "#clothing",
+      "#one",
+      "#person",
+      "#holding",
+      "#small",
+      "#glowing",
+      "#snowflake",
+      "#shaped",
+      "#light",
+      "#ornament",
+      "#the",
+      "#other",
+      "#hands",
+      "#and"
+    ],
+    "backend": "graph",
+    "post_id": "17941350201336291",
+    "post_url": "https://www.instagram.com/p/DcdmgkpFsmi/",
+    "status": "posted"
   }
 ]
