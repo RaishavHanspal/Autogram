@@ -1006,5 +1006,63 @@
     "post_id": "18129011413666449",
     "post_url": "https://www.instagram.com/p/DcfpYgyFr6u/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260826T083641Z",
+    "timestamp": "2026-08-26T08:36:41.157397+00:00",
+    "brief": {
+      "subject": "A romantic couple standing inside a crystal-studded cave, with their reflections creating kaleidoscopic patterns on the cave walls, their shadows merging into the formations.",
+      "setting": "Crystal cave cavern",
+      "lighting": "Soft spotlight-like light revealing crystal formations",
+      "mood": "magical, wonder-filled, ethereal, tender, and vulnerable, with a deep emotional connection.",
+      "composition": "Frame within frame (trees framing couple) with the couple standing in the center of the cave, reflections merging with the crystal formations, shadows merging with the natural formations.",
+      "color_palette": "High contrast black and white conversion, with soft golden hues and natural tones of the skin and hair, enhancing the ethereal and magical atmosphere.",
+      "time_of_day": "Cool blue hour twilight light, casting a golden hue over the scene.",
+      "style_modifiers": [
+        "cinematic",
+        "professional photography aesthetics",
+        "high-quality",
+        "photorealistic",
+        "romantic",
+        "expressive faces",
+        "natural emotions",
+        "realistic skin and details"
+      ],
+      "location_name": "Crystal cave cavern",
+      "interaction": "dancing in rain or natural elements"
+    },
+    "positive_prompt": "candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair, dancing in rain or natural elements, A romantic couple standing inside a crystal-studded cave, with their reflections creating kaleidoscopic patterns on the cave walls, their shadows merging into the formations., in Crystal cave cavern, Soft spotlight-like light revealing crystal formations, magical, wonder-filled, ethereal, tender, and vulnerable, with a deep emotional connection., Frame within frame (trees framing couple) with the couple standing in the center of the cave, reflections merging with the crystal formations, shadows merging with the natural formations., High contrast black and white conversion, with soft golden hues and natural tones of the skin and hair, enhancing the ethereal and magical atmosphere., Cool blue hour twilight light, casting a golden hue over the scene., cinematic, professional photography aesthetics, high-quality, photorealistic, romantic, expressive faces, natural emotions, realistic skin and details, shot on DSLR, 85mm lens, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly",
+    "seed": 3748625674,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "08c701b314bfe8cf18a73782e4daead90622cde950414c0f1fe2a001acf9b18f",
+    "image_path": "out/20260826T083641Z.jpg",
+    "caption": "What a magical moment in the cool blue hour. Their reflections and shadows merge with the natural crystal formations like a tender dream. Romantic and ethereal, their connection is palpable in the glow of the golden twilight. #cinematic #professionalphotographyaesthetics #highqualityphotography #realisticskin #naturalemotions #photorealistic #romantic #expressivefaces #realisticdetails #tenderness #caramelhair #silkyskin #softlight #magic #naturallight #magicinnature #twilightglow #glitteringcrystals #cavesofmagic #dancinginrain #reflectivehearts #dreamyromance #magicinnature #caramelbeauty #silkyhair #glitteringreflections #crystalcavern #magicinnature #magicintheair\n\n#cinematic #highqualityphotography #realisticskin #naturalemotions #photorealistic #romantic #expressivefaces #realisticdetails #tenderness #caramelhair #silkyskin #softlight #twilightglow #glitteringcrystals #cavesofmagic #dancinginrain #reflectivehearts #dreamyromance",
+    "alt_text": "A romantic couple standing inside a crystal-studded cave, with their reflections creating kaleidoscopic patterns on the cave walls, their shadows merging with the natural crystal formations.",
+    "hashtags": [
+      "#cinematic",
+      "#highqualityphotography",
+      "#realisticskin",
+      "#naturalemotions",
+      "#photorealistic",
+      "#romantic",
+      "#expressivefaces",
+      "#realisticdetails",
+      "#tenderness",
+      "#caramelhair",
+      "#silkyskin",
+      "#softlight",
+      "#twilightglow",
+      "#glitteringcrystals",
+      "#cavesofmagic",
+      "#dancinginrain",
+      "#reflectivehearts",
+      "#dreamyromance"
+    ],
+    "backend": "graph",
+    "post_id": "18084394589265867",
+    "post_url": "https://www.instagram.com/p/Dcf0NCzIFy7/",
+    "status": "posted"
   }
 ]
