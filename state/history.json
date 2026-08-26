@@ -752,5 +752,55 @@
     "post_id": "18091507937643365",
     "post_url": "https://www.instagram.com/p/Dce1xIvnyeO/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260826T021853Z",
+    "timestamp": "2026-08-26T02:18:53.259337+00:00",
+    "brief": {
+      "subject": "Mid-20s South Asian woman and late-20s South Asian man standing in a sunlit meadow with wildflowers and a gentle hillside behind them, their hands intertwined under a tree's canopy, their shadows creating a natural frame.",
+      "setting": "Vintage architecture alley",
+      "lighting": "Soft golden light casting long shadows",
+      "mood": "nostalgic, classic, romantic",
+      "composition": "frame within frame (trees framing couple)",
+      "color_palette": "vibrant spring colors",
+      "time_of_day": "spring sunset",
+      "style_modifiers": [
+        "cinematic",
+        "professional",
+        "high-quality"
+      ],
+      "location_name": "Vintage architecture alley",
+      "interaction": "forehead-to-forehead connection"
+    },
+    "positive_prompt": "candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair, forehead-to-forehead connection, Mid-20s South Asian woman and late-20s South Asian man standing in a sunlit meadow with wildflowers and a gentle hillside behind them, their hands intertwined under a tree's canopy, their shadows creating a natural frame., in Vintage architecture alley, Soft golden light casting long shadows, nostalgic, classic, romantic, frame within frame (trees framing couple), vibrant spring colors, spring sunset, cinematic, professional, high-quality, shot on DSLR, 85mm lens, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly",
+    "seed": 2310475225,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "33a1b210c0c2cf93804363f3e2b2b09d4922e3cc2b79b611c2691499ef2a435d",
+    "image_path": "out/20260826T021853Z.jpg",
+    "caption": "Sitting here in this golden hour, our shadows intertwining like old friends. Perfect framing with the trees. Time slows to a graceful frame. #cinematic #professional\n\n#VintageArchitectureAlley #SpringSunset #Mid20sSouthAsian #Late20sSouthAsian #HandInHand #GoldenHour #ClassicRomance #CinematicMoment #ProfessionalQuality #VibrantSpringColors #ForeheadToForehead #IntertwinedHands #NostalgicRomance #autogram #slowdesign",
+    "alt_text": "A mid-20s South Asian woman and late-20s South Asian man standing in a sunlit meadow with wildflowers and a gentle hillside behind them, their hands intertwined under a tree's canopy, their shadows creating a natural frame.",
+    "hashtags": [
+      "#VintageArchitectureAlley",
+      "#SpringSunset",
+      "#Mid20sSouthAsian",
+      "#Late20sSouthAsian",
+      "#HandInHand",
+      "#GoldenHour",
+      "#ClassicRomance",
+      "#CinematicMoment",
+      "#ProfessionalQuality",
+      "#VibrantSpringColors",
+      "#ForeheadToForehead",
+      "#IntertwinedHands",
+      "#NostalgicRomance",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "18334232881262295",
+    "post_url": "https://www.instagram.com/p/DcfI2Win4yU/",
+    "status": "posted"
   }
 ]
