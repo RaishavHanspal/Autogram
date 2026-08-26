@@ -51,7 +51,7 @@ image:
   # run); the brief fields supply the rotating scene/place/style. The photoreal
   # cues at the end push toward a real-photograph look.
   positive_template: "candid photograph of {characters}, {interaction}, {subject}, in {setting}, {lighting}, {mood}, {composition}, {color_palette}, {time_of_day}, {style_modifiers}, shot on DSLR, 85mm lens, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k"
-  negative_template: "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly"
+  negative_template: "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear"
 
 postproc:
   aspect: "4:5"                # one of: "1:1", "4:5", "1.91:1"
@@ -84,6 +84,20 @@ gates:
   degenerate_min_variance: 60.0   # reject near-uniform output
   degenerate_dark_mean: 12.0      # reject near-black
   degenerate_bright_mean: 243.0   # reject near-white
+
+# Post a vertical Reel (assembled from the still) instead of a photo. Uses the
+# SAME publish path (instagrapi clip_upload / Graph REELS). Needs ffmpeg on PATH
+# (preinstalled on GitHub ubuntu runners); if absent it falls back to a photo.
+reel:
+  enabled: true
+  duration_s: 7.0
+  fps: 30
+  width: 1080
+  height: 1920
+  zoom: 1.12                 # gentle Ken-Burns end zoom (1.0 = static)
+  # Drop CC0/royalty-free .mp3/.wav tracks here for sound (rotated per run).
+  # Instagram's own licensed music can't be attached via the free API.
+  audio_dir: "assets/audio"
 
 state:
   history_path: "state/history.json"
