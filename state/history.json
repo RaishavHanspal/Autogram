@@ -802,5 +802,53 @@
     "post_id": "18334232881262295",
     "post_url": "https://www.instagram.com/p/DcfI2Win4yU/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260826T035037Z",
+    "timestamp": "2026-08-26T03:50:37.746917+00:00",
+    "brief": {
+      "subject": "high-quality, photorealistic romantic images of couples deeply in love, with crystal-clear, expressive faces, natural emotions, realistic skin and details, cinematic lighting, beautiful backgrounds, and professional photography aesthetics. (variation 409)",
+      "setting": "Riverside bend with autumn colors",
+      "lighting": "Soft autumn afternoon light filtered through leaves",
+      "mood": "dramatic and intense",
+      "composition": "centered symmetrical composition",
+      "color_palette": "warm earthy tones with muted saturation",
+      "time_of_day": "morning",
+      "style_modifiers": [
+        "50mm",
+        "photographic"
+      ],
+      "location_name": "Riverside bend with autumn colors",
+      "interaction": "gazing into each other's eyes"
+    },
+    "positive_prompt": "candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair, gazing into each other's eyes, high-quality, photorealistic romantic images of couples deeply in love, with crystal-clear, expressive faces, natural emotions, realistic skin and details, cinematic lighting, beautiful backgrounds, and professional photography aesthetics. (variation 409), in Riverside bend with autumn colors, Soft autumn afternoon light filtered through leaves, dramatic and intense, centered symmetrical composition, warm earthy tones with muted saturation, morning, 50mm, photographic, shot on DSLR, 85mm lens, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly",
+    "seed": 2332526409,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "65b3bf76b3bd8253ee908bf206ede30d15e2e71d45feb35956e3ae5efb35f665",
+    "image_path": "out/20260826T035037Z.jpg",
+    "caption": "Witness the raw, emotional connection between these two souls, bathed in the gentle yet dramatic light of autumn. It's a moment captured perfectly with 50mm lens and photographic eye. #photorealistic #photographyLovers #loveAtRiverside #riversideAdventures #autumnRiverside #50mmLense #PhotoofTheDay #photographyLovers #loveInNature #photographyCommunity #photojournalism #photographyFindsLove #loveInAutumn #photographyCommunity #photographyLovers #photographyInspiration #loveInNature #photographyFindsLove #loveInRiverside #photographyCommunity #loveInNature #photographyLovers #photographyInspiration\n\n#photorealistic #photographyLovers #loveAtRiverside #riversideAdventures #autumnRiverside #50mmLense #PhotoofTheDay #photographyCommunity #loveInNature #photographyInspiration #loveInAutumn #photographyFindsLove #autogram #slowdesign",
+    "alt_text": "Photorealistic romantic image of two deeply in love couples gazing into each other's eyes at a riverside bend with autumn colors and soft autumn afternoon light.",
+    "hashtags": [
+      "#photorealistic",
+      "#photographyLovers",
+      "#loveAtRiverside",
+      "#riversideAdventures",
+      "#autumnRiverside",
+      "#50mmLense",
+      "#PhotoofTheDay",
+      "#photographyCommunity",
+      "#loveInNature",
+      "#photographyInspiration",
+      "#loveInAutumn",
+      "#photographyFindsLove",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "17882523432621604",
+    "post_url": "https://www.instagram.com/p/DcfTS4JjUId/",
+    "status": "posted"
   }
 ]
