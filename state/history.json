@@ -1326,5 +1326,60 @@
     "post_id": "18093501653636700",
     "post_url": "https://www.instagram.com/p/DcgI22OGpO7/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260826T130258Z",
+    "timestamp": "2026-08-26T13:02:58.149048+00:00",
+    "brief": {
+      "subject": "A mid-20s South Asian woman and a late-20s South Asian man standing in a sunlit forest clearing, their shadows stretching gracefully behind them, with the vast old-growth forest and moss-covered ground as their beautiful and mysterious backdrop.",
+      "setting": "Dense forest canopy",
+      "lighting": "Dappled sunlight through dense canopy",
+      "mood": "Deeply romantic, mysterious, and grounded, with a sense of timeless beauty and profound connection.",
+      "composition": "The couple is centered in the frame with their hands entwined, their expressions of deep affection and natural beauty creating a natural and intimate connection. The wildflowers and tall trees provide a natural frame.",
+      "color_palette": "Warm golden hues with a backdrop of green and brown tones from the moss-covered ground and wildflowers, with the occasional flash of silver from the sunlight.",
+      "time_of_day": "Winter, late afternoon with a golden hour light casting warm golden hues over the scene.",
+      "style_modifiers": [
+        "cinematic",
+        "professional",
+        "photorealistic",
+        "high-quality",
+        "deeply romantic"
+      ],
+      "location_name": "Dense forest canopy",
+      "interaction": ""
+    },
+    "positive_prompt": "candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair, A mid-20s South Asian woman and a late-20s South Asian man standing in a sunlit forest clearing, their shadows stretching gracefully behind them, with the vast old-growth forest and moss-covered ground as their beautiful and mysterious backdrop., in Dense forest canopy, Dappled sunlight through dense canopy, Deeply romantic, mysterious, and grounded, with a sense of timeless beauty and profound connection., The couple is centered in the frame with their hands entwined, their expressions of deep affection and natural beauty creating a natural and intimate connection. The wildflowers and tall trees provide a natural frame., Warm golden hues with a backdrop of green and brown tones from the moss-covered ground and wildflowers, with the occasional flash of silver from the sunlight., Winter, late afternoon with a golden hour light casting warm golden hues over the scene., cinematic, professional, photorealistic, high-quality, deeply romantic, shot on DSLR, 85mm lens, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly",
+    "seed": 1459615212,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "457fd1a2dbfa54fa3640c67f47798b1cd072091843d100788d0bd039baaf6d67",
+    "image_path": "out/20260826T130258Z.jpg",
+    "caption": "Feet cradled in moss, eyes locked in this sacred space. The golden hour casts a warm glow, intertwining hands and shadows stretch like a promise. Nature's whispers echo through the ancient trees. #cinematic #professional #photorealistic #highquality #deeplyromantic #romantic #romanticmoment #awesomestorytelling #forestmagic #naturelove #awakeintheforest #goldenhour #forestwalk #loveatmidnight #duskanddawn #loveinwinter #naturephotography #timelapse #awakeintheforest #loveinwinter #loveintheforest #loveinthemoment #loveintheforest #loveinthemoment #loveintheforest\n\n#cinematic #professional #photorealistic #highquality #deeplyromantic #romantic #romanticmoment #awesomestorytelling #forestmagic #naturelove #awakeintheforest #goldenhour #forestwalk #loveatmidnight #duskanddawn #loveinwinter #naturephotography #timelapse",
+    "alt_text": "A mid-20s South Asian woman and a late-20s South Asian man standing in a sunlit forest clearing, their shadows stretching gracefully behind them, with the vast old-growth forest and moss-covered ground as their beautiful and mysterious backdrop.",
+    "hashtags": [
+      "#cinematic",
+      "#professional",
+      "#photorealistic",
+      "#highquality",
+      "#deeplyromantic",
+      "#romantic",
+      "#romanticmoment",
+      "#awesomestorytelling",
+      "#forestmagic",
+      "#naturelove",
+      "#awakeintheforest",
+      "#goldenhour",
+      "#forestwalk",
+      "#loveatmidnight",
+      "#duskanddawn",
+      "#loveinwinter",
+      "#naturephotography",
+      "#timelapse"
+    ],
+    "backend": "graph",
+    "post_id": "18121855099852937",
+    "post_url": "https://www.instagram.com/p/DcgSbG7gXq3/",
+    "status": "posted"
   }
 ]
