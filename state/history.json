@@ -1381,5 +1381,58 @@
     "post_id": "18121855099852937",
     "post_url": "https://www.instagram.com/p/DcgSbG7gXq3/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260826T145240Z",
+    "timestamp": "2026-08-26T14:52:40.874771+00:00",
+    "brief": {
+      "subject": "Mid-20s South Asian woman and late-20s South Asian man standing in a still moonlit pond surrounded by a tranquil forest, their silhouettes merged in the mirror-like water as the full moon illuminates their expressions, with stars twinkling in the sky above.",
+      "setting": "Still pond reflection",
+      "lighting": "Soft natural daylight",
+      "mood": "Serene, mysterious, and intimate, capturing the magic of a night under the stars with lovers.",
+      "composition": "The couple’s silhouettes are the main focus, framed by the tranquil pond and the surrounding forest, with the stars and the moon above completing the composition.",
+      "color_palette": "Blues and greys with hints of silver from the moonlight and stars, creating a soft and dreamy atmosphere.",
+      "time_of_day": "Moonlit night with stars visible in the sky.",
+      "style_modifiers": [
+        "cinematic",
+        "high-contrast",
+        "soft-shadows"
+      ],
+      "location_name": "Still pond reflection",
+      "interaction": ""
+    },
+    "positive_prompt": "candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair, Mid-20s South Asian woman and late-20s South Asian man standing in a still moonlit pond surrounded by a tranquil forest, their silhouettes merged in the mirror-like water as the full moon illuminates their expressions, with stars twinkling in the sky above., in Still pond reflection, Soft natural daylight, Serene, mysterious, and intimate, capturing the magic of a night under the stars with lovers., The couple’s silhouettes are the main focus, framed by the tranquil pond and the surrounding forest, with the stars and the moon above completing the composition., Blues and greys with hints of silver from the moonlight and stars, creating a soft and dreamy atmosphere., Moonlit night with stars visible in the sky., cinematic, high-contrast, soft-shadows, shot on DSLR, 85mm lens, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly",
+    "seed": 2477600491,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "857ef71c9202eb09915166388aa939c9003308aac66ab2ccd39c4cde3e1ff356",
+    "image_path": "out/20260826T145240Z.jpg",
+    "caption": "As the full moon casts its silver glow, their silhouettes merge in the still pond. It's a moment where the stars twinkle above, their expressions so full of magic and love. Perfect for a design lover's heart. #cinematic #softshadows #highcontrast #serenemoon #mysteriouslove #dreamy #stillpondreflection #magicnight #intimatemoment #loversmoon #moonlightmoment #starsabove #moonmagic #forestmoon #naturemoon #starstwinkle #mysticlove #moonlitforest #underthestars #lovedrive #soulconnect #moonlove #magicalmoment #lovestory #magicsky #moonandstars #naturemoon #loveinmotion #lovestory #moonmagic #moonlight #lovestory #moonlove #moonmagic #soulconnect\n\n#cinematic #serenemoon #mysteriouslove #dreamy #stillpondreflection #magicnight #intimatemoment #loversmoon #moonlightmoment #starsabove #moonandstars #naturemoon #soulconnect #loveinmotion #moonlove #moonmagic #lovestory #moonlight",
+    "alt_text": "A mid-20s South Asian woman and late-20s South Asian man standing in a still moonlit pond surrounded by a tranquil forest, their silhouettes merged in the mirror-like water as the full moon illuminates their expressions, with stars twinkling in the sky above.",
+    "hashtags": [
+      "#cinematic",
+      "#serenemoon",
+      "#mysteriouslove",
+      "#dreamy",
+      "#stillpondreflection",
+      "#magicnight",
+      "#intimatemoment",
+      "#loversmoon",
+      "#moonlightmoment",
+      "#starsabove",
+      "#moonandstars",
+      "#naturemoon",
+      "#soulconnect",
+      "#loveinmotion",
+      "#moonlove",
+      "#moonmagic",
+      "#lovestory",
+      "#moonlight"
+    ],
+    "backend": "graph",
+    "post_id": "17992793943009695",
+    "post_url": "https://www.instagram.com/p/DcgfO2uH9e2/",
+    "status": "posted"
   }
 ]
