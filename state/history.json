@@ -1117,5 +1117,54 @@
     "post_id": "18068651780719581",
     "post_url": "https://www.instagram.com/p/Dcf17qVltc0/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260826T095052Z",
+    "timestamp": "2026-08-26T09:50:52.432935+00:00",
+    "brief": {
+      "subject": "Highly romantic couple standing on a sunlit riverbank with towering pine trees and wildflowers in the background, their hands entwined and looking into each other's eyes, shadows merging gracefully behind them",
+      "setting": "River with stepping stones",
+      "lighting": "Bright natural daylight with water transparency",
+      "mood": "Passionate, tender, loving, deep emotional connection, enchanted forest, serene beauty",
+      "composition": "Leading lines (path, river, pine trees) with a focus on the couple's expressions and the merging shadows",
+      "color_palette": "Vibrant autumn colors with warm golds, soft greens, and deep browns",
+      "time_of_day": "Mid-afternoon autumn",
+      "style_modifiers": [
+        "neon colored light contemporary feel",
+        "professional photography aesthetics",
+        "dramatic and intense"
+      ],
+      "location_name": "River with stepping stones",
+      "interaction": "standing apart but connected visually"
+    },
+    "positive_prompt": "candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair, standing apart but connected visually, Highly romantic couple standing on a sunlit riverbank with towering pine trees and wildflowers in the background, their hands entwined and looking into each other's eyes, shadows merging gracefully behind them, in River with stepping stones, Bright natural daylight with water transparency, Passionate, tender, loving, deep emotional connection, enchanted forest, serene beauty, Leading lines (path, river, pine trees) with a focus on the couple's expressions and the merging shadows, Vibrant autumn colors with warm golds, soft greens, and deep browns, Mid-afternoon autumn, neon colored light contemporary feel, professional photography aesthetics, dramatic and intense, shot on DSLR, 85mm lens, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly",
+    "seed": 1290816262,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "6d8ee47ebbfe0cec70f1ae3208299aa9912c575d808f186ae48484abe83b394b",
+    "image_path": "out/20260826T095052Z.jpg",
+    "caption": "Feet on the soft stones, hearts in the gentle flow. Our eyes meet, shadows merging in this enchanted forest. A moment so tender, so deep, so pure. #neonfeels #photographylove\n\n#photography #naturallight #autumnlandscape #lovingmoment #enchantedforest #sunlitriver #professionalphotography #riverside #couple #naturalbeauty #hands #eyecontact #autogram #slowdesign",
+    "alt_text": "A romantic couple standing on stepping stones by a sunlit river with pine trees and wildflowers in the background, their hands entwined and looking into each other's eyes, shadows merging gracefully behind them.",
+    "hashtags": [
+      "#photography",
+      "#naturallight",
+      "#autumnlandscape",
+      "#lovingmoment",
+      "#enchantedforest",
+      "#sunlitriver",
+      "#professionalphotography",
+      "#riverside",
+      "#couple",
+      "#naturalbeauty",
+      "#hands",
+      "#eyecontact",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "18116204293738948",
+    "post_url": "https://www.instagram.com/p/Dcf8YI9lj3m/",
+    "status": "posted"
   }
 ]
