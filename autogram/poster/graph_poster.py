@@ -55,10 +55,16 @@ class GraphApiPoster(Poster):
         if usage:
             log.info("graph x-app-usage: %s (daily publish quota: %d)", usage, DAILY_POST_QUOTA)
 
-    def _create_container(self, image_url: str, caption: str) -> str:
+    def _create_container(self, media_url: str, caption: str, is_reel: bool = False) -> str:
+        data = {"caption": caption, "access_token": self.access_token}
+        if is_reel:
+            data["media_type"] = "REELS"
+            data["video_url"] = media_url
+        else:
+            data["image_url"] = media_url
         resp = requests.post(
             f"{GRAPH_BASE}/{self.ig_user_id}/media",
-            data={"image_url": image_url, "caption": caption, "access_token": self.access_token},
+            data=data,
             timeout=60,
         )
         self._log_usage(resp)
@@ -71,8 +77,8 @@ class GraphApiPoster(Poster):
             raise PosterError("media container create returned no id")
         return str(cid)
 
-    def _poll_container(self, container_id: str) -> None:
-        deadline = time.monotonic() + self.container_timeout_s
+    def _poll_container(self, container_id: str, timeout_s: float | None = None) -> None:
+        deadline = time.monotonic() + (timeout_s or self.container_timeout_s)
         delay = 2.0
         while time.monotonic() < deadline:
             resp = requests.get(
@@ -124,26 +130,32 @@ class GraphApiPoster(Poster):
     # ------------------------------------------------------------------ #
     def publish(self, image_path: str | Path, caption: str, alt_text: str) -> PostResult:
         # NOTE: alt_text is accepted for interface parity. The Graph publish
-        # endpoint does not expose alt text on image posts; it is recorded in
-        # state but not sent. Caption carries the visible text.
+        # endpoint does not expose alt text; it is recorded in state but not
+        # sent. A .mp4/.mov is published as a Reel (media_type=REELS); video
+        # processing is slower so the container poll gets a longer budget.
+        is_reel = Path(str(image_path)).suffix.lower() in {".mp4", ".mov"}
         if self.dry_run:
             log.info(
-                "[dry-run] would host image %s, then POST /%s/media (image_url, caption "
-                "<%d chars>) -> poll -> POST /media_publish",
+                "[dry-run] would host %s %s, then POST /%s/media (%s, caption <%d chars>) "
+                "-> poll -> POST /media_publish",
+                "reel" if is_reel else "image",
                 image_path,
                 self.ig_user_id or "<user>",
+                "video_url,media_type=REELS" if is_reel else "image_url",
                 len(caption),
             )
             return PostResult(post_id="dry-run", url=None, backend=self.name, dry_run=True)
 
-        image_url = self.image_host.upload(image_path)
-        container_id = self._create_container(image_url, caption)
-        self._poll_container(container_id)
+        media_url = self.image_host.upload(image_path)
+        container_id = self._create_container(media_url, caption, is_reel=is_reel)
+        self._poll_container(
+            container_id, timeout_s=self.container_timeout_s * 3 if is_reel else None
+        )
         media_id = self._publish_container(container_id)
         url = self._permalink(media_id)
-        log.info("published media id=%s url=%s", media_id, url)
+        log.info("published %s id=%s url=%s", "reel" if is_reel else "media", media_id, url)
         return PostResult(
-            post_id=media_id, url=url, backend=self.name, extra={"image_url": image_url}
+            post_id=media_id, url=url, backend=self.name, extra={"media_url": media_url}
         )
 
     def comment(self, post_id: str, text: str) -> None:
