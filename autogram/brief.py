@@ -157,7 +157,8 @@ def build_character_block(characters_data: dict[str, Any]) -> str:
         "a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, "
         "high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; "
         "and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, "
-        "defined square jawline, short groomed dark beard, thick black hair"
+        "defined square jawline, short groomed dark beard, thick black hair; "
+        "both fully clothed in elegant modest conservative attire"
     )
 
 
