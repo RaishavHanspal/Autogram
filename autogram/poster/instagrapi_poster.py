@@ -175,28 +175,42 @@ class InstagrapiPoster(Poster):
 
     # ------------------------------------------------------------------ #
     def publish(self, image_path: str | Path, caption: str, alt_text: str) -> PostResult:
-        image_path = str(image_path)
+        # A video file (.mp4/.mov) is posted as a Reel via clip_upload; anything
+        # else is a photo. Same login/backoff/return path for both.
+        media_path = str(image_path)
+        is_reel = Path(media_path).suffix.lower() in {".mp4", ".mov"}
+
         if self.dry_run:
+            action = "clip_upload" if is_reel else "photo_upload"
             log.info(
-                "[dry-run] would client.photo_upload(path=%s, caption=<%d chars>, "
-                "extra_data={'custom_accessibility_caption': <alt %d chars>})",
-                image_path,
+                "[dry-run] would client.%s(path=%s, caption=<%d chars>%s)",
+                action,
+                media_path,
                 len(caption),
-                len(alt_text),
+                ""
+                if is_reel
+                else f", extra_data={{'custom_accessibility_caption': <alt {len(alt_text)} chars>}}",
             )
             return PostResult(post_id="dry-run", url=None, backend=self.name, dry_run=True)
 
         client = self.login()
-        extra_data = {"custom_accessibility_caption": alt_text} if alt_text else {}
 
-        def _do() -> Any:
-            return client.photo_upload(image_path, caption=caption, extra_data=extra_data)
+        if is_reel:
+
+            def _do() -> Any:
+                return client.clip_upload(media_path, caption=caption)
+        else:
+            extra_data = {"custom_accessibility_caption": alt_text} if alt_text else {}
+
+            def _do() -> Any:
+                return client.photo_upload(media_path, caption=caption, extra_data=extra_data)
 
         media = self._with_backoff(_do)
         code = getattr(media, "code", None)
-        url = f"https://www.instagram.com/p/{code}/" if code else None
+        slug = "reel" if is_reel else "p"
+        url = f"https://www.instagram.com/{slug}/{code}/" if code else None
         pk = str(getattr(media, "pk", "") or getattr(media, "id", ""))
-        log.info("published media pk=%s url=%s", pk, url)
+        log.info("published %s pk=%s url=%s", "reel" if is_reel else "media", pk, url)
         return PostResult(post_id=pk, url=url, backend=self.name)
 
     def comment(self, post_id: str, text: str) -> None:
