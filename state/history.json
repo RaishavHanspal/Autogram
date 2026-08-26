@@ -958,5 +958,53 @@
     "post_id": "18061372664600907",
     "post_url": "https://www.instagram.com/p/DcfkaynH7wK/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260826T070626Z",
+    "timestamp": "2026-08-26T07:06:26.778004+00:00",
+    "brief": {
+      "subject": "high-quality, photorealistic romantic images of couples deeply in love, with crystal-clear, expressive faces, natural emotions, realistic skin and details, cinematic lighting, beautiful backgrounds, and professional photography aesthetics. (variation 265)",
+      "setting": "Japanese zen garden",
+      "lighting": "Balanced natural diffused light",
+      "mood": "deeply romantic and passionate",
+      "composition": "leading lines (path, river, fence)",
+      "color_palette": "moody dark romantic grading",
+      "time_of_day": "morning",
+      "style_modifiers": [
+        "macro",
+        "photographic"
+      ],
+      "location_name": "Japanese zen garden",
+      "interaction": "hand-holding walking together"
+    },
+    "positive_prompt": "candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair, hand-holding walking together, high-quality, photorealistic romantic images of couples deeply in love, with crystal-clear, expressive faces, natural emotions, realistic skin and details, cinematic lighting, beautiful backgrounds, and professional photography aesthetics. (variation 265), in Japanese zen garden, Balanced natural diffused light, deeply romantic and passionate, leading lines (path, river, fence), moody dark romantic grading, morning, macro, photographic, shot on DSLR, 85mm lens, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly",
+    "seed": 3744770265,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "a5e2de096065f83c6d5b35e572b75ca2d7e4900bdca2febfc04164d2f4eb6deb",
+    "image_path": "out/20260826T070626Z.jpg",
+    "caption": "Walking hand in hand through this tranquil Japanese garden, the early morning light casts a warm, moody glow. A moment of deep connection and romance captured in pure, professional photography.\n\n#photographic #photorealistic #zen #love #japaneseculture #morning #macrophotography #instaphotography #crystalclear #professionalphotography #expressivefaces #realistic #autogram #slowdesign",
+    "alt_text": "High-quality, photorealistic romantic image of a couple hand-holding and walking through a Japanese zen garden during morning diffused natural light, with a moody dark romantic color palette and leading lines.",
+    "hashtags": [
+      "#photographic",
+      "#photorealistic",
+      "#zen",
+      "#love",
+      "#japaneseculture",
+      "#morning",
+      "#macrophotography",
+      "#instaphotography",
+      "#crystalclear",
+      "#professionalphotography",
+      "#expressivefaces",
+      "#realistic",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "18129011413666449",
+    "post_url": "https://www.instagram.com/p/DcfpYgyFr6u/",
+    "status": "posted"
   }
 ]
