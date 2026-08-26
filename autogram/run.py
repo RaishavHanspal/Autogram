@@ -196,6 +196,37 @@ def run_pipeline(args: argparse.Namespace, cfg: Config, secrets: Secrets) -> int
                 f"image hash {processed.sha256[:12]} already posted; refusing to repeat",
             )
 
+        # --- extra Reel scenes (same couple, different places) ---
+        # Reuse the already-loaded pipeline (gen) so the model loads once. Each
+        # scene diverges via history + a distinct seed. A failed scene is skipped,
+        # never fatal — the Reel just uses whatever scenes succeeded (>=1).
+        reel_scene_paths: list[Path] = [processed.path]
+        if cfg.reel.enabled and not args.image_only and cfg.reel.num_scenes > 1:
+            acc_briefs = state.recent_briefs(cfg.brief.history_depth) + [brief.model_dump()]
+            acc_subjects = state.recent_subjects(cfg.brief.history_depth) + [brief.subject]
+            for i in range(1, cfg.reel.num_scenes):
+                scene_seed = seed + i * 7919
+                try:
+                    with stage_timer(log, f"reel.scene{i}"):
+                        b_i = generate_brief(
+                            client=ollama,
+                            cfg=cfg,
+                            seed=scene_seed,
+                            run_date=run_date,
+                            history_subjects=acc_subjects,
+                            recent_briefs=acc_briefs,
+                            model=llm_model,
+                        )
+                        pos_i, neg_i = render_prompts(b_i, cfg, characters_block=characters_block)
+                        g_i = gen.generate(pos_i, neg_i, scene_seed)
+                        run_image_gates(g_i.image, cfg)
+                        p_i = process_image(g_i.image, cfg, out_dir / f"{stamp}_{i}.jpg")
+                    reel_scene_paths.append(p_i.path)
+                    acc_briefs.append(b_i.model_dump())
+                    acc_subjects.append(b_i.subject)
+                except Exception as exc:  # noqa: BLE001
+                    log.warning("reel scene %d skipped (%s); continuing", i, exc)
+
         # --- image-only exit ---
         if args.image_only:
             _write_artifacts(out_dir, stamp, brief, positive, negative, processed, None, None, None)
@@ -267,7 +298,8 @@ def run_pipeline(args: argparse.Namespace, cfg: Config, secrets: Secrets) -> int
 
         try:
             with stage_timer(log, "reel"):
-                publish_path = build_reel(processed.path, cfg, out_dir / f"{stamp}.mp4", seed)
+                publish_path = build_reel(reel_scene_paths, cfg, out_dir / f"{stamp}.mp4", seed)
+            log.info("reel assembled from %d scene(s): %s", len(reel_scene_paths), publish_path)
         except ReelError as exc:
             log.warning("reel unavailable (%s); posting the still image instead", exc)
             publish_path = processed.path
