@@ -260,13 +260,25 @@ def run_pipeline(args: argparse.Namespace, cfg: Config, secrets: Secrets) -> int
         caption_result.hashtags,
     )
 
+    # --- optional Reel assembly (posted via the SAME publish path) ---
+    publish_path: Path = processed.path
+    if cfg.reel.enabled:
+        from .reel import ReelError, build_reel
+
+        try:
+            with stage_timer(log, "reel"):
+                publish_path = build_reel(processed.path, cfg, out_dir / f"{stamp}.mp4", seed)
+        except ReelError as exc:
+            log.warning("reel unavailable (%s); posting the still image instead", exc)
+            publish_path = processed.path
+
     # --- publish ---
     from .poster import PosterError, build_poster
 
     try:
         with stage_timer(log, "post"):
             poster = build_poster(secrets, cfg, dry_run=args.dry_run)
-            result = poster.publish(processed.path, final_caption, caption_result.alt_text)
+            result = poster.publish(publish_path, final_caption, caption_result.alt_text)
             if comment_text and result.post_id and result.post_id != "dry-run":
                 poster.comment(result.post_id, comment_text)
             elif comment_text and args.dry_run:
@@ -363,4 +375,3 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
- 
