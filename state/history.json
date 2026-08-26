@@ -850,5 +850,59 @@
     "post_id": "17882523432621604",
     "post_url": "https://www.instagram.com/p/DcfTS4JjUId/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260826T044909Z",
+    "timestamp": "2026-08-26T04:49:09.160541+00:00",
+    "brief": {
+      "subject": "A romantic couple standing in a sunlit Indian palace courtyard, with intricate tile work and fountains in the background, their hands intertwined, their expressions of deep affection.",
+      "setting": "Indian palace courtyard",
+      "lighting": "Golden hour light highlighting architectural details",
+      "mood": "Regal, elegant, and heritage with a sense of deep affection and connection.",
+      "composition": "Centered symmetrical composition, with the couple standing apart but visually connected, their hands intertwined, with the palace courtyard and fountains in the background.",
+      "color_palette": "Warm tones with shades of gold, deep olive, and soft greys, with warm winter reflections on the marble and tile work.",
+      "time_of_day": "Winter golden hour, with warm golden hues casting a glow over the scene.",
+      "style_modifiers": [
+        "cinematic",
+        "professional photography aesthetics",
+        "high-quality",
+        "photorealistic"
+      ],
+      "location_name": "Indian palace courtyard",
+      "interaction": "standing apart but connected visually"
+    },
+    "positive_prompt": "candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair, standing apart but connected visually, A romantic couple standing in a sunlit Indian palace courtyard, with intricate tile work and fountains in the background, their hands intertwined, their expressions of deep affection., in Indian palace courtyard, Golden hour light highlighting architectural details, Regal, elegant, and heritage with a sense of deep affection and connection., Centered symmetrical composition, with the couple standing apart but visually connected, their hands intertwined, with the palace courtyard and fountains in the background., Warm tones with shades of gold, deep olive, and soft greys, with warm winter reflections on the marble and tile work., Winter golden hour, with warm golden hues casting a glow over the scene., cinematic, professional photography aesthetics, high-quality, photorealistic, shot on DSLR, 85mm lens, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly",
+    "seed": 3883314363,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "e34a5111098dc086d164cf3e9e482b7bd0949817ce1a90de527f45a07bfa31c8",
+    "image_path": "out/20260826T044909Z.jpg",
+    "caption": "A moment frozen in time - their hands intertwined, deep affection shining through in their eyes. So elegant, so full of love. #cinematicphotography #professionalquality #photorealistic #hearts #deepconnection #heritagecouple #royalcouple #intricatetiles #fountainstoyoung #intricatetilework #magnificentelemony #goldenhourmagic #sunsetindianpalace #wintersunlight #loveinaction #hearteyescouple #handinhand #fairytailequation #magichourphotography #tendernessindepth #palaceandlove #royaltylove #handsonheart #intricatefountains #palacecouple #tileworkmagic\n\n#hearts #deepconnection #heritagecouple #royalcouple #intricatetiles #fountainstoyoung #intricatetilework #magnificentelemony #goldenhourmagic #sunsetindianpalace #wintersunlight #loveinaction #hearteyescouple #handinhand #fairytailequation #magichourphotography #tendernessindepth #palaceandlove",
+    "alt_text": "A romantic couple standing in a sunlit Indian palace courtyard, their hands intertwined, under golden hour light highlighting intricate tile work and fountains in the background, with a sense of deep affection and connection.",
+    "hashtags": [
+      "#hearts",
+      "#deepconnection",
+      "#heritagecouple",
+      "#royalcouple",
+      "#intricatetiles",
+      "#fountainstoyoung",
+      "#intricatetilework",
+      "#magnificentelemony",
+      "#goldenhourmagic",
+      "#sunsetindianpalace",
+      "#wintersunlight",
+      "#loveinaction",
+      "#hearteyescouple",
+      "#handinhand",
+      "#fairytailequation",
+      "#magichourphotography",
+      "#tendernessindepth",
+      "#palaceandlove"
+    ],
+    "backend": "graph",
+    "post_id": "18118118188934538",
+    "post_url": "https://www.instagram.com/p/DcfZza4jRL1/",
+    "status": "posted"
   }
 ]
