@@ -66,7 +66,8 @@ class ImageConfig(BaseModel):
         "illustration, painting, drawing, cartoon, anime, 3d render, cgi, "
         "plastic skin, deformed, disfigured, mutated hands, extra fingers, "
         "extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, "
-        "jpeg artifacts, oversaturated, ugly"
+        "jpeg artifacts, oversaturated, ugly, "
+        "nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear"
     )
 
 
@@ -118,6 +119,18 @@ class GatesConfig(BaseModel):
     degenerate_bright_mean: float = 243.0
 
 
+class ReelConfig(BaseModel):
+    # When enabled, the still is assembled into a vertical Reel (mp4) and posted
+    # via the SAME publish path (clip_upload / REELS container) instead of a photo.
+    enabled: bool = False
+    duration_s: float = 7.0
+    fps: int = 30
+    width: int = 1080
+    height: int = 1920
+    zoom: float = 1.12  # gentle Ken-Burns end zoom (1.0 = no zoom)
+    audio_dir: str = "assets/audio"  # drop CC0/royalty-free tracks here for sound
+
+
 class StateConfig(BaseModel):
     history_path: str = "state/history.json"
     session_path: str = "state/ig_session.json"
@@ -134,6 +147,7 @@ class Config(BaseModel):
     caption: CaptionConfig = Field(default_factory=CaptionConfig)
     hashtags: HashtagsConfig = Field(default_factory=HashtagsConfig)
     gates: GatesConfig = Field(default_factory=GatesConfig)
+    reel: ReelConfig = Field(default_factory=ReelConfig)
     state: StateConfig = Field(default_factory=StateConfig)
 
 
