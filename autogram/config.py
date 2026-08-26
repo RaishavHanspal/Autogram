@@ -120,15 +120,17 @@ class GatesConfig(BaseModel):
 
 
 class ReelConfig(BaseModel):
-    # When enabled, the still is assembled into a vertical Reel (mp4) and posted
-    # via the SAME publish path (clip_upload / REELS container) instead of a photo.
+    # When enabled, several stills are assembled into a vertical Reel (mp4) and
+    # posted via the SAME publish path (clip_upload / REELS) instead of a photo.
     enabled: bool = False
-    duration_s: float = 7.0
+    num_scenes: int = 3  # distinct scenes generated + stitched (1 = single still)
+    seconds_per_image: float = 4.0  # on-screen time per scene (before crossfade)
+    crossfade_s: float = 0.7  # crossfade duration between scenes
     fps: int = 30
     width: int = 1080
     height: int = 1920
-    zoom: float = 1.12  # gentle Ken-Burns end zoom (1.0 = no zoom)
-    audio_dir: str = "assets/audio"  # drop CC0/royalty-free tracks here for sound
+    zoom: float = 1.2  # Ken-Burns end zoom per scene (1.0 = no zoom)
+    audio_dir: str = "assets/audio"  # CC0/royalty-free tracks; else a soft bed is synthesized
 
 
 class StateConfig(BaseModel):
