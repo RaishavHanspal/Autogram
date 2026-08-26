@@ -1434,5 +1434,62 @@
     "post_id": "17992793943009695",
     "post_url": "https://www.instagram.com/p/DcgfO2uH9e2/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260826T162357Z",
+    "timestamp": "2026-08-26T16:23:57.309302+00:00",
+    "brief": {
+      "subject": "A high-quality, photorealistic romantic image of a mid-20s South Asian woman and a late-20s South Asian man standing in a sunlit autumn forest clearing, their hands intertwined under a canopy of wildflowers, their shadows merging gracefully behind them, with the setting sun casting a golden glow over their intertwined hands and the landscape.",
+      "setting": "Autumn forest carpet",
+      "lighting": "Warm autumn sunlight",
+      "mood": "Serene, loving, intimate, and reflective, with a sense of emotional depth and connection.",
+      "composition": "Overhead flat-lay camera angle, extreme close-up, 50mm focal length, with the couple centered in the frame and the wildflowers and canopy of leaves framing their expressions and shadows.",
+      "color_palette": "Golden hues, soft pastels, and natural tones, with warm golden tones of the setting sun and the golden-red autumn leaves, and soft pastel tones of the woman's and man's clothes.",
+      "time_of_day": "Sunset, with golden hour lighting and the sun setting in the background.",
+      "style_modifiers": [
+        "photorealistic",
+        "high-quality",
+        "romantic",
+        "deep emotional connection",
+        "photorealistic",
+        "professional photography aesthetics",
+        "cinematic lighting",
+        "natural background",
+        "expressive faces",
+        "natural emotions",
+        "realistic skin and details"
+      ],
+      "location_name": "Autumn forest carpet",
+      "interaction": ""
+    },
+    "positive_prompt": "candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair, A high-quality, photorealistic romantic image of a mid-20s South Asian woman and a late-20s South Asian man standing in a sunlit autumn forest clearing, their hands intertwined under a canopy of wildflowers, their shadows merging gracefully behind them, with the setting sun casting a golden glow over their intertwined hands and the landscape., in Autumn forest carpet, Warm autumn sunlight, Serene, loving, intimate, and reflective, with a sense of emotional depth and connection., Overhead flat-lay camera angle, extreme close-up, 50mm focal length, with the couple centered in the frame and the wildflowers and canopy of leaves framing their expressions and shadows., Golden hues, soft pastels, and natural tones, with warm golden tones of the setting sun and the golden-red autumn leaves, and soft pastel tones of the woman's and man's clothes., Sunset, with golden hour lighting and the sun setting in the background., photorealistic, high-quality, romantic, deep emotional connection, photorealistic, professional photography aesthetics, cinematic lighting, natural background, expressive faces, natural emotions, realistic skin and details, shot on DSLR, 85mm lens, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly",
+    "seed": 3898098814,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "201561169a4433163606a82e6e57653ac1b4992e19978fe29dd14df570c47943",
+    "image_path": "out/20260826T162357Z.jpg",
+    "caption": "Gentle hands intertwined, shadows merging. Perfect moment captured in the golden glow of sunset. 🌅 #AutumnForestLove\n\n#AutumnForest #LoveMoment #CinematicPhotography #DeepEmotion #RealisticConnection #SouthAsianLove #Photorealistic #IntimateMoments #GoldenHues #IntimateSunset #SoftPastels #RomanticPhotography #autogram #slowdesign",
+    "alt_text": "A mid-20s South Asian woman and a late-20s South Asian man standing in a sunlit autumn forest clearing, their hands intertwined under a canopy of wildflowers, their shadows merging gracefully behind them, with the setting sun casting a golden glow over their intertwined hands and the landscape.",
+    "hashtags": [
+      "#AutumnForest",
+      "#LoveMoment",
+      "#CinematicPhotography",
+      "#DeepEmotion",
+      "#RealisticConnection",
+      "#SouthAsianLove",
+      "#Photorealistic",
+      "#IntimateMoments",
+      "#GoldenHues",
+      "#IntimateSunset",
+      "#SoftPastels",
+      "#RomanticPhotography",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "18109153321847516",
+    "post_url": "https://www.instagram.com/p/DcgplmclFui/",
+    "status": "posted"
   }
 ]
