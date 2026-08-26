@@ -1270,5 +1270,61 @@
     "post_id": "17899354815572453",
     "post_url": "https://www.instagram.com/p/DcgCVbNoPom/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260826T113639Z",
+    "timestamp": "2026-08-26T11:36:39.207627+00:00",
+    "brief": {
+      "subject": "A mid-20s South Asian woman and a late-20s South Asian man standing on a sunlit cherry blossom hillside, gazing into each other's eyes under the setting sun, their hands intertwined, with the soft pink petals gently falling around them.",
+      "setting": "Spring cherry blossom landscape",
+      "lighting": "Soft spring daylight",
+      "mood": "celebratory, romantic, transient, with a sense of natural beauty and the beauty of the natural world.",
+      "composition": "Dutch angle to highlight the couple, balanced with the falling petals and cherry blossoms, a focal point at the couple's intertwined hands under the setting sun.",
+      "color_palette": "Soft pastels of pink, white, and gold, with natural greens from the leaves and branches.",
+      "time_of_day": "Sunset, golden hour lighting.",
+      "style_modifiers": [
+        "high-quality",
+        "photorealistic",
+        "romantic",
+        "cinematic",
+        "deep emotional connection",
+        "ethereal atmosphere"
+      ],
+      "location_name": "Spring cherry blossom landscape",
+      "interaction": ""
+    },
+    "positive_prompt": "candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair, A mid-20s South Asian woman and a late-20s South Asian man standing on a sunlit cherry blossom hillside, gazing into each other's eyes under the setting sun, their hands intertwined, with the soft pink petals gently falling around them., in Spring cherry blossom landscape, Soft spring daylight, celebratory, romantic, transient, with a sense of natural beauty and the beauty of the natural world., Dutch angle to highlight the couple, balanced with the falling petals and cherry blossoms, a focal point at the couple's intertwined hands under the setting sun., Soft pastels of pink, white, and gold, with natural greens from the leaves and branches., Sunset, golden hour lighting., high-quality, photorealistic, romantic, cinematic, deep emotional connection, ethereal atmosphere, shot on DSLR, 85mm lens, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly",
+    "seed": 2091216818,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "d9572a3d414bb10affda26997835be868949ba438f22d08de214342954dd1b26",
+    "image_path": "out/20260826T113639Z.jpg",
+    "caption": "Watching the sunset with you under the cherry blossoms felt like the sweetest moment. This is our forever moment, captured in the soft pink petals and intertwined hands. #highquality #photorealistic #cinematic #deepemotionconnection #etherealatmosphere #SpringCherryBlossomLandscape #romanticimagery #pastelcolors #gentlewhispers #goldenhourlighting #handsonhands #springcherries #naturalbeauty #celebratorymoment #transientmoment #photographylife #instaflavor #lovemoment #couplesphotography #springfever #photographylovers #instaphotography #coupletime #insta2019 #instagood #instalove 🌸💖\n\n#highquality #photorealistic #cinematic #deepemotionconnection #etherealatmosphere #SpringCherryBlossomLandscape #romanticimagery #pastelcolors #gentlewhispers #goldenhourlighting #handsonhands #springcherries #naturalbeauty #celebratorymoment #transientmoment #photographylife #instaflavor #lovemoment",
+    "alt_text": "A mid-20s South Asian woman and a late-20s South Asian man standing on a sunlit cherry blossom hillside, gazing into each other's eyes under the setting sun, their hands intertwined, with the soft pink petals gently falling around them.",
+    "hashtags": [
+      "#highquality",
+      "#photorealistic",
+      "#cinematic",
+      "#deepemotionconnection",
+      "#etherealatmosphere",
+      "#SpringCherryBlossomLandscape",
+      "#romanticimagery",
+      "#pastelcolors",
+      "#gentlewhispers",
+      "#goldenhourlighting",
+      "#handsonhands",
+      "#springcherries",
+      "#naturalbeauty",
+      "#celebratorymoment",
+      "#transientmoment",
+      "#photographylife",
+      "#instaflavor",
+      "#lovemoment"
+    ],
+    "backend": "graph",
+    "post_id": "18093501653636700",
+    "post_url": "https://www.instagram.com/p/DcgI22OGpO7/",
+    "status": "posted"
   }
 ]
