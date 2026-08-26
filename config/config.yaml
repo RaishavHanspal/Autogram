@@ -90,12 +90,15 @@ gates:
 # (preinstalled on GitHub ubuntu runners); if absent it falls back to a photo.
 reel:
   enabled: true
-  duration_s: 7.0
+  num_scenes: 3              # distinct scenes generated + stitched (each ~a few min on CPU)
+  seconds_per_image: 4.0     # on-screen time per scene
+  crossfade_s: 0.7           # crossfade between scenes
   fps: 30
   width: 1080
   height: 1920
-  zoom: 1.12                 # gentle Ken-Burns end zoom (1.0 = static)
-  # Drop CC0/royalty-free .mp3/.wav tracks here for sound (rotated per run).
+  zoom: 1.2                  # Ken-Burns end zoom per scene (1.0 = static)
+  # Drop CC0/royalty-free .mp3/.wav tracks here for real music (rotated per run);
+  # if empty, a soft ambient bed is synthesized so the Reel is never silent.
   # Instagram's own licensed music can't be attached via the free API.
   audio_dir: "assets/audio"
 
