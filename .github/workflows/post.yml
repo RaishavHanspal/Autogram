@@ -7,7 +7,8 @@ name: autogram-post
 # The in-job jitter sleep (0-45 min) further avoids robotic fixed-minute posts.
 on:
   schedule:
-    - cron: "0 * * * *"
+    # Mon & Thu at 14:00 UTC (twice weekly). Adjust to your audience/timezone.
+    - cron: "0 */6 * * *"
   workflow_dispatch:
     inputs:
       description:
@@ -78,6 +79,15 @@ jobs:
           restore-keys: |
             pip-${{ runner.os }}-
 
+      - name: Ensure ffmpeg (Reel assembly + clip upload)
+        run: |
+          set -euo pipefail
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+          ffmpeg -version | head -n 1
+
       - name: Install and warm Ollama
         run: |
           set -euo pipefail
@@ -97,7 +107,18 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements-cpu.txt
           pip install -e .
-   
+
+      - name: Jitter (avoid robotic fixed-minute posts)
+        if: github.event_name == 'schedule'
+        run: sleep $((RANDOM % 2700))  # 0-45 minutes
+
+      - name: Debug secret presence (prints NO values)
+        run: |
+          echo "POST_BACKEND set: ${POST_BACKEND:+yes} (len ${#POST_BACKEND})"
+          echo "IG_USERNAME set: ${IG_USERNAME:+yes} (len ${#IG_USERNAME})"
+          echo "IG_PASSWORD set: ${IG_PASSWORD:+yes} (len ${#IG_PASSWORD})"
+          echo "IG_SESSION_B64 set: ${IG_SESSION_B64:+yes} (len ${#IG_SESSION_B64})"
+        
       - name: Run autogram
         id: run
         run: |
