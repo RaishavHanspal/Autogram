@@ -904,5 +904,59 @@
     "post_id": "18118118188934538",
     "post_url": "https://www.instagram.com/p/DcfZza4jRL1/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260826T062230Z",
+    "timestamp": "2026-08-26T06:22:30.229270+00:00",
+    "brief": {
+      "subject": "Mid-20s South Asian woman and late-20s South Asian man standing among hundreds of blooming roses in a sunlit Rose garden, gazing into each other's eyes under the setting sun, their shadows stretching gracefully behind them with the petals of the roses glowing softly.",
+      "setting": "Rose garden in bloom",
+      "lighting": "Soft daylight with petals glowing",
+      "mood": "romantic, lush, sensory, mysterious, enchanted forest, serene beauty, magical atmosphere",
+      "composition": "frame within frame (trees framing couple), focus on foreground couple only",
+      "color_palette": "warm golden tones, soft golden hues, vibrant autumn colors, deep reds and golds",
+      "time_of_day": "sunset, autumn",
+      "style_modifiers": [
+        "photorealistic",
+        "high-quality",
+        "cinematic",
+        "professional photography aesthetics"
+      ],
+      "location_name": "Rose garden in bloom",
+      "interaction": "quiet contemplation side-by-side"
+    },
+    "positive_prompt": "candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair, quiet contemplation side-by-side, Mid-20s South Asian woman and late-20s South Asian man standing among hundreds of blooming roses in a sunlit Rose garden, gazing into each other's eyes under the setting sun, their shadows stretching gracefully behind them with the petals of the roses glowing softly., in Rose garden in bloom, Soft daylight with petals glowing, romantic, lush, sensory, mysterious, enchanted forest, serene beauty, magical atmosphere, frame within frame (trees framing couple), focus on foreground couple only, warm golden tones, soft golden hues, vibrant autumn colors, deep reds and golds, sunset, autumn, photorealistic, high-quality, cinematic, professional photography aesthetics, shot on DSLR, 85mm lens, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly",
+    "seed": 1651888862,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "1be0bd2a79391068b89bacf11d22dfd81456b07c545f6c058c5068c8695e48b2",
+    "image_path": "out/20260826T062230Z.jpg",
+    "caption": "Lost in the warm golden glow of the setting sun, their shadows stretching gracefully behind them. Perfect stillness, just the way I like it. #lovingmoment #photographylover\n\n#lovingmoment #photographylover #rosedreams #autumnsunset #roses #photography #romantic #rosedream #goldenhours #couple #photographyinspiration #sunset #couplephotography #photographymoment #photographylove #lovemoment #lovingphotography #rosesofamillion",
+    "alt_text": "A mid-20s South Asian woman and late-20s South Asian man standing among blooming roses in a sunlit Rose garden, gazing into each other's eyes under the setting sun, their shadows stretching gracefully behind them with the petals of the roses glowing softly.",
+    "hashtags": [
+      "#lovingmoment",
+      "#photographylover",
+      "#rosedreams",
+      "#autumnsunset",
+      "#roses",
+      "#photography",
+      "#romantic",
+      "#rosedream",
+      "#goldenhours",
+      "#couple",
+      "#photographyinspiration",
+      "#sunset",
+      "#couplephotography",
+      "#photographymoment",
+      "#photographylove",
+      "#lovemoment",
+      "#lovingphotography",
+      "#rosesofamillion"
+    ],
+    "backend": "graph",
+    "post_id": "18061372664600907",
+    "post_url": "https://www.instagram.com/p/DcfkaynH7wK/",
+    "status": "posted"
   }
 ]
