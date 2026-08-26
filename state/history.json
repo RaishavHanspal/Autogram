@@ -1222,5 +1222,53 @@
     "post_id": "18134703373624416",
     "post_url": "https://www.instagram.com/p/Dcf_1nkn3fM/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260826T104050Z",
+    "timestamp": "2026-08-26T10:40:50.370538+00:00",
+    "brief": {
+      "subject": "High-quality, photorealistic romantic image of a mid-20s South Asian woman and a late-20s South Asian man standing on a snowy hillside gazing into each other's eyes, their shadows stretching long behind them, with the sun setting in the background, creating a magical and ethereal atmosphere",
+      "setting": "Industrial warehouse interior",
+      "lighting": "Dramatic geometric window light",
+      "mood": "Contemporary, artistic, bold, magical, ethereal",
+      "composition": "High angle, wide establishing shot, subject wide scale",
+      "color_palette": "Whites, grays, warm earth tones, metallic silver, golden hues",
+      "time_of_day": "Winter sunset",
+      "style_modifiers": [
+        "Professional",
+        "Cinematic"
+      ],
+      "location_name": "Industrial warehouse interior",
+      "interaction": ""
+    },
+    "positive_prompt": "candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair, High-quality, photorealistic romantic image of a mid-20s South Asian woman and a late-20s South Asian man standing on a snowy hillside gazing into each other's eyes, their shadows stretching long behind them, with the sun setting in the background, creating a magical and ethereal atmosphere, in Industrial warehouse interior, Dramatic geometric window light, Contemporary, artistic, bold, magical, ethereal, High angle, wide establishing shot, subject wide scale, Whites, grays, warm earth tones, metallic silver, golden hues, Winter sunset, Professional, Cinematic, shot on DSLR, 85mm lens, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly",
+    "seed": 278800326,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "b9ba7f84f7067d02362eca74b2e45858db8d2c3be24dafd1a360560ee2713260",
+    "image_path": "out/20260826T104050Z.jpg",
+    "caption": "Just watched the sunset on the snowy hillside through those dramatic window beams. The contrast of warm shadows against icy whites is just breathtaking. #Professional #Cinematic #DesignLovers #LoveInWinter #ArtisticMoment #WinterSunset #IndustrialWarehouseInterior #GoldenHues #EtherealMagic #CalmConnection #FeelingConnected #RomanticView\n\n#Professional #Cinematic #DesignLovers #LoveInWinter #ArtisticMoment #WinterSunset #IndustrialWarehouseInterior #GoldenHues #EtherealMagic #CalmConnection #FeelingConnected #RomanticView #autogram #slowdesign",
+    "alt_text": "Photorealistic romantic image of a mid-20s South Asian woman and a late-20s South Asian man standing on a snowy hillside gazing into each other's eyes, their shadows stretching long behind them, with the sun setting in the background, creating a magical and ethereal atmosphere.",
+    "hashtags": [
+      "#Professional",
+      "#Cinematic",
+      "#DesignLovers",
+      "#LoveInWinter",
+      "#ArtisticMoment",
+      "#WinterSunset",
+      "#IndustrialWarehouseInterior",
+      "#GoldenHues",
+      "#EtherealMagic",
+      "#CalmConnection",
+      "#FeelingConnected",
+      "#RomanticView",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "17899354815572453",
+    "post_url": "https://www.instagram.com/p/DcgCVbNoPom/",
+    "status": "posted"
   }
 ]
