@@ -1599,5 +1599,52 @@
     "post_id": "18333091498279258",
     "post_url": "https://www.instagram.com/reel/DchAeWJgMYF/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260826T204158Z",
+    "timestamp": "2026-08-26T20:41:58.348738+00:00",
+    "brief": {
+      "subject": "high-quality, photorealistic romantic images of couples deeply in love, with crystal-clear, expressive faces, natural emotions, realistic skin and details, cinematic lighting, beautiful backgrounds, and professional photography aesthetics. (variation 571)",
+      "setting": "Rain-soaked city street",
+      "lighting": "Cool neon mixed with reflected warm city light",
+      "mood": "serene",
+      "composition": "dutch angle, medium shot",
+      "color_palette": "muted neutral tones",
+      "time_of_day": "morning",
+      "style_modifiers": [
+        "macro",
+        "photographic"
+      ],
+      "location_name": "Rain-soaked city street",
+      "interaction": ""
+    },
+    "positive_prompt": "candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair; both fully clothed in elegant modest conservative attire, high-quality, photorealistic romantic images of couples deeply in love, with crystal-clear, expressive faces, natural emotions, realistic skin and details, cinematic lighting, beautiful backgrounds, and professional photography aesthetics. (variation 571), in Rain-soaked city street, Cool neon mixed with reflected warm city light, serene, dutch angle, medium shot, muted neutral tones, morning, macro, photographic, shot on DSLR, 85mm lens, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear",
+    "seed": 85575571,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "190baac2f24623f43925bf86c12933d483182a3dbd927c4b3214e8ef0f36b863",
+    "image_path": "out/20260826T204158Z.jpg",
+    "caption": "Witness the raw emotion on their faces. A moment captured in the cool neon glow of a rainy city street. #Photographic #Macro #Calm #Serene #DesignLovers #LoveInPhotos #LoveAtFirstSight #Photorealistic #Relatable #InDepth #EmotionalConnection\n\n#Photographic #Macro #Calm #Serene #DesignLovers #LoveInPhotos #LoveAtFirstSight #Photorealistic #Relatable #InDepth #EmotionalConnection #autogram #slowdesign",
+    "alt_text": "Photorealistic high-quality romantic image of a couple deeply in love taken in a rain-soaked city street with cool neon lighting and a cinematic look.",
+    "hashtags": [
+      "#Photographic",
+      "#Macro",
+      "#Calm",
+      "#Serene",
+      "#DesignLovers",
+      "#LoveInPhotos",
+      "#LoveAtFirstSight",
+      "#Photorealistic",
+      "#Relatable",
+      "#InDepth",
+      "#EmotionalConnection",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "18368868598211775",
+    "post_url": "https://www.instagram.com/reel/DchJEX5geOz/",
+    "status": "posted"
   }
 ]
