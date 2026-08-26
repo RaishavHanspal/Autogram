@@ -1541,5 +1541,63 @@
     "post_id": "18098178251459069",
     "post_url": "https://www.instagram.com/p/Dcg1PMMlPHv/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260826T194401Z",
+    "timestamp": "2026-08-26T19:44:01.789382+00:00",
+    "brief": {
+      "subject": "A mid-20s South Asian woman and a late-20s South Asian man standing on a snow-covered hillside in an underground river cave, their shadows stretching long behind them under the cool light of the reflective river.",
+      "setting": "Underground river cave",
+      "lighting": "Cool reflective water light",
+      "mood": "Mysterious, exploratory, sacred.",
+      "composition": "The couple is positioned at a worm's-eye view, their reflections in the water creating a mirrored image. The shadows of the couple merge gracefully behind them, the reflections of the river illuminating their expressions under the cool light of the water.",
+      "color_palette": "The scene is predominantly dark with a cool, silver and blue hue, accentuated by the warm golden undertones of the couple’s skin and the silver reflections of the water.",
+      "time_of_day": "Late winter evening, with the setting sun casting a warm golden hue over the scene.",
+      "style_modifiers": [
+        "high-quality",
+        "photorealistic",
+        "romantic",
+        "deeply in love",
+        "natural emotions",
+        "cinematic lighting",
+        "beautiful backgrounds",
+        "professional photography aesthetics"
+      ],
+      "location_name": "Underground river cave",
+      "interaction": ""
+    },
+    "positive_prompt": "candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair; both fully clothed in elegant modest conservative attire, A mid-20s South Asian woman and a late-20s South Asian man standing on a snow-covered hillside in an underground river cave, their shadows stretching long behind them under the cool light of the reflective river., in Underground river cave, Cool reflective water light, Mysterious, exploratory, sacred., The couple is positioned at a worm's-eye view, their reflections in the water creating a mirrored image. The shadows of the couple merge gracefully behind them, the reflections of the river illuminating their expressions under the cool light of the water., The scene is predominantly dark with a cool, silver and blue hue, accentuated by the warm golden undertones of the couple’s skin and the silver reflections of the water., Late winter evening, with the setting sun casting a warm golden hue over the scene., high-quality, photorealistic, romantic, deeply in love, natural emotions, cinematic lighting, beautiful backgrounds, professional photography aesthetics, shot on DSLR, 85mm lens, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear",
+    "seed": 3193197858,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "a13d72e23417a225833e6f2129891a95a56e670e043be2f1e793fed8df868c38",
+    "image_path": "out/20260826T194401Z.jpg",
+    "caption": "Can you feel the magic in the air? 🌅 This moment under the cool, reflective waters of an underground river cave is pure romance. Something magical happens when two hearts beat in sync. #UndergroundRiverCave #DeeplyInLove #PhotorealisticArtistry #RomanticPhotography #ProfessionalAesthetics #MysticalReflections #WinterEveningUnderground #CinematicLighting #NaturalEmotions #BeautifulBackgrounds #CoolReflectiveLighting #HighQualityPhotography #LateWinterEvening #ReflectionsAndShadows #FeelTheMystery #UnderTheWaterReflections #SnowCoveredHillside #CaveExploration #AncientSacredSpace #WinterRomance #FeelTheEmotions #WarmGoldenSkin #SilverReflections #UndergroundAdventures #PhotographyJourney #UndergroundLove #UndergroundRomance #UndergroundReflections #UndergroundExploration #UndergroundMagic #UndergroundMysteries #UndergroundReflectionsUnderwater #UndergroundReflectionsUnderground #UndergroundLoveStory #UndergroundReflectionsUnderwaterReflections #UndergroundLoveMagic #UndergroundLoveUnderwater #UndergroundLoveReflections #UndergroundLoveMagicUnderwater #UndergroundLoveUnderwaterReflections #UndergroundLoveReflectionsUnderwaterReflections #UndergroundLoveReflectionsUnderwaterReflectionsUnderwater\n\n#UndergroundRiverCave #DeeplyInLove #RomanticPhotography #ProfessionalAesthetics #MysticalReflections #WinterEvening #CinematicLighting #NaturalEmotions #BeautifulBackgrounds #CoolReflectiveLighting #HighQualityPhotography #LateWinterEvening #ReflectionsAndShadows #FeelTheMystery #UnderwaterReflections #SnowCoveredHillside #CaveExploration #AncientSacredSpace",
+    "alt_text": "A mid-20s South Asian woman and a late-20s South Asian man stand in an underground river cave with their reflections in the water creating a mirrored image. The cool reflective water light illuminates their expressions under the golden undertones of their skin and silver reflections of the water.",
+    "hashtags": [
+      "#UndergroundRiverCave",
+      "#DeeplyInLove",
+      "#RomanticPhotography",
+      "#ProfessionalAesthetics",
+      "#MysticalReflections",
+      "#WinterEvening",
+      "#CinematicLighting",
+      "#NaturalEmotions",
+      "#BeautifulBackgrounds",
+      "#CoolReflectiveLighting",
+      "#HighQualityPhotography",
+      "#LateWinterEvening",
+      "#ReflectionsAndShadows",
+      "#FeelTheMystery",
+      "#UnderwaterReflections",
+      "#SnowCoveredHillside",
+      "#CaveExploration",
+      "#AncientSacredSpace"
+    ],
+    "backend": "graph",
+    "post_id": "18333091498279258",
+    "post_url": "https://www.instagram.com/reel/DchAeWJgMYF/",
+    "status": "posted"
   }
 ]
