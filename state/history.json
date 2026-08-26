@@ -1646,5 +1646,53 @@
     "post_id": "18368868598211775",
     "post_url": "https://www.instagram.com/reel/DchJEX5geOz/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260826T224250Z",
+    "timestamp": "2026-08-26T22:42:50.926224+00:00",
+    "brief": {
+      "subject": "high-quality, photorealistic romantic images of couples deeply in love, with crystal-clear, expressive faces, natural emotions, realistic skin and details, cinematic lighting, beautiful backgrounds, and professional photography aesthetics. (variation 188)",
+      "setting": "Misty forest morning",
+      "lighting": "Soft diffused dawn light",
+      "mood": "serene",
+      "composition": "worm's-eye, wide establishing shot",
+      "color_palette": "muted neutral tones",
+      "time_of_day": "morning",
+      "style_modifiers": [
+        "35mm",
+        "photographic"
+      ],
+      "location_name": "Misty forest morning",
+      "interaction": ""
+    },
+    "positive_prompt": "candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair; both fully clothed in elegant modest conservative attire, high-quality, photorealistic romantic images of couples deeply in love, with crystal-clear, expressive faces, natural emotions, realistic skin and details, cinematic lighting, beautiful backgrounds, and professional photography aesthetics. (variation 188), in Misty forest morning, Soft diffused dawn light, serene, worm's-eye, wide establishing shot, muted neutral tones, morning, 35mm, photographic, shot on DSLR, 85mm lens, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear",
+    "seed": 1239025188,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "8ea12b9e491b5d12d20278189f2d2d7f9222f9fd79ff67cee1e4cc4a07124165",
+    "image_path": "out/20260826T224250Z.jpg",
+    "caption": "Witnessing the quiet serenity of dawn in the misty forest. A tender moment captured in light and shadow, where every expression tells a story. #photographic #35mm\n\n#photographic #instafollow #mutedneon #instadaily #instafilter #instaforever #instagood #instarealestate #instacurated #instawarm #instaamour #instaforeverlove #autogram #slowdesign",
+    "alt_text": "Photorealistic romantic image of two deeply in love couples in a misty forest, captured during a soft diffused dawn light in a worm's-eye wide establishing shot, featuring natural emotions and cinematic aesthetics.",
+    "hashtags": [
+      "#photographic",
+      "#instafollow",
+      "#mutedneon",
+      "#instadaily",
+      "#instafilter",
+      "#instaforever",
+      "#instagood",
+      "#instarealestate",
+      "#instacurated",
+      "#instawarm",
+      "#instaamour",
+      "#instaforeverlove",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "18089091884447451",
+    "post_url": "https://www.instagram.com/reel/DchWF38lFrr/",
+    "status": "posted"
   }
 ]
