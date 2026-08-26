@@ -1166,5 +1166,61 @@
     "post_id": "18116204293738948",
     "post_url": "https://www.instagram.com/p/Dcf8YI9lj3m/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260826T101923Z",
+    "timestamp": "2026-08-26T10:19:23.805285+00:00",
+    "brief": {
+      "subject": "Mid-20s South Asian woman and late-20s South Asian man standing under blooming cherry trees at sunset in a picturesque autumnal garden",
+      "setting": "Spring cherry blossom festival",
+      "lighting": "Soft spring daylight with petal translucence",
+      "mood": "Celebratory, romantic, transient, autumnal",
+      "composition": "Over-the-shoulder perspective, medium shot with dutch angle, partial background focus, medium depth of field",
+      "color_palette": "Soft autumn tones with pink cherry blossoms, golden hues from lanterns, warm golden skin tones",
+      "time_of_day": "Autumn sunset, magical and ethereal",
+      "style_modifiers": [
+        "high-quality",
+        "photorealistic",
+        "romantic",
+        "aspirational",
+        "professional",
+        "cinematic"
+      ],
+      "location_name": "Spring cherry blossom festival",
+      "interaction": "hand-holding walking together"
+    },
+    "positive_prompt": "candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair, hand-holding walking together, Mid-20s South Asian woman and late-20s South Asian man standing under blooming cherry trees at sunset in a picturesque autumnal garden, in Spring cherry blossom festival, Soft spring daylight with petal translucence, Celebratory, romantic, transient, autumnal, Over-the-shoulder perspective, medium shot with dutch angle, partial background focus, medium depth of field, Soft autumn tones with pink cherry blossoms, golden hues from lanterns, warm golden skin tones, Autumn sunset, magical and ethereal, high-quality, photorealistic, romantic, aspirational, professional, cinematic, shot on DSLR, 85mm lens, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly",
+    "seed": 1959622969,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "b0f95d81d045bfee76db88dec092697b4ec33f20e5627b2a81a7e2b705155033",
+    "image_path": "out/20260826T101923Z.jpg",
+    "caption": "Just took a 🌹step into autumn's magical twilight. Hand-holding under cherry blossoms, the colors whisper of summer's goodbye. 🌅 #highquality #photorealistic #cinematic #aspirational #professional #romantic #springcherryblossomfestival #celebratory #transient #warmgolden #softautumn #goldenhues #pinkcherryblossoms #naturallight #magic #elegance #vibes #authenticemotion #realmoments #romanticwalks #photographymoment\n\n#highquality #photorealistic #cinematic #aspirational #professional #romantic #springcherryblossomfestival #celebratory #transient #warmgolden #softautumn #goldenhues #pinkcherryblossoms #naturallight #magic #elegance #vibes #authenticemotion",
+    "alt_text": "A mid-20s South Asian woman and late-20s South Asian man standing in an autumnal garden, hand in hand, under blooming cherry trees at sunset.",
+    "hashtags": [
+      "#highquality",
+      "#photorealistic",
+      "#cinematic",
+      "#aspirational",
+      "#professional",
+      "#romantic",
+      "#springcherryblossomfestival",
+      "#celebratory",
+      "#transient",
+      "#warmgolden",
+      "#softautumn",
+      "#goldenhues",
+      "#pinkcherryblossoms",
+      "#naturallight",
+      "#magic",
+      "#elegance",
+      "#vibes",
+      "#authenticemotion"
+    ],
+    "backend": "graph",
+    "post_id": "18134703373624416",
+    "post_url": "https://www.instagram.com/p/Dcf_1nkn3fM/",
+    "status": "posted"
   }
 ]
