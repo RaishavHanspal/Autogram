@@ -443,4 +443,3 @@ def generate_ai_video(
         )
 
     raise AIVideoError(f"unsupported AI video provider: {provider}")
-    
