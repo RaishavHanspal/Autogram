@@ -131,7 +131,7 @@ def _pick_trend(rng: random.Random, trends: dict[str, Any], key: str) -> str:
 # framed from behind or facing the view so no front faces exist to be mangled.
 # (SD1.5 deforms faces that occupy only a small part of a 512px frame.)
 _SHOT_DISTANCES = [
-    "extreme close-up of their faces, sharp facial detail",
+    "extreme close-up of their faces, sharp facial detail",
     "close-up portrait of both faces",
     "medium shot from the waist up, faces clearly visible",
     "three-quarter shot from head to knees, faces clearly visible",
