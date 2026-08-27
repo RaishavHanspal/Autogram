@@ -1849,5 +1849,59 @@
     "post_id": "17985862502867407",
     "post_url": "https://www.instagram.com/reel/DcjbjWpgUj5/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260827T194147Z",
+    "timestamp": "2026-08-27T19:41:47.601795+00:00",
+    "brief": {
+      "subject": "A high-quality, photorealistic romantic image of a mid-20s South Asian woman and a late-20s South Asian man standing in a sunlit sea cave with dramatic rock formations, their shadows merging with the cave's natural formations, their reflections creating kaleidoscopic patterns on the cave walls.",
+      "setting": "Beach cave exploration",
+      "lighting": "Natural backlighting from cave opening",
+      "mood": "Magical, mysterious, and awe-inspiring with a sense of passionate and romantic connection.",
+      "composition": "Overhead flat-lay shot with a camera angle following the couple's reflections on the cave walls, their shadows merging with the formations, with the sun setting in the background, creating a kaleidoscopic effect.",
+      "color_palette": "Vibrant warm golds and oranges blending with cool blues and greys, with highlights of soft pink from the setting sun.",
+      "time_of_day": "Cool blue hour twilight with setting sun in the background.",
+      "style_modifiers": [
+        "Cinematic Lighting",
+        "Magical Atmosphere",
+        "Passionate Romance"
+      ],
+      "location_name": "Beach cave exploration",
+      "interaction": "",
+      "framing": "over-the-shoulder shot focusing on one clear face, side profile view, couple low in the lower third with negative space above, caught mid-laugh, natural genuine expression"
+    },
+    "positive_prompt": "over-the-shoulder shot focusing on one clear face, side profile view, couple low in the lower third with negative space above, caught mid-laugh, natural genuine expression, candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair; both fully clothed in elegant modest conservative attire, A high-quality, photorealistic romantic image of a mid-20s South Asian woman and a late-20s South Asian man standing in a sunlit sea cave with dramatic rock formations, their shadows merging with the cave's natural formations, their reflections creating kaleidoscopic patterns on the cave walls., in Beach cave exploration, Natural backlighting from cave opening, Magical, mysterious, and awe-inspiring with a sense of passionate and romantic connection., Vibrant warm golds and oranges blending with cool blues and greys, with highlights of soft pink from the setting sun., Cool blue hour twilight with setting sun in the background., Cinematic Lighting, Magical Atmosphere, Passionate Romance, shot on DSLR, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, deformed face, distorted face, asymmetric face, extra faces, extra heads, fused faces, malformed face, blurry face, disfigured eyes, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear",
+    "seed": 1364661302,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "dfcd261cff2ca442129020b74b0c7175fae035139138ef9a62a54e2e5286fca9",
+    "image_path": "out/20260827T194147Z.jpg",
+    "caption": "This moment right here. Magical, mysterious, and awe-inspiring with a sense of passionate and romantic connection. and real.\n\nIn Beach cave exploration, under Natural backlighting from cave opening. Just us, just this. Overhead flat-lay shot with a camera angle following the couple's reflections on the cave walls, their shadows merging with the formations, with the sun setting in the background, creating a kaleidoscopic effect..\n\n#high #quality #photorealistic #romantic #image #of #mid #20s #South #Asian #woman #and #late #man #standing #in #sunlit #sea",
+    "alt_text": "A high-quality, photorealistic romantic image of a mid-20s South Asian woman and a late-20s South Asian man standing in a sunlit sea cave with dramatic rock formations, their shadows merging with the cave's natural formations, their reflections creating kaleidoscopic patterns on the cave walls., Beach cave exploration, Natural backlighting from cave opening.",
+    "hashtags": [
+      "#high",
+      "#quality",
+      "#photorealistic",
+      "#romantic",
+      "#image",
+      "#of",
+      "#mid",
+      "#20s",
+      "#South",
+      "#Asian",
+      "#woman",
+      "#and",
+      "#late",
+      "#man",
+      "#standing",
+      "#in",
+      "#sunlit",
+      "#sea"
+    ],
+    "backend": "graph",
+    "post_id": "18018611195872170",
+    "post_url": "https://www.instagram.com/p/Dcjnv02FF8t/",
+    "status": "posted"
   }
 ]
