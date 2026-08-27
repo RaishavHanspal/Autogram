@@ -1,13 +1,19 @@
 name: autogram-post
 
+# cron is UTC — GitHub Actions has no timezone support. IST = UTC+5:30, so the
+# IST equivalent of each slot is noted inline. GitHub also DELAYS and sometimes
+# DROPS the `schedule` event under load (observed gaps of 51-213 min on an
+# hourly cron), so treat these as approximate, never as exact minutes.
 on:
   schedule:
-    - cron: "37 3 * * *"
-    - cron: "47 6 * * *"
-    - cron: "7 10 * * *"
-    - cron: "47 12 * * *"
-    - cron: "7 15 * * *"
-    - cron: "37 15 * * *"
+    - cron: "37 3 * * *"    # 09:07 IST
+    - cron: "47 6 * * *"    # 12:17 IST
+    - cron: "7 10 * * *"    # 15:37 IST
+    - cron: "47 12 * * *"   # 18:17 IST
+    - cron: "7 15 * * *"    # 20:37 IST
+    - cron: "37 15 * * *"   # 21:07 IST -- only 30 min after the previous slot
+                            # while timeout-minutes is 60; the concurrency
+                            # group below serialises it instead of losing it.
 
   workflow_dispatch:
     inputs:
@@ -16,9 +22,35 @@ on:
         required: false
         default: "manual"
         type: string
+      dry_run:
+        description: "Generate + gate, do not publish"
+        required: false
+        default: false
+        type: boolean
+      description:
+        description: "Override the content theme"
+        required: false
+        default: ""
+        type: string
+      seed:
+        description: "Reproducible seed"
+        required: false
+        default: ""
+        type: string
 
+# Declaring `permissions:` at all drops every default scope, so `issues: write`
+# must be listed explicitly — the failure-issue step below shells out to
+# `gh issue create/comment` and 403s without it.
 permissions:
   contents: write
+  issues: write
+
+# Stops two slots (or schedule-vs-dispatch) from posting simultaneously and
+# from racing each other on state/history.json. cancel-in-progress: false means
+# the later slot queues behind the running one rather than being cancelled.
+concurrency:
+  group: autogram-post
+  cancel-in-progress: false
 
 jobs:
   post:
@@ -36,17 +68,22 @@ jobs:
       IG_PROXY: ${{ secrets.IG_PROXY }}
       IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
       IG_USER_ID: ${{ secrets.IG_USER_ID }}
+      # Required by autogram.image_host to upload media to GitHub Releases.
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      GITHUB_REPOSITORY: ${{ github.repository }}      
+      GITHUB_REPOSITORY: ${{ github.repository }}
       # Optional: free-tier AI image-to-video (PixVerse). If unset, the run
       # falls back to the FFmpeg Ken-Burns reel automatically.
       PIXVERSE_API_KEY: ${{ secrets.PIXVERSE_API_KEY }}
       PIXVERSE_MODEL: ${{ secrets.PIXVERSE_MODEL }}
       HF_TOKEN: ${{ secrets.HF_TOKEN }}
-      HF_VIDEO_MODEL: ${{ secrets.HF_VIDEO_MODE }}
+      HF_VIDEO_MODEL: ${{ secrets.HF_VIDEO_MODEL }}
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Full history: the "Commit history back" step rebases onto
+          # origin/<branch>, which a default depth-1 shallow clone cannot do.
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -100,16 +137,33 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements-cpu.txt
           pip install -e .
-  
+
       - name: Run autogram
         id: run
+        env:
+          # Dispatch inputs arrive via env, never string-interpolated into the
+          # shell (the old `eval ... ${{ inputs.description }}` was injectable).
+          IN_DRY_RUN: ${{ inputs.dry_run }}
+          IN_DESCRIPTION: ${{ inputs.description }}
+          IN_SEED: ${{ inputs.seed }}
+          IN_SLOT: ${{ inputs.slot }}
+          SCHED_CRON: ${{ github.event.schedule }}
         run: |
-          set -o pipefail
-          ARGS=""
-          if [ "${{ inputs.dry_run }}" = "true" ]; then ARGS="$ARGS --dry-run"; fi
-          if [ -n "${{ inputs.description }}" ]; then ARGS="$ARGS --description \"${{ inputs.description }}\""; fi
-          if [ -n "${{ inputs.seed }}" ]; then ARGS="$ARGS --seed ${{ inputs.seed }}"; fi
-          eval python -m autogram.run $ARGS 2>&1 | tee run.log
+          # Deliberately NOT `set -e`: the `[ ... ] && ARGS+=(...)` lines below
+          # return 1 when the input is empty, which would abort the step.
+          set -uo pipefail
+          echo "slot=${IN_SLOT:-} cron=${SCHED_CRON:-none}"
+          ARGS=()
+          [ "${IN_DRY_RUN:-false}" = "true" ] && ARGS+=(--dry-run)
+          [ -n "${IN_DESCRIPTION:-}" ] && ARGS+=(--description "$IN_DESCRIPTION")
+          [ -n "${IN_SEED:-}" ] && ARGS+=(--seed "$IN_SEED")
+          python -m autogram.run "${ARGS[@]}" 2>&1 | tee run.log
+          code=${PIPESTATUS[0]}
+          # Exit codes: 0 ok, 1 config, 2 brief/LLM, 3 image, 4 postproc,
+          # 5 caption, 6 safety gate, 7 publish, 8 duplicate.
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          echo "autogram exit code: $code" >> "$GITHUB_STEP_SUMMARY"
+          exit "$code"
 
       - name: Upload artifacts (image + caption)
         if: always()
@@ -120,6 +174,7 @@ jobs:
             out/*.jpg
             out/*.txt
             out/*.json
+            run.log
           if-no-files-found: ignore
           retention-days: 14
 
@@ -134,18 +189,36 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -f state/history.json
           git commit -m "chore(autogram): record run [skip ci]"
-          git push
+          # A 10-55 minute run means origin/<branch> has very likely moved on,
+          # and a bare `git push` is then rejected non-fast-forward — which was
+          # marking successful posts as failed runs and losing history records.
+          for attempt in 1 2 3 4 5; do
+            if git push origin "HEAD:${GITHUB_REF_NAME}"; then
+              echo "pushed on attempt $attempt"; exit 0
+            fi
+            echo "push rejected, rebasing (attempt $attempt)"
+            git fetch origin "${GITHUB_REF_NAME}"
+            git rebase "origin/${GITHUB_REF_NAME}" || { git rebase --abort; exit 1; }
+            sleep $((attempt * 5))
+          done
+          echo "could not push history after 5 attempts"; exit 1
 
       - name: Open/append failure issue
         if: failure()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EXIT_CODE: ${{ steps.run.outputs.exit_code }}
+          SCHED_CRON: ${{ github.event.schedule }}
         run: |
           set -euo pipefail
           TAIL=$(tail -n 60 run.log 2>/dev/null || echo "no log captured")
           TITLE="autogram run failed"
-          BODY=$(printf '### Run failed\nRun: %s\n\n```\n%s\n```\n' "${{ github.run_id }}" "$TAIL")
-          EXISTING=$(gh issue list --state open --search "$TITLE in:title" --json number --jq '.[0].number' || echo "")
+          BODY=$(printf '### Run failed\nRun: %s\nExit code: %s\nSlot cron: %s\n\n```\n%s\n```\n' \
+                 "${GITHUB_RUN_ID}" "${EXIT_CODE:-unknown}" "${SCHED_CRON:-dispatch}" "$TAIL")
+          # `.[0].number` emits the literal string "null" on no match, which
+          # then becomes `gh issue comment null`. `// empty` yields "" instead.
+          EXISTING=$(gh issue list --state open --search "$TITLE in:title" \
+                       --json number --jq '.[0].number // empty' || echo "")
           if [ -n "$EXISTING" ]; then
             gh issue comment "$EXISTING" --body "$BODY"
           else
