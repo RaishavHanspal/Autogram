@@ -114,15 +114,31 @@ jobs:
       - name: Install and warm Ollama
         run: |
           set -euo pipefail
+
           curl -fsSL https://ollama.com/install.sh | sh
+
           mkdir -p "$OLLAMA_MODELS"
-          # autogram manages the daemon itself, but warm it here so the model
-          # pull is cached in this step's logs and the daemon is proven healthy.
+
+          # Start Ollama explicitly and wait until its API is ready.
           OLLAMA_HOST=127.0.0.1:11434 nohup ollama serve >/tmp/ollama.log 2>&1 &
+
           for _ in $(seq 1 30); do
-            if curl -sf http://127.0.0.1:11434/api/tags >/dev/null && break
+            if curl -sf http://127.0.0.1:11434/api/tags >/dev/null; then
+              echo "Ollama API is ready."
+              break
+            fi
+
+            echo "Waiting for Ollama..."
             sleep 2
           done
+
+          # Fail clearly if Ollama never became available.
+          if ! curl -sf http://127.0.0.1:11434/api/tags >/dev/null; then
+            echo "Ollama failed to start."
+            cat /tmp/ollama.log || true
+            exit 1
+          fi
+
           ollama pull qwen2.5:3b-instruct
 
       - name: Install Python deps (CPU torch)
