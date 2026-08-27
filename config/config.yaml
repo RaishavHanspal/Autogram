@@ -90,9 +90,9 @@ gates:
 # (preinstalled on GitHub ubuntu runners); if absent it falls back to a photo.
 reel:
   enabled: true
-  num_scenes: 3              # distinct scenes generated + stitched (each ~a few min on CPU)
-  seconds_per_image: 4.0     # on-screen time per scene
-  crossfade_s: 0.7           # crossfade between scenes
+  num_scenes: 5              # distinct scenes generated + stitched (each ~a few min on CPU)
+  seconds_per_image: 3.0     # on-screen time per scene
+  crossfade_s: 0.35           # crossfade between scenes
   fps: 30
   width: 1080
   height: 1920
