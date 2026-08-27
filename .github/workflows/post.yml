@@ -42,7 +42,7 @@ jobs:
       PIXVERSE_API_KEY: ${{ secrets.PIXVERSE_API_KEY }}
       PIXVERSE_MODEL: ${{ secrets.PIXVERSE_MODEL }}
       HF_TOKEN: ${{ secrets.HF_TOKEN }}
-      HF_VIDEO_MODEL: ${{ secrets.HF_VIDEO_MODE
+      HF_VIDEO_MODEL: ${{ secrets.HF_VIDEO_MODE }}
 
     steps:
       - uses: actions/checkout@v4
