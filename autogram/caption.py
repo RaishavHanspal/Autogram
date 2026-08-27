@@ -299,7 +299,7 @@ def validate_tier_distribution(
 # Caption post-processing (rules enforced in code, not only the prompt)
 # --------------------------------------------------------------------------- #
 _EMOJI_RE = re.compile(
-    "[" "\U0001f300-\U0001faff" "\U00002600-\U000027bf" "\U0001f1e6-\U0001f1ff" "]",
+    "[\U0001f300-\U0001faff\U00002600-\U000027bf\U0001f1e6-\U0001f1ff]",
     flags=re.UNICODE,
 )
 _MENTION_RE = re.compile(r"(?<!\w)@\w+")
@@ -334,7 +334,7 @@ def compose_final_caption(caption: str, hashtags: list[str], cfg: Config) -> str
         body = f"{caption}\n\n{' '.join(hashtags)}"
     if len(body) > cfg.caption.max_length:
         raise ValueError(
-            f"caption+hashtags is {len(body)} chars, exceeds limit " f"{cfg.caption.max_length}"
+            f"caption+hashtags is {len(body)} chars, exceeds limit {cfg.caption.max_length}"
         )
     return body
 
