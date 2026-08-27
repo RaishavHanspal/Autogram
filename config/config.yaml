@@ -52,7 +52,7 @@ image:
   # (kept identical every run); the brief supplies the rotating scene/place.
   # No fixed focal length here — it biased every frame toward a portrait.
   positive_template: "{framing}, candid photograph of {characters}, {interaction}, {subject}, in {setting}, {lighting}, {mood}, {color_palette}, {time_of_day}, {style_modifiers}, shot on DSLR, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k"
-  negative_template: "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear"
+  negative_template: "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, deformed face, distorted face, asymmetric face, extra faces, extra heads, fused faces, malformed face, blurry face, disfigured eyes, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear"
 
 postproc:
   aspect: "4:5"                # one of: "1:1", "4:5", "1.91:1"
