@@ -23,8 +23,8 @@ true human/object motion like an AI image-to-video model.
 
 from __future__ import annotations
 
-import math
 import random
+import re
 import shutil
 import subprocess
 from collections.abc import Sequence
@@ -104,6 +104,7 @@ _EFFECTS = [
 # Utility
 # ---------------------------------------------------------------------------
 
+
 def is_video(path: str | Path) -> bool:
     """True if the path looks like a video file."""
     return Path(path).suffix.lower() in VIDEO_SUFFIXES
@@ -116,7 +117,7 @@ def ffmpeg_available() -> bool:
 def _normalize_images(
     image_paths: str | Path | Sequence[str | Path],
 ) -> list[Path]:
-    if isinstance(image_paths, (str, Path)):
+    if isinstance(image_paths, str | Path):
         items: Sequence[str | Path] = [image_paths]
     else:
         items = image_paths
@@ -138,10 +139,7 @@ def _pick_audio(
     if not d.is_dir():
         return None
 
-    tracks = sorted(
-        p for p in d.iterdir()
-        if p.is_file() and p.suffix.lower() in _AUDIO_SUFFIXES
-    )
+    tracks = sorted(p for p in d.iterdir() if p.is_file() and p.suffix.lower() in _AUDIO_SUFFIXES)
 
     if not tracks:
         return None
@@ -152,6 +150,7 @@ def _pick_audio(
 # ---------------------------------------------------------------------------
 # Random scene planning
 # ---------------------------------------------------------------------------
+
 
 def _random_scene_plan(
     n: int,
@@ -226,10 +225,7 @@ def _random_scene_plan(
         # ---------------------------------------------------------------
         # Transition
         # ---------------------------------------------------------------
-        transitions = [
-            t for t in _TRANSITIONS
-            if t != previous_transition
-        ]
+        transitions = [t for t in _TRANSITIONS if t != previous_transition]
 
         transition = rng.choice(transitions)
 
@@ -261,6 +257,7 @@ def _random_scene_plan(
 # Camera motion
 # ---------------------------------------------------------------------------
 
+
 def _motion_expression(
     motion: str,
     focal_x: float,
@@ -278,11 +275,7 @@ def _motion_expression(
     cx = focal_x
     cy = focal_y
 
-    if motion == "push_in":
-        x = f"{cx}"
-        y = f"{cy}"
-
-    elif motion == "pull_out":
+    if motion == "push_in" or motion == "pull_out":
         x = f"{cx}"
         y = f"{cy}"
 
@@ -330,11 +323,7 @@ def _motion_expression(
         x = f"{cx} + 0.025*sin(2*PI*p)"
         y = f"{cy} + 0.035*cos(2*PI*p)"
 
-    elif motion == "dramatic_push":
-        x = f"{cx}"
-        y = f"{cy}"
-
-    elif motion == "dramatic_pull":
+    elif motion == "dramatic_push" or motion == "dramatic_pull":
         x = f"{cx}"
         y = f"{cy}"
 
@@ -349,6 +338,7 @@ def _motion_expression(
 # Visual effects
 # ---------------------------------------------------------------------------
 
+
 def _effect_filter(effect: str) -> str:
     """Return a lightweight FFmpeg visual treatment."""
 
@@ -356,55 +346,24 @@ def _effect_filter(effect: str) -> str:
         return ""
 
     if effect == "warm":
-        return (
-            "eq="
-            "brightness=0.025:"
-            "contrast=1.04:"
-            "saturation=1.10"
-        )
+        return "eq=" "brightness=0.025:" "contrast=1.04:" "saturation=1.10"
 
     if effect == "cinematic":
-        return (
-            "eq="
-            "brightness=-0.015:"
-            "contrast=1.10:"
-            "saturation=0.94"
-        )
+        return "eq=" "brightness=-0.015:" "contrast=1.10:" "saturation=0.94"
 
     if effect == "dreamy":
-        return (
-            "eq="
-            "brightness=0.025:"
-            "contrast=0.96:"
-            "saturation=1.05,"
-            "gblur=sigma=0.35"
-        )
+        return "eq=" "brightness=0.025:" "contrast=0.96:" "saturation=1.05," "gblur=sigma=0.35"
 
     if effect == "soft":
         return (
-            "eq="
-            "brightness=0.015:"
-            "contrast=0.98:"
-            "saturation=1.02,"
-            "unsharp=5:5:0.35:5:5:0"
+            "eq=" "brightness=0.015:" "contrast=0.98:" "saturation=1.02," "unsharp=5:5:0.35:5:5:0"
         )
 
     if effect == "contrast":
-        return (
-            "eq="
-            "brightness=-0.01:"
-            "contrast=1.15:"
-            "saturation=1.04"
-        )
+        return "eq=" "brightness=-0.01:" "contrast=1.15:" "saturation=1.04"
 
     if effect == "vignette":
-        return (
-            "eq="
-            "brightness=0.01:"
-            "contrast=1.05:"
-            "saturation=1.03,"
-            "vignette=PI/5"
-        )
+        return "eq=" "brightness=0.01:" "contrast=1.05:" "saturation=1.03," "vignette=PI/5"
 
     return ""
 
@@ -412,6 +371,7 @@ def _effect_filter(effect: str) -> str:
 # ---------------------------------------------------------------------------
 # Scene filter
 # ---------------------------------------------------------------------------
+
 
 def _scene_filter(
     idx: int,
@@ -431,7 +391,6 @@ def _scene_filter(
     up_w = width * 2
     up_h = height * 2
 
-    duration = float(scene["duration"])
     zoom = float(scene["zoom"])
 
     focal_x = float(scene["focal_x"])
@@ -451,55 +410,38 @@ def _scene_filter(
         focal_y,
     )
 
+    # _motion_expression returns expressions in terms of 'p' (progress 0->1),
+    # but zoompan has no 'p' variable â substitute the concrete progress in
+    # terms of its frame counter 'on'. \bp\b avoids touching PI/pow/etc.
+    x_expr = re.sub(r"\bp\b", progress, x_expr)
+    y_expr = re.sub(r"\bp\b", progress, y_expr)
+
     # Convert normalized coordinates to actual coordinates.
     #
     # zoompan's iw/ih refer to the source dimensions after scaling.
-    x_expr = (
-        f"(iw/2-(iw/zoom/2))"
-        f"+(({x_expr})-0.5)*iw/zoom"
-    )
+    x_expr = f"(iw/2-(iw/zoom/2))" f"+(({x_expr})-0.5)*iw/zoom"
 
-    y_expr = (
-        f"(ih/2-(ih/zoom/2))"
-        f"+(({y_expr})-0.5)*ih/zoom"
-    )
+    y_expr = f"(ih/2-(ih/zoom/2))" f"+(({y_expr})-0.5)*ih/zoom"
 
     # Different motion styles use different zoom curves.
     if motion == "push_in":
-        zoom_expr = (
-            f"1+({zoom - 1:.5f})*"
-            f"({progress})"
-        )
+        zoom_expr = f"1+({zoom - 1:.5f})*" f"({progress})"
 
     elif motion == "pull_out":
-        zoom_expr = (
-            f"{zoom:.5f}-({zoom - 1:.5f})*"
-            f"({progress})"
-        )
+        zoom_expr = f"{zoom:.5f}-({zoom - 1:.5f})*" f"({progress})"
 
     elif motion == "dramatic_push":
-        zoom_expr = (
-            f"1+({zoom - 1:.5f})*"
-            f"pow({progress},0.72)"
-        )
+        zoom_expr = f"1+({zoom - 1:.5f})*" f"pow({progress},0.72)"
 
     elif motion == "dramatic_pull":
-        zoom_expr = (
-            f"{zoom:.5f}-({zoom - 1:.5f})*"
-            f"pow({progress},0.72)"
-        )
+        zoom_expr = f"{zoom:.5f}-({zoom - 1:.5f})*" f"pow({progress},0.72)"
 
     else:
         # Subtle breathing motion.
-        zoom_expr = (
-            f"1+({zoom - 1:.5f})*"
-            f"({progress})"
-            f"+0.006*sin(2*PI*{progress})"
-        )
+        zoom_expr = f"1+({zoom - 1:.5f})*" f"({progress})" f"+0.006*sin(2*PI*{progress})"
 
     filters = [
-        f"scale={up_w}:{up_h}:"
-        "force_original_aspect_ratio=increase",
+        f"scale={up_w}:{up_h}:" "force_original_aspect_ratio=increase",
         f"crop={up_w}:{up_h}",
         (
             "zoompan="
@@ -512,13 +454,10 @@ def _scene_filter(
         ),
     ]
 
-    # Very subtle rotation.
-    if abs(rotation) > 0.0001:
-        filters.append(
-            f"rotate="
-            f"{rotation}*sin(2*PI*{progress}):"
-            "fillcolor=black@0"
-        )
+    # NOTE: no rotate filter here. zoompan already supplies the motion, and a
+    # rotate after it (a) can't use 'on' outside zoompan and (b) leaves black
+    # corners on the WxH frame. Left out to keep every scene clean.
+    _ = rotation
 
     effect = _effect_filter(effect)
     if effect:
@@ -533,16 +472,13 @@ def _scene_filter(
         ]
     )
 
-    return (
-        f"[{idx}:v]"
-        + ",".join(filters)
-        + f"[v{idx}]"
-    )
+    return f"[{idx}:v]" + ",".join(filters) + f"[v{idx}]"
 
 
 # ---------------------------------------------------------------------------
 # Filter graph
 # ---------------------------------------------------------------------------
+
 
 def _build_filtergraph(
     scenes: list[dict],
@@ -594,11 +530,7 @@ def _build_filtergraph(
 
         offset = accumulated - crossfade
 
-        label = (
-            "vout"
-            if i == len(scenes) - 1
-            else f"x{i}"
-        )
+        label = "vout" if i == len(scenes) - 1 else f"x{i}"
 
         parts.append(
             f"[{previous}][v{i}]"
@@ -619,6 +551,7 @@ def _build_filtergraph(
 # Generated audio
 # ---------------------------------------------------------------------------
 
+
 def _build_generated_audio(
     duration: float,
     rng: random.Random,
@@ -638,17 +571,17 @@ def _build_generated_audio(
     """
 
     roots = [
-        196.00,   # G3
-        207.65,   # Ab3
-        220.00,   # A3
-        233.08,   # Bb3
-        246.94,   # B3
-        261.63,   # C4
-        277.18,   # Db4
-        293.66,   # D4
-        311.13,   # Eb4
-        329.63,   # E4
-        349.23,   # F4
+        196.00,  # G3
+        207.65,  # Ab3
+        220.00,  # A3
+        233.08,  # Bb3
+        246.94,  # B3
+        261.63,  # C4
+        277.18,  # Db4
+        293.66,  # D4
+        311.13,  # Eb4
+        329.63,  # E4
+        349.23,  # F4
     ]
 
     root = rng.choice(roots)
@@ -663,9 +596,7 @@ def _build_generated_audio(
 
     a, b, c = rng.choice(interval_sets)
 
-    bpm = rng.choice(
-        [68, 72, 76, 80, 84, 88, 92]
-    )
+    bpm = rng.choice([68, 72, 76, 80, 84, 88, 92])
 
     pulse = bpm / 60.0
 
@@ -698,12 +629,7 @@ def _build_generated_audio(
         f"sin(2*PI*{low_freq:.2f}*t))"
     )
 
-    return (
-        "aevalsrc="
-        f"'{expression}'"
-        ":s=44100"
-        f":d={duration:.3f}"
-    )
+    return "aevalsrc=" f"'{expression}'" ":s=44100" f":d={duration:.3f}"
 
 
 def _build_audio_filter(
@@ -744,6 +670,7 @@ def _build_audio_filter(
 # Main renderer
 # ---------------------------------------------------------------------------
 
+
 def build_reel(
     image_paths: str | Path | Sequence[str | Path],
     cfg: Config,
@@ -771,29 +698,18 @@ def build_reel(
     """
 
     if not ffmpeg_available():
-        raise ReelError(
-            "ffmpeg not found on PATH; cannot build a Reel"
-        )
+        raise ReelError("ffmpeg not found on PATH; cannot build a Reel")
 
     imgs = _normalize_images(image_paths)
 
     if not imgs:
-        raise ReelError(
-            "no images supplied for the Reel"
-        )
+        raise ReelError("no images supplied for the Reel")
 
     # Validate images early.
-    missing = [
-        str(p)
-        for p in imgs
-        if not p.exists()
-    ]
+    missing = [str(p) for p in imgs if not p.exists()]
 
     if missing:
-        raise ReelError(
-            "image(s) not found: "
-            + ", ".join(missing)
-        )
+        raise ReelError("image(s) not found: " + ", ".join(missing))
 
     rc = cfg.reel
 
@@ -832,10 +748,7 @@ def build_reel(
     )
 
     # Calculate final duration after crossfades.
-    total = sum(
-        scene["duration"]
-        for scene in scenes
-    )
+    total = sum(scene["duration"] for scene in scenes)
 
     for i in range(1, len(scenes)):
         previous = scenes[i - 1]["duration"]
@@ -921,67 +834,47 @@ def build_reel(
     cmd += [
         "-filter_complex",
         filter_complex,
-
         "-map",
         f"[{video_label}]",
-
         "-map",
         f"{audio_idx}:a",
-
         "-t",
         f"{total:.3f}",
-
         # --------------------------------------------------------------
         # Video
         # --------------------------------------------------------------
-
         "-c:v",
         "libx264",
-
         # Veryfast is suitable for GitHub Actions CPU.
         "-preset",
         "veryfast",
-
         # Good Reel quality without huge files.
         "-crf",
         "20",
-
         "-pix_fmt",
         "yuv420p",
-
         "-r",
         str(rc.fps),
-
-        # Explicit dimensions in case config is changed.
-        "-vf",
-        f"scale={rc.width}:{rc.height}:"
-        "force_original_aspect_ratio=disable",
-
+        # NOTE: no -vf here â the complex filtergraph already outputs
+        # width x height. Adding -vf on a complex-filtered stream makes ffmpeg
+        # abort ("Simple and complex filtering cannot be used together").
         # --------------------------------------------------------------
         # Audio
         # --------------------------------------------------------------
-
         "-c:a",
         "aac",
-
         "-b:a",
         "128k",
-
         "-ar",
         "44100",
-
         "-ac",
         "2",
-
         # --------------------------------------------------------------
         # Instagram-friendly MP4
         # --------------------------------------------------------------
-
         "-movflags",
         "+faststart",
-
         "-shortest",
-
         str(out),
     ]
 
@@ -1036,20 +929,13 @@ def build_reel(
             else str(exc)
         )
 
-        raise ReelError(
-            "ffmpeg failed to assemble the Reel:\n"
-            + detail
-        ) from exc
+        raise ReelError("ffmpeg failed to assemble the Reel:\n" + detail) from exc
 
     if not out.exists():
-        raise ReelError(
-            f"ffmpeg completed but output was not created: {out}"
-        )
+        raise ReelError(f"ffmpeg completed but output was not created: {out}")
 
     if out.stat().st_size < 50_000:
-        raise ReelError(
-            f"generated Reel appears invalid or empty: {out}"
-        )
+        raise ReelError(f"generated Reel appears invalid or empty: {out}")
 
     log.info(
         "reel successfully created: %s (%.2f MB)",
@@ -1057,4 +943,121 @@ def build_reel(
         out.stat().st_size / (1024 * 1024),
     )
 
+    return out
+
+
+def _video_duration(path: Path) -> float:
+    """Best-effort clip duration via ffprobe; 0.0 if it can't be read."""
+    try:
+        res = subprocess.run(
+            [
+                "ffprobe",
+                "-v",
+                "error",
+                "-show_entries",
+                "format=duration",
+                "-of",
+                "default=noprint_wrappers=1:nokey=1",
+                str(path),
+            ],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        return float(res.stdout.strip())
+    except (subprocess.CalledProcessError, ValueError, OSError):
+        return 0.0
+
+
+def assemble_ai_clips(
+    clips: Sequence[str | Path],
+    cfg: Config,
+    out_path: str | Path,
+    seed: int = 0,
+) -> Path:
+    """Assemble AI-generated video clips (real motion) into a final Reel.
+
+    Kept deliberately separate from the still-image filtergraph: the clips
+    already contain motion, so each is only normalized to width x height and the
+    clips are hard-concatenated (robust to varying provider clip lengths), then
+    audio is muxed (a royalty-free track from reel.audio_dir, else a synthesized
+    ambient bed). H.264 + AAC + faststart, same as the FFmpeg reel.
+    """
+    if not ffmpeg_available():
+        raise ReelError("ffmpeg not found on PATH; cannot assemble AI clips")
+    vids = [Path(c) for c in clips if c]
+    if not vids:
+        raise ReelError("no AI clips supplied")
+
+    rc = cfg.reel
+    out = Path(out_path)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    rng = random.Random(seed)
+    audio = _pick_audio(rc.audio_dir, rng)
+
+    cmd: list[str] = ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error"]
+    for v in vids:
+        cmd += ["-i", str(v)]
+
+    # Real total duration so audio always covers the video (no -shortest cut).
+    total = sum(_video_duration(v) for v in vids)
+    if total <= 0:
+        total = len(vids) * float(cfg.reel.ai_video.duration_s)
+
+    audio_idx = len(vids)
+    if audio is not None:
+        cmd += ["-stream_loop", "-1", "-i", str(audio)]
+    else:
+        # Over-provision the bed; -shortest trims it to the concatenated video.
+        cmd += ["-f", "lavfi", "-i", _build_audio_filter(duration=total + 2.0, rng=rng)]
+
+    parts = [
+        f"[{i}:v]scale={rc.width}:{rc.height}:force_original_aspect_ratio=increase,"
+        f"crop={rc.width}:{rc.height},setsar=1,fps={rc.fps},format=yuv420p,"
+        f"setpts=PTS-STARTPTS[v{i}]"
+        for i in range(len(vids))
+    ]
+    concat_inputs = "".join(f"[v{i}]" for i in range(len(vids)))
+    parts.append(f"{concat_inputs}concat=n={len(vids)}:v=1:a=0[vout]")
+    filter_complex = ";".join(parts)
+
+    cmd += [
+        "-filter_complex",
+        filter_complex,
+        "-map",
+        "[vout]",
+        "-map",
+        f"{audio_idx}:a",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "veryfast",
+        "-crf",
+        "20",
+        "-pix_fmt",
+        "yuv420p",
+        "-r",
+        str(rc.fps),
+        "-c:a",
+        "aac",
+        "-b:a",
+        "128k",
+        "-ar",
+        "44100",
+        "-ac",
+        "2",
+        "-movflags",
+        "+faststart",
+        "-shortest",
+        str(out),
+    ]
+
+    log.info("assembling reel from %d AI clip(s): %s", len(vids), out)
+    try:
+        subprocess.run(cmd, check=True, capture_output=True)
+    except subprocess.CalledProcessError as exc:
+        detail = exc.stderr.decode("utf-8", "replace")[-2000:] if exc.stderr else str(exc)
+        raise ReelError("ffmpeg failed to assemble AI clips:\n" + detail) from exc
+    if not out.exists() or out.stat().st_size < 50_000:
+        raise ReelError(f"assembled AI reel appears invalid: {out}")
     return out
