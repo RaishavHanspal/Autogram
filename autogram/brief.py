@@ -126,15 +126,19 @@ def _pick_trend(rng: random.Random, trends: dict[str, Any], key: str) -> str:
 # Framing variation — curated, compact, SD-friendly. Placed FIRST in the image
 # prompt so shot distance/angle/alignment actually change per image instead of
 # every frame being the same centered two-person portrait.
+# Shot distances are face-SAFE: front-facing shots stay close enough that faces
+# get enough pixels for SD to render them cleanly, and the far/wide shots are
+# framed from behind or facing the view so no front faces exist to be mangled.
+# (SD1.5 deforms faces that occupy only a small part of a 512px frame.)
 _SHOT_DISTANCES = [
-    "extreme close-up of their faces",
-    "close-up portrait",
-    "medium shot from the waist up",
-    "medium-wide shot showing full bodies",
-    "full-body wide shot",
-    "wide establishing shot with the couple small in the frame",
-    "over-the-shoulder shot",
-    "distant environmental shot with sweeping scenery",
+    "extreme close-up of their faces, sharp facial detail",
+    "close-up portrait of both faces",
+    "medium shot from the waist up, faces clearly visible",
+    "three-quarter shot from head to knees, faces clearly visible",
+    "over-the-shoulder shot focusing on one clear face",
+    "wide shot seen from behind, the couple facing away toward the view",
+    "environmental wide shot from behind, couple silhouetted against the scenery",
+    "full-body shot from behind as they walk into the landscape",
 ]
 _CAMERA_ANGLES = [
     "eye-level angle",
