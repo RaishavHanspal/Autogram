@@ -76,24 +76,18 @@ def _http_json(
         if not raw:
             return response.status, {}
 
-        return response.status, json.loads(
-            raw.decode("utf-8")
-        )
+        return response.status, json.loads(raw.decode("utf-8"))
 
     except urllib.error.HTTPError as exc:
-        body = exc.read().decode(
+        err_body = exc.read().decode(
             "utf-8",
             "replace",
         )
 
-        raise AIVideoError(
-            f"HTTP {exc.code} from {url}: {body[-1000:]}"
-        ) from exc
+        raise AIVideoError(f"HTTP {exc.code} from {url}: {err_body[-1000:]}") from exc
 
     except urllib.error.URLError as exc:
-        raise AIVideoError(
-            f"network error calling {url}: {exc}"
-        ) from exc
+        raise AIVideoError(f"network error calling {url}: {exc}") from exc
 
 
 def _download(
@@ -121,16 +115,12 @@ def _download(
             data = response.read()
 
         if len(data) < 10_000:
-            raise AIVideoError(
-                "downloaded AI video is suspiciously small"
-            )
+            raise AIVideoError("downloaded AI video is suspiciously small")
 
         destination.write_bytes(data)
 
     except Exception as exc:
-        raise AIVideoError(
-            f"failed to download AI video: {exc}"
-        ) from exc
+        raise AIVideoError(f"failed to download AI video: {exc}") from exc
 
     return destination
 
@@ -145,14 +135,9 @@ def _read_image_data_url(image_path: Path) -> str:
     import base64
     import mimetypes
 
-    mime = (
-        mimetypes.guess_type(str(image_path))[0]
-        or "image/jpeg"
-    )
+    mime = mimetypes.guess_type(str(image_path))[0] or "image/jpeg"
 
-    encoded = base64.b64encode(
-        image_path.read_bytes()
-    ).decode("ascii")
+    encoded = base64.b64encode(image_path.read_bytes()).decode("ascii")
 
     return f"data:{mime};base64,{encoded}"
 
@@ -188,6 +173,7 @@ def _pixverse_generate(
     prompt: str,
     cfg: Config,
     output_path: Path,
+    image_url: str | None = None,
 ) -> Path:
     """
     PixVerse image-to-video implementation.
@@ -200,9 +186,7 @@ def _pixverse_generate(
     api_key = os.getenv("PIXVERSE_API_KEY")
 
     if not api_key:
-        raise AIVideoError(
-            "PIXVERSE_API_KEY is not configured"
-        )
+        raise AIVideoError("PIXVERSE_API_KEY is not configured")
 
     base = "https://app-api.pixverse.ai"
 
@@ -216,12 +200,10 @@ def _pixverse_generate(
     # Upload image
     # ---------------------------------------------------------------
 
-    image_url = os.getenv("PIXVERSE_IMAGE_URL")
+    image_url = image_url or os.getenv("PIXVERSE_IMAGE_URL")
 
     if not image_url:
-        raise AIVideoError(
-            "PIXVERSE_IMAGE_URL is required for CI image-to-video"
-        )
+        raise AIVideoError("no public image URL (pass image_url or set PIXVERSE_IMAGE_URL)")
 
     status, upload = _http_json(
         "POST",
@@ -234,19 +216,12 @@ def _pixverse_generate(
     )
 
     if status < 200 or status >= 300:
-        raise AIVideoError(
-            f"PixVerse image upload failed: {upload}"
-        )
+        raise AIVideoError(f"PixVerse image upload failed: {upload}")
 
-    image_id = (
-        upload.get("Resp", {}).get("image_id")
-        or upload.get("image_id")
-    )
+    image_id = upload.get("Resp", {}).get("image_id") or upload.get("image_id")
 
     if not image_id:
-        raise AIVideoError(
-            f"PixVerse upload returned no image_id: {upload}"
-        )
+        raise AIVideoError(f"PixVerse upload returned no image_id: {upload}")
 
     # ---------------------------------------------------------------
     # Create image-to-video task
@@ -271,20 +246,14 @@ def _pixverse_generate(
     )
 
     if status < 200 or status >= 300:
-        raise AIVideoError(
-            f"PixVerse generation request failed: {result}"
-        )
+        raise AIVideoError(f"PixVerse generation request failed: {result}")
 
     task_id = (
-        result.get("Resp", {}).get("video_id")
-        or result.get("video_id")
-        or result.get("task_id")
+        result.get("Resp", {}).get("video_id") or result.get("video_id") or result.get("task_id")
     )
 
     if not task_id:
-        raise AIVideoError(
-            f"PixVerse returned no task id: {result}"
-        )
+        raise AIVideoError(f"PixVerse returned no task id: {result}")
 
     # ---------------------------------------------------------------
     # Poll
@@ -302,11 +271,7 @@ def _pixverse_generate(
 
         status_data = data.get("Resp", data)
 
-        state = str(
-            status_data.get("status")
-            or status_data.get("state")
-            or ""
-        ).lower()
+        state = str(status_data.get("status") or status_data.get("state") or "").lower()
 
         log.info(
             "PixVerse task=%s status=%s",
@@ -327,9 +292,7 @@ def _pixverse_generate(
             )
 
             if not video_url:
-                raise AIVideoError(
-                    f"PixVerse completed without video URL: {data}"
-                )
+                raise AIVideoError(f"PixVerse completed without video URL: {data}")
 
             return _download(
                 video_url,
@@ -343,9 +306,7 @@ def _pixverse_generate(
             "cancelled",
             "canceled",
         }:
-            raise AIVideoError(
-                f"PixVerse generation failed: {data}"
-            )
+            raise AIVideoError(f"PixVerse generation failed: {data}")
 
         time.sleep(
             max(
@@ -354,10 +315,7 @@ def _pixverse_generate(
             )
         )
 
-    raise AIVideoError(
-        f"PixVerse generation timed out after "
-        f"{cfg.reel.ai_video.timeout_s}s"
-    )
+    raise AIVideoError(f"PixVerse generation timed out after " f"{cfg.reel.ai_video.timeout_s}s")
 
 
 def generate_ai_video(
@@ -365,6 +323,7 @@ def generate_ai_video(
     scene_description: str,
     cfg: Config,
     output_path: str | Path,
+    image_url: str | None = None,
 ) -> Path:
     """
     Generate an AI video.
@@ -373,30 +332,20 @@ def generate_ai_video(
     """
 
     if not cfg.reel.ai_video.enabled:
-        raise AIVideoError(
-            "AI video is disabled"
-        )
+        raise AIVideoError("AI video is disabled")
 
     if cfg.reel.ai_video.mode == "off":
-        raise AIVideoError(
-            "AI video mode is off"
-        )
+        raise AIVideoError("AI video mode is off")
 
     image = Path(image_path)
     output = Path(output_path)
 
     if not image.exists():
-        raise AIVideoError(
-            f"source image does not exist: {image}"
-        )
+        raise AIVideoError(f"source image does not exist: {image}")
 
-    provider = (
-        cfg.reel.ai_video.provider.lower()
-    )
+    provider = cfg.reel.ai_video.provider.lower()
 
-    prompt = _pixverse_prompt(
-        scene_description
-    )
+    prompt = _pixverse_prompt(scene_description)
 
     log.info(
         "AI video: provider=%s image=%s",
@@ -410,8 +359,7 @@ def generate_ai_video(
             prompt,
             cfg,
             output,
+            image_url=image_url,
         )
 
-    raise AIVideoError(
-        f"unsupported AI video provider: {provider}"
-    )
+    raise AIVideoError(f"unsupported AI video provider: {provider}")
