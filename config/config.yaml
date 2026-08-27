@@ -112,8 +112,11 @@ reel:
     # "auto" = try AI video, then automatically fall back to FFmpeg.
     # "off"  = never call an external AI video provider.
     mode: "auto"
-    # Provider implemented below.
-    provider: "pixverse"
+    # Provider: "pixverse" (paid API; needs PIXVERSE_API_KEY + a public image
+    # host) or "huggingface" (free serverless tier; needs HF_TOKEN, POSTs the
+    # image directly — no hosting; set HF_VIDEO_MODEL to a currently-served
+    # image-to-video model). Either way, failure falls back to the FFmpeg reel.
+    provider: "huggingface"
     # Only animate selected scenes.
     # Example: [0, 2] means scene 1 and scene 3 become AI video.
     # Other scenes use the free FFmpeg animation.
