@@ -54,8 +54,23 @@ class ImageConfig(BaseModel):
     # Sampling used only on the GPU/FLUX path (schnell is distilled: 4 steps, CFG 0).
     hq_steps: int = 4
     hq_guidance_scale: float = 0.0
+    # Native 4:5 (Instagram portrait) so no pixels are cropped away and faces
+    # get more verticals. 512x640 is a safe CPU size; 640x800 is sharper but slower.
     width: int = 512
-    height: int = 512
+    height: int = 640
+    # Quality levers for the CPU SD1.5 path (ignored on the FLUX/GPU path):
+    #   - DPM++ 2M Karras scheduler (sharper at the same step count)
+    #   - a fine-tuned VAE (crisper detail, better color; "" disables)
+    scheduler: str = "dpmpp_karras"
+    vae: str = "stabilityai/sd-vae-ft-mse"
+    # Optional hi-res fix: a second img2img pass at hires_scale that adds real
+    # detail (the biggest SD1.5 quality lever) at ~2x the time. Default OFF so a
+    # 4-scene reel never blows the 60-min job budget unattended — enable it and
+    # lower reel.num_scenes if you want maximum quality.
+    hires_fix: bool = False
+    hires_scale: float = 1.5
+    hires_denoise: float = 0.4
+    hires_steps: int = 16
     positive_template: str = (
         "{framing}, candid photograph of {characters}, {interaction}, {subject}, "
         "in {setting}, {lighting}, {mood}, {color_palette}, {time_of_day}, "
