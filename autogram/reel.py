@@ -346,24 +346,22 @@ def _effect_filter(effect: str) -> str:
         return ""
 
     if effect == "warm":
-        return "eq=" "brightness=0.025:" "contrast=1.04:" "saturation=1.10"
+        return "eq=brightness=0.025:contrast=1.04:saturation=1.10"
 
     if effect == "cinematic":
-        return "eq=" "brightness=-0.015:" "contrast=1.10:" "saturation=0.94"
+        return "eq=brightness=-0.015:contrast=1.10:saturation=0.94"
 
     if effect == "dreamy":
-        return "eq=" "brightness=0.025:" "contrast=0.96:" "saturation=1.05," "gblur=sigma=0.35"
+        return "eq=brightness=0.025:contrast=0.96:saturation=1.05,gblur=sigma=0.35"
 
     if effect == "soft":
-        return (
-            "eq=" "brightness=0.015:" "contrast=0.98:" "saturation=1.02," "unsharp=5:5:0.35:5:5:0"
-        )
+        return "eq=brightness=0.015:contrast=0.98:saturation=1.02,unsharp=5:5:0.35:5:5:0"
 
     if effect == "contrast":
-        return "eq=" "brightness=-0.01:" "contrast=1.15:" "saturation=1.04"
+        return "eq=brightness=-0.01:contrast=1.15:saturation=1.04"
 
     if effect == "vignette":
-        return "eq=" "brightness=0.01:" "contrast=1.05:" "saturation=1.03," "vignette=PI/5"
+        return "eq=brightness=0.01:contrast=1.05:saturation=1.03,vignette=PI/5"
 
     return ""
 
@@ -419,26 +417,26 @@ def _scene_filter(
     # Convert normalized coordinates to actual coordinates.
     #
     # zoompan's iw/ih refer to the source dimensions after scaling.
-    x_expr = f"(iw/2-(iw/zoom/2))" f"+(({x_expr})-0.5)*iw/zoom"
+    x_expr = f"(iw/2-(iw/zoom/2))+(({x_expr})-0.5)*iw/zoom"
 
-    y_expr = f"(ih/2-(ih/zoom/2))" f"+(({y_expr})-0.5)*ih/zoom"
+    y_expr = f"(ih/2-(ih/zoom/2))(({y_expr})-0.5)*ih/zoom"
 
     # Different motion styles use different zoom curves.
     if motion == "push_in":
-        zoom_expr = f"1+({zoom - 1:.5f})*" f"({progress})"
+        zoom_expr = f"1+({zoom - 1:.5f})*({progress})"
 
     elif motion == "pull_out":
-        zoom_expr = f"{zoom:.5f}-({zoom - 1:.5f})*" f"({progress})"
+        zoom_expr = f"{zoom:.5f}-({zoom - 1:.5f})*({progress})"
 
     elif motion == "dramatic_push":
-        zoom_expr = f"1+({zoom - 1:.5f})*" f"pow({progress},0.72)"
+        zoom_expr = f"1+({zoom - 1:.5f})*pow({progress},0.72)"
 
     elif motion == "dramatic_pull":
-        zoom_expr = f"{zoom:.5f}-({zoom - 1:.5f})*" f"pow({progress},0.72)"
+        zoom_expr = f"{zoom:.5f}-({zoom - 1:.5f})*pow({progress},0.72)"
 
     else:
         # Subtle breathing motion.
-        zoom_expr = f"1+({zoom - 1:.5f})*" f"({progress})" f"+0.006*sin(2*PI*{progress})"
+        zoom_expr = f"1+({zoom - 1:.5f})*" f"({progress})+0.006*sin(2*PI*{progress})"
 
     filters = [
         f"scale={up_w}:{up_h}:" "force_original_aspect_ratio=increase",
@@ -615,9 +613,9 @@ def _build_generated_audio(
     expression = (
         f"(0.82+0.18*sin(2*PI*0.11*t))*("
         f"{amp1:.4f}*sin(2*PI*{root:.3f}*t)"
-        f"+{amp2:.4f}*sin(2*PI*{root*a:.3f}*t)"
-        f"+{amp3:.4f}*sin(2*PI*{root*b:.3f}*t)"
-        f"+{amp3 * 0.75:.4f}*sin(2*PI*{root*c:.3f}*t)"
+        f"+{amp2:.4f}*sin(2*PI*{root * a:.3f}*t)"
+        f"+{amp3:.4f}*sin(2*PI*{root * b:.3f}*t)"
+        f"+{amp3 * 0.75:.4f}*sin(2*PI*{root * c:.3f}*t)"
         f")"
         f"+"
         f"({shimmer_amp:.4f}*"
@@ -883,8 +881,7 @@ def build_reel(
     # ------------------------------------------------------------------
 
     log.info(
-        "building unique reel: seed=%d scenes=%d duration=%.2fs "
-        "resolution=%dx%d fps=%d audio=%s",
+        "building unique reel: seed=%d scenes=%d duration=%.2fs resolution=%dx%d fps=%d audio=%s",
         seed,
         len(imgs),
         total,
