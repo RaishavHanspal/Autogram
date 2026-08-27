@@ -100,4 +100,4 @@ def publish_image_to_github_release(
 
     filename = image.name
 
-    return f"https://github.com/{repository}" f"/releases/download/{tag}/" f"{filename}"
+    return f"https://github.com/{repository}/releases/download/{tag}/{filename}"
