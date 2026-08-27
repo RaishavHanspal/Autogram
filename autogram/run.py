@@ -298,15 +298,17 @@ def run_pipeline(args: argparse.Namespace, cfg: Config, secrets: Secrets) -> int
     if cfg.reel.enabled:
         from .reel import ReelError, assemble_ai_clips, build_reel
 
-        # Try real AI motion for the configured scene indexes; each still is
-        # hosted (public URL) so the provider can fetch it. Any failure (no key,
-        # no credits, timeout) is non-fatal — we fall back to the FFmpeg reel.
+        # Try real AI motion for the configured scene indexes. Any failure (no
+        # key, no credits, timeout) is non-fatal — we fall back to the FFmpeg
+        # reel. PixVerse needs a public image URL (hosted via GitHub Release);
+        # Hugging Face POSTs the image bytes directly, so no hosting is needed.
         ai_clips: list[Path] = []
         av = cfg.reel.ai_video
         if av.enabled and av.mode == "auto":
             from .ai_video import AIVideoError, generate_ai_video
             from .image_host import ImageHostError, publish_image_to_github_release
 
+            needs_url = av.provider.lower() == "pixverse"
             for idx in av.ai_scene_indexes:
                 if idx >= len(reel_scene_paths):
                     continue
@@ -314,7 +316,11 @@ def run_pipeline(args: argparse.Namespace, cfg: Config, secrets: Secrets) -> int
                 desc = reel_scene_descs[idx] if idx < len(reel_scene_descs) else cfg.theme
                 try:
                     with stage_timer(log, f"ai_video.scene{idx}"):
-                        url = publish_image_to_github_release(still, tag=f"autogram-reel-{stamp}")
+                        url = (
+                            publish_image_to_github_release(still, tag=f"autogram-reel-{stamp}")
+                            if needs_url
+                            else None
+                        )
                         clip = generate_ai_video(
                             still, desc, cfg, out_dir / f"{stamp}_ai{idx}.mp4", image_url=url
                         )
