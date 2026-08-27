@@ -57,10 +57,10 @@ class ImageConfig(BaseModel):
     width: int = 512
     height: int = 512
     positive_template: str = (
-        "candid photograph of {characters}, {interaction}, {subject}, in {setting}, "
-        "{lighting}, {mood}, {composition}, {color_palette}, {time_of_day}, "
-        "{style_modifiers}, shot on DSLR, 85mm lens, natural skin texture, "
-        "realistic, highly detailed, sharp focus, professional photography, 8k"
+        "{framing}, candid photograph of {characters}, {interaction}, {subject}, "
+        "in {setting}, {lighting}, {mood}, {color_palette}, {time_of_day}, "
+        "{style_modifiers}, shot on DSLR, natural skin texture, realistic, "
+        "highly detailed, sharp focus, professional photography, 8k"
     )
     negative_template: str = (
         "illustration, painting, drawing, cartoon, anime, 3d render, cgi, "
@@ -116,7 +116,10 @@ class GatesConfig(BaseModel):
     profanity: bool = True
     degenerate_min_variance: float = 60.0
     degenerate_dark_mean: float = 12.0
-    degenerate_bright_mean: float = class AiVideoConfig(BaseModel):
+    degenerate_bright_mean: float = 243.0
+
+
+class AiVideoConfig(BaseModel):
     enabled: bool = True
     # auto = attempt AI video and fall back to FFmpeg
     # off = never attempt AI video
@@ -124,9 +127,7 @@ class GatesConfig(BaseModel):
     # Currently supported provider.
     provider: str = "pixverse"
     # Scene indexes that should use AI video.
-    ai_scene_indexes: list[int] = Field(
-        default_factory=lambda: [0, 2]
-    )
+    ai_scene_indexes: list[int] = Field(default_factory=lambda: [0, 2])
 
     # Requested AI video duration.
     duration_s: int = 3
@@ -143,27 +144,21 @@ class GatesConfig(BaseModel):
     @classmethod
     def _valid_mode(cls, v: str) -> str:
         if v not in {"auto", "off"}:
-            raise ValueError(
-                "ai_video.mode must be 'auto' or 'off'"
-            )
+            raise ValueError("ai_video.mode must be 'auto' or 'off'")
         return v
 
     @field_validator("duration_s")
     @classmethod
     def _valid_duration(cls, v: int) -> int:
         if v < 1 or v > 10:
-            raise ValueError(
-                "ai_video.duration_s must be between 1 and 10"
-            )
+            raise ValueError("ai_video.duration_s must be between 1 and 10")
         return v
-        
+
     @field_validator("timeout_s")
     @classmethod
     def _valid_timeout(cls, v: int) -> int:
         if v < 30:
-            raise ValueError(
-                "ai_video.timeout_s must be >= 30"
-            )
+            raise ValueError("ai_video.timeout_s must be >= 30")
         return v
 
 
@@ -184,9 +179,7 @@ class ReelConfig(BaseModel):
     # Royalty-free audio directory.
     audio_dir: str = "assets/audio"
     # Optional external AI image-to-video.
-    ai_video: AiVideoConfig = Field(
-        default_factory=AiVideoConfig
-    )
+    ai_video: AiVideoConfig = Field(default_factory=AiVideoConfig)
 
 
 class StateConfig(BaseModel):
