@@ -201,6 +201,7 @@ def run_pipeline(args: argparse.Namespace, cfg: Config, secrets: Secrets) -> int
         # scene diverges via history + a distinct seed. A failed scene is skipped,
         # never fatal — the Reel just uses whatever scenes succeeded (>=1).
         reel_scene_paths: list[Path] = [processed.path]
+        reel_scene_descs: list[str] = [brief.subject]
         if cfg.reel.enabled and not args.image_only and cfg.reel.num_scenes > 1:
             acc_briefs = state.recent_briefs(cfg.brief.history_depth) + [brief.model_dump()]
             acc_subjects = state.recent_subjects(cfg.brief.history_depth) + [brief.subject]
@@ -222,6 +223,7 @@ def run_pipeline(args: argparse.Namespace, cfg: Config, secrets: Secrets) -> int
                         run_image_gates(g_i.image, cfg)
                         p_i = process_image(g_i.image, cfg, out_dir / f"{stamp}_{i}.jpg")
                     reel_scene_paths.append(p_i.path)
+                    reel_scene_descs.append(b_i.subject)
                     acc_briefs.append(b_i.model_dump())
                     acc_subjects.append(b_i.subject)
                 except Exception as exc:  # noqa: BLE001
@@ -294,12 +296,40 @@ def run_pipeline(args: argparse.Namespace, cfg: Config, secrets: Secrets) -> int
     # --- optional Reel assembly (posted via the SAME publish path) ---
     publish_path: Path = processed.path
     if cfg.reel.enabled:
-        from .reel import ReelError, build_reel
+        from .reel import ReelError, assemble_ai_clips, build_reel
+
+        # Try real AI motion for the configured scene indexes; each still is
+        # hosted (public URL) so the provider can fetch it. Any failure (no key,
+        # no credits, timeout) is non-fatal — we fall back to the FFmpeg reel.
+        ai_clips: list[Path] = []
+        av = cfg.reel.ai_video
+        if av.enabled and av.mode == "auto":
+            from .ai_video import AIVideoError, generate_ai_video
+            from .image_host import ImageHostError, publish_image_to_github_release
+
+            for idx in av.ai_scene_indexes:
+                if idx >= len(reel_scene_paths):
+                    continue
+                still = reel_scene_paths[idx]
+                desc = reel_scene_descs[idx] if idx < len(reel_scene_descs) else cfg.theme
+                try:
+                    with stage_timer(log, f"ai_video.scene{idx}"):
+                        url = publish_image_to_github_release(still, tag=f"autogram-reel-{stamp}")
+                        clip = generate_ai_video(
+                            still, desc, cfg, out_dir / f"{stamp}_ai{idx}.mp4", image_url=url
+                        )
+                    ai_clips.append(clip)
+                except (AIVideoError, ImageHostError) as exc:
+                    log.warning("AI video scene %d unavailable (%s); using FFmpeg motion", idx, exc)
 
         try:
             with stage_timer(log, "reel"):
-                publish_path = build_reel(reel_scene_paths, cfg, out_dir / f"{stamp}.mp4", seed)
-            log.info("reel assembled from %d scene(s): %s", len(reel_scene_paths), publish_path)
+                if ai_clips:
+                    publish_path = assemble_ai_clips(ai_clips, cfg, out_dir / f"{stamp}.mp4", seed)
+                    log.info("reel assembled from %d AI clip(s)", len(ai_clips))
+                else:
+                    publish_path = build_reel(reel_scene_paths, cfg, out_dir / f"{stamp}.mp4", seed)
+                    log.info("reel assembled from %d still scene(s)", len(reel_scene_paths))
         except ReelError as exc:
             log.warning("reel unavailable (%s); posting the still image instead", exc)
             publish_path = processed.path
