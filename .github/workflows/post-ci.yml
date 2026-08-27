@@ -119,8 +119,9 @@ jobs:
           # autogram manages the daemon itself, but warm it here so the model
           # pull is cached in this step's logs and the daemon is proven healthy.
           OLLAMA_HOST=127.0.0.1:11434 nohup ollama serve >/tmp/ollama.log 2>&1 &
-          for i in $(seq 1 30); do
-            curl -sf http://127.0.0.1:11434/api/tags >/dev/null && break || sleep 2
+          for _ in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:11434/api/tags >/dev/null && break
+            sleep 2
           done
           ollama pull qwen2.5:3b-instruct
 
@@ -206,6 +207,7 @@ jobs:
           set -euo pipefail
           TAIL=$(tail -n 60 run.log 2>/dev/null || echo "no log captured")
           TITLE="autogram run failed"
+          # shellcheck disable=SC2016 # single quotes are the printf format string
           BODY=$(printf '### Run failed\nRun: %s\nExit code: %s\nSlot cron: %s\n\n```\n%s\n```\n' \
                  "${GITHUB_RUN_ID}" "${EXIT_CODE:-unknown}" "${SCHED_CRON:-dispatch}" "$TAIL")
           # `.[0].number` emits the literal string "null" on no match, which
