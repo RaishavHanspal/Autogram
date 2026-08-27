@@ -59,6 +59,7 @@ class ImageGenerator:
     def __init__(self, cfg: Config) -> None:
         self.cfg = cfg
         self._pipe: Any = None
+        self._img2img: Any = None
         self._device: str = "cpu"
         self._dtype_name: str = "float32"
         self._model_id: str = cfg.image.model
@@ -79,6 +80,39 @@ class ImageGenerator:
         pipe = AutoPipelineForText2Image.from_pretrained(
             model_id, torch_dtype=torch_dtype, safety_checker=None
         )
+
+        # Quality upgrades for the SD (non-distilled, non-FLUX) path. Each is
+        # guarded so a failed load never breaks generation — we just keep the
+        # pipeline's defaults.
+        model_lc = model_id.lower()
+        is_sd = "flux" not in model_lc and not any(
+            k in model_lc for k in ("turbo", "schnell", "lcm")
+        )
+        if is_sd and self.cfg.image.scheduler == "dpmpp_karras":
+            try:
+                from diffusers import DPMSolverMultistepScheduler
+
+                pipe.scheduler = DPMSolverMultistepScheduler.from_config(
+                    pipe.scheduler.config,
+                    use_karras_sigmas=True,
+                    algorithm_type="dpmsolver++",
+                )
+                log.info("scheduler -> DPM++ 2M Karras")
+            except Exception as exc:  # noqa: BLE001
+                log.warning("could not set DPM++ scheduler (%s); keeping default", exc)
+        if is_sd and self.cfg.image.vae:
+            try:
+                from diffusers import AutoencoderKL
+
+                pipe.vae = AutoencoderKL.from_pretrained(
+                    self.cfg.image.vae, torch_dtype=torch_dtype
+                )
+                log.info("loaded fine-tuned VAE %s", self.cfg.image.vae)
+            except Exception as exc:  # noqa: BLE001
+                log.warning(
+                    "could not load VAE %s (%s); using the model's own", self.cfg.image.vae, exc
+                )
+
         pipe = pipe.to(device)
 
         if device == "cpu":
@@ -127,6 +161,12 @@ class ImageGenerator:
         )
         result = self._pipe(**kwargs)
         image = result.images[0]
+
+        # Optional hi-res fix (SD path only): a second img2img pass that adds
+        # real detail. Falls back to the base image on any failure.
+        if not is_distilled and "flux" not in model_lc and self.cfg.image.hires_fix:
+            image = self._apply_hires(image, positive, negative, generator)
+
         meta = ImageMeta(
             model_id=self._model_id,
             device=self._device,
@@ -138,3 +178,38 @@ class ImageGenerator:
             seed=seed,
         )
         return GeneratedImage(image=image, meta=meta)
+
+    def _apply_hires(self, image: Image, positive: str, negative: str, generator: Any) -> Image:
+        """Second img2img pass at hires_scale to add detail. Never fatal."""
+        try:
+            from diffusers import AutoPipelineForImage2Image
+            from PIL import Image as PILImage
+
+            if self._img2img is None:
+                self._img2img = AutoPipelineForImage2Image.from_pipe(self._pipe)
+            scale = self.cfg.image.hires_scale
+            up_w = int(self.cfg.image.width * scale)
+            up_h = int(self.cfg.image.height * scale)
+            up_w -= up_w % 8  # SD needs multiples of 8
+            up_h -= up_h % 8
+            base = image.resize((up_w, up_h), PILImage.Resampling.LANCZOS)
+            log.info(
+                "hi-res fix -> %dx%d, denoise %.2f, %d steps",
+                up_w,
+                up_h,
+                self.cfg.image.hires_denoise,
+                self.cfg.image.hires_steps,
+            )
+            out = self._img2img(
+                prompt=positive,
+                negative_prompt=negative,
+                image=base,
+                strength=self.cfg.image.hires_denoise,
+                num_inference_steps=self.cfg.image.hires_steps,
+                guidance_scale=self.cfg.image.guidance_scale,
+                generator=generator,
+            )
+            return out.images[0]
+        except Exception as exc:  # noqa: BLE001
+            log.warning("hi-res fix failed (%s); using base image", exc)
+            return image
