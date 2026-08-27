@@ -10,8 +10,8 @@ on:
     - cron: "47 6 * * *"    # 12:17 IST
     - cron: "7 10 * * *"    # 15:37 IST
     - cron: "47 12 * * *"   # 18:17 IST
-    - cron: "7 15 * * *"    # 20:37 IST
     - cron: "37 15 * * *"   # 21:07 IST -- only 30 min after the previous slot
+    - cron: "30 16 * * *".  # temporary 22:00
                             # while timeout-minutes is 60; the concurrency
                             # group below serialises it instead of losing it.
 
