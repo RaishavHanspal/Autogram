@@ -116,21 +116,77 @@ class GatesConfig(BaseModel):
     profanity: bool = True
     degenerate_min_variance: float = 60.0
     degenerate_dark_mean: float = 12.0
-    degenerate_bright_mean: float = 243.0
+    degenerate_bright_mean: float = class AiVideoConfig(BaseModel):
+    enabled: bool = True
+    # auto = attempt AI video and fall back to FFmpeg
+    # off = never attempt AI video
+    mode: str = "auto"
+    # Currently supported provider.
+    provider: str = "pixverse"
+    # Scene indexes that should use AI video.
+    ai_scene_indexes: list[int] = Field(
+        default_factory=lambda: [0, 2]
+    )
+
+    # Requested AI video duration.
+    duration_s: int = 3
+    # Maximum time to wait for a provider.
+    timeout_s: int = 180
+    # Poll interval.
+    poll_interval_s: int = 5
+    # Never make AI video failure fatal.
+    fallback_to_ffmpeg: bool = True
+    # Whether intermediate AI MP4s should remain in out/.
+    keep_intermediate: bool = False
+
+    @field_validator("mode")
+    @classmethod
+    def _valid_mode(cls, v: str) -> str:
+        if v not in {"auto", "off"}:
+            raise ValueError(
+                "ai_video.mode must be 'auto' or 'off'"
+            )
+        return v
+
+    @field_validator("duration_s")
+    @classmethod
+    def _valid_duration(cls, v: int) -> int:
+        if v < 1 or v > 10:
+            raise ValueError(
+                "ai_video.duration_s must be between 1 and 10"
+            )
+        return v
+        
+    @field_validator("timeout_s")
+    @classmethod
+    def _valid_timeout(cls, v: int) -> int:
+        if v < 30:
+            raise ValueError(
+                "ai_video.timeout_s must be >= 30"
+            )
+        return v
 
 
 class ReelConfig(BaseModel):
-    # When enabled, several stills are assembled into a vertical Reel (mp4) and
-    # posted via the SAME publish path (clip_upload / REELS) instead of a photo.
+    # When enabled, several scenes are assembled into a vertical Reel.
     enabled: bool = False
-    num_scenes: int = 3  # distinct scenes generated + stitched (1 = single still)
-    seconds_per_image: float = 4.0  # on-screen time per scene (before crossfade)
-    crossfade_s: float = 0.7  # crossfade duration between scenes
+    # Number of generated scenes.
+    num_scenes: int = 4
+    # Average scene duration before transitions.
+    seconds_per_image: float = 3.2
+    # Transition duration.
+    crossfade_s: float = 0.35
     fps: int = 30
     width: int = 1080
     height: int = 1920
-    zoom: float = 1.2  # Ken-Burns end zoom per scene (1.0 = no zoom)
-    audio_dir: str = "assets/audio"  # CC0/royalty-free tracks; else a soft bed is synthesized
+    # FFmpeg fallback zoom.
+    zoom: float = 1.12
+    # Royalty-free audio directory.
+    audio_dir: str = "assets/audio"
+    # Optional external AI image-to-video.
+    ai_video: AiVideoConfig = Field(
+        default_factory=AiVideoConfig
+    )
 
 
 class StateConfig(BaseModel):
