@@ -47,10 +47,11 @@ image:
   hq_guidance_scale: 0.0                    # FLUX schnell / turbo want CFG 0.0
   width: 512
   height: 512
-  # SD prompt templates. {characters} is the fixed couple (kept identical every
-  # run); the brief fields supply the rotating scene/place/style. The photoreal
-  # cues at the end push toward a real-photograph look.
-  positive_template: "candid photograph of {characters}, {interaction}, {subject}, in {setting}, {lighting}, {mood}, {composition}, {color_palette}, {time_of_day}, {style_modifiers}, shot on DSLR, 85mm lens, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k"
+  # SD prompt templates. {framing} (shot distance/angle/alignment/candid) leads
+  # so distance & composition actually vary; {characters} is the fixed couple
+  # (kept identical every run); the brief supplies the rotating scene/place.
+  # No fixed focal length here — it biased every frame toward a portrait.
+  positive_template: "{framing}, candid photograph of {characters}, {interaction}, {subject}, in {setting}, {lighting}, {mood}, {color_palette}, {time_of_day}, {style_modifiers}, shot on DSLR, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k"
   negative_template: "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear"
 
 postproc:
