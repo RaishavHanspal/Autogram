@@ -315,7 +315,7 @@ def _pixverse_generate(
             )
         )
 
-    raise AIVideoError(f"PixVerse generation timed out after " f"{cfg.reel.ai_video.timeout_s}s")
+    raise AIVideoError(f"PixVerse generation timed out after {cfg.reel.ai_video.timeout_s}s")
 
 
 def _huggingface_generate(
@@ -443,3 +443,4 @@ def generate_ai_video(
         )
 
     raise AIVideoError(f"unsupported AI video provider: {provider}")
+    
