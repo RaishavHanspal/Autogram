@@ -1748,5 +1748,54 @@
     "post_id": "18126238315838875",
     "post_url": "https://www.instagram.com/reel/DcigRQJjMSu/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260827T162710Z",
+    "timestamp": "2026-08-27T16:27:10.220502+00:00",
+    "brief": {
+      "subject": "Mid-20s South Asian woman and late-20s South Asian man standing in a sunlit summer garden with wildflowers, dense bushes, and a tranquil pond in the background, gazing into each other's eyes",
+      "setting": "Secret garden nook",
+      "lighting": "Soft filtered light",
+      "mood": "secluded, intimate, tranquil, loving, natural, serene beauty",
+      "composition": "Full body shot from behind as they walk into the landscape, overhead top-down view, rule-of-thirds composition, couple slightly off to one side, walking together with natural motion, gentle reflections in the pond",
+      "color_palette": "Vibrant summer colors, warm golden hues, soft golden hue, soft pastel tones of green and blue from the foliage and water",
+      "time_of_day": "Summer afternoon, soft golden hour light",
+      "style_modifiers": [
+        "cinematic",
+        "high-quality",
+        "professional photography aesthetics",
+        "serene"
+      ],
+      "location_name": "Secret garden nook",
+      "interaction": "",
+      "framing": "full-body shot from behind as they walk into the landscape, overhead top-down view, rule-of-thirds composition, couple off to one side, walking together with natural motion"
+    },
+    "positive_prompt": "full-body shot from behind as they walk into the landscape, overhead top-down view, rule-of-thirds composition, couple off to one side, walking together with natural motion, candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair; both fully clothed in elegant modest conservative attire, Mid-20s South Asian woman and late-20s South Asian man standing in a sunlit summer garden with wildflowers, dense bushes, and a tranquil pond in the background, gazing into each other's eyes, in Secret garden nook, Soft filtered light, secluded, intimate, tranquil, loving, natural, serene beauty, Vibrant summer colors, warm golden hues, soft golden hue, soft pastel tones of green and blue from the foliage and water, Summer afternoon, soft golden hour light, cinematic, high-quality, professional photography aesthetics, serene, shot on DSLR, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, deformed face, distorted face, asymmetric face, extra faces, extra heads, fused faces, malformed face, blurry face, disfigured eyes, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear",
+    "seed": 1658962513,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "fa970cd120560611d5e571ced6c7aec8071cd02a761c62eecc152e2ad0bc5a48",
+    "image_path": "out/20260827T162710Z.jpg",
+    "caption": "Lost in the quiet serenity of this sunlit summer garden, our couple found a moment to gaze into each other's eyes. The tranquil pond and wildflowers whispered of timeless love. #cinematic #professionalphotographyaesthetics #serene\n\n#cinematic #serene #romantic #southasian #love #garden #summer #gaze #eyes #quiet #autogram #slowdesign",
+    "alt_text": "A mid-20s South Asian woman and late-20s South Asian man standing together in a sunlit summer garden with wildflowers, dense bushes, and a tranquil pond in the background, gazing into each other's eyes.",
+    "hashtags": [
+      "#cinematic",
+      "#serene",
+      "#romantic",
+      "#southasian",
+      "#love",
+      "#garden",
+      "#summer",
+      "#gaze",
+      "#eyes",
+      "#quiet",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "17895965055597737",
+    "post_url": "https://www.instagram.com/reel/DcjQLwLitGN/",
+    "status": "posted"
   }
 ]
