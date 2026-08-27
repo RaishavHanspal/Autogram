@@ -1,5 +1,7 @@
 # autogram
 
+autogramworld
+
 **Free, open-source, self-hosted Instagram auto-poster.** Given one standing
 content theme and Instagram credentials, autogram generates a fresh, non-repeating
 image (self-hosted diffusion) and caption (self-hosted LLM) and posts it — on your
