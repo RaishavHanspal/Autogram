@@ -46,6 +46,10 @@ class Brief(BaseModel):
     # rotation is recorded to history and the couple's interaction varies.
     location_name: str = ""
     interaction: str = ""
+    # Deterministic per-scene framing (shot distance / angle / alignment /
+    # candid cue) injected at the FRONT of the image prompt so distance and
+    # composition actually vary instead of every image being the same portrait.
+    framing: str = ""
 
 
 def compute_seed(run_date: str, salt: str) -> int:
@@ -119,18 +123,72 @@ def _pick_trend(rng: random.Random, trends: dict[str, Any], key: str) -> str:
     return ""
 
 
+# Framing variation — curated, compact, SD-friendly. Placed FIRST in the image
+# prompt so shot distance/angle/alignment actually change per image instead of
+# every frame being the same centered two-person portrait.
+_SHOT_DISTANCES = [
+    "extreme close-up of their faces",
+    "close-up portrait",
+    "medium shot from the waist up",
+    "medium-wide shot showing full bodies",
+    "full-body wide shot",
+    "wide establishing shot with the couple small in the frame",
+    "over-the-shoulder shot",
+    "distant environmental shot with sweeping scenery",
+]
+_CAMERA_ANGLES = [
+    "eye-level angle",
+    "low angle looking up",
+    "high angle looking down",
+    "slight dutch tilt",
+    "overhead top-down view",
+    "shot from behind the couple",
+    "side profile view",
+    "three-quarter back view",
+]
+_ALIGNMENTS = [
+    "rule-of-thirds composition, couple off to one side",
+    "couple on the left third",
+    "couple on the right third",
+    "couple low in the lower third with negative space above",
+    "framed by natural foreground elements",
+    "off-center with strong leading lines",
+    "asymmetric composition with depth layers",
+]
+_CANDID_CUES = [
+    "candid unposed moment, not looking at the camera",
+    "caught mid-laugh, natural genuine expression",
+    "walking together with natural motion",
+    "spontaneous documentary-style street photograph",
+    "natural candid gesture, gazing at each other",
+    "quiet candid instant looking into the distance",
+    "in-between moment, relaxed and unaware of the camera",
+]
+
+
+def select_framing(rng: random.Random) -> str:
+    """Pick a compact shot/framing string (distance, angle, alignment, candid)."""
+    return (
+        f"{rng.choice(_SHOT_DISTANCES)}, "
+        f"{rng.choice(_CAMERA_ANGLES)}, "
+        f"{rng.choice(_ALIGNMENTS)}, "
+        f"{rng.choice(_CANDID_CUES)}"
+    )
+
+
 def select_style(rng: random.Random, characters_data: dict[str, Any]) -> dict[str, str]:
     """Select a photographic style + interaction combination for this run.
 
-    Combined with location rotation and a unique per-run seed this yields an
-    effectively non-repeating combinatorial space (locations x interactions x
-    moods x compositions x lighting x grading), so the platform can produce
-    large volumes of content without duplication.
+    Combined with location rotation, framing variation, and a unique per-run
+    seed this yields an effectively non-repeating combinatorial space
+    (locations x interactions x framing x moods x compositions x lighting x
+    grading), so the platform can produce large volumes of varied content.
     """
     trends = characters_data.get("photography_trends", {})
     if not isinstance(trends, dict):
         trends = {}
     return {
+        "framing": select_framing(rng),
         "interaction": _pick(rng, characters_data, "interaction_styles"),
         "emotion": _pick(rng, characters_data, "moods_and_emotions"),
         "composition": _pick_trend(rng, trends, "compositions"),
@@ -231,12 +289,15 @@ def _build_messages(
     if any(style.values()):
         style_section = (
             "\nPHOTOGRAPHIC DIRECTION (weave these in):\n"
+            f"Framing/shot: {style.get('framing', '')}\n"
             f"Interaction: {style.get('interaction', '')}\n"
             f"Emotion: {style.get('emotion', '')}\n"
             f"Composition: {style.get('composition', '')}\n"
             f"Lighting style: {style.get('lighting_style', '')}\n"
             f"Color grading: {style.get('color_grading', '')}\n"
             f"Depth of field: {style.get('depth_of_field', '')}\n"
+            "Make the shot distance and framing match the Framing/shot above; "
+            "do NOT default to a centered two-person portrait every time.\n"
         )
 
     hints = "\n".join(f"- {k.replace('_', ' ')}: {v}" for k, v in axis_hints.items())
@@ -288,6 +349,7 @@ def _apply_scene(
     interaction = style.get("interaction", "")
     if interaction:
         brief.interaction = interaction
+    brief.framing = style.get("framing", "")
     return brief
 
 
