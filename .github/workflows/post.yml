@@ -1,36 +1,40 @@
 name: autogram-post
 
-# Scheduled posting + manual runs.
-#
-# NOTE: cron here is UTC. GitHub delays scheduled workflows under load, so the
-# exact minute is NOT guaranteed — treat the schedule as "roughly twice weekly".
-# The in-job jitter sleep (0-45 min) further avoids robotic fixed-minute posts.
 on:
   schedule:
-    - cron: "11 * * * *"
+    # 09:07 IST
+    - cron: "37 3 * * *"
+
+    # 12:17 IST
+    - cron: "17 7 * * *"
+
+    # 15:37 IST
+    - cron: "7 10 * * *"
+
+    # 18:17 IST
+    - cron: "47 12 * * *"
+
+    # 21:07 IST
+    - cron: "7 15 * * *"
+
   workflow_dispatch:
     inputs:
-      description:
-        description: "One-off theme override"
+      slot:
+        description: "Posting slot"
         required: false
+        default: "manual"
         type: string
-      dry_run:
-        description: "Run everything but post nothing"
-        required: false
-        type: boolean
-        default: false
-      seed:
-        description: "Reproducible seed (integer)"
-        required: false
-        type: string
-
-concurrency:
-  group: autogram
-  cancel-in-progress: false
 
 permissions:
   contents: write
-  issues: write
+
+# IMPORTANT:
+# Do not use cancel-in-progress: true here.
+# If GitHub delays a scheduled run, we don't want it killed by another slot.
+concurrency:
+  group: autogram-publisher
+  cancel-in-progress: false
+  queue: max
 
 jobs:
   post:
