@@ -1797,5 +1797,57 @@
     "post_id": "17895965055597737",
     "post_url": "https://www.instagram.com/reel/DcjQLwLitGN/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260827T174633Z",
+    "timestamp": "2026-08-27T17:46:33.203321+00:00",
+    "brief": {
+      "subject": "A high-quality, photorealistic romantic image of a mid-20s South Asian woman and a late-20s South Asian man standing side by side in a vibrant market alley at dusk, their shadows merging behind them as the market lights mix with the warm hues of the setting sun.",
+      "setting": "Market alley at dusk",
+      "lighting": "Warm market lights mixed with dusk",
+      "mood": "vibrant, lively, authentic, intimate, loving",
+      "composition": "Framing/shot: high angle looking down, couple on the left third, walking together with natural motion, close-up portrait of both faces. Interaction: The couple is seen smiling warmly at each other, their expressions clearly showing their deep affection. Composition: The lighting and shadows blend to create a harmonious and dynamic background. Lighting style: Cinematic lighting, with warm and cool tones blending together. Color grading: Warm golden hues and soft golden hue, blending seamlessly. Depth of field: Wide, focusing on the faces and the expressive interactions, creating a sense of intimacy.",
+      "color_palette": "Warm golden hues, soft golden hue, vibrant spring colors, warm golden background with subtle market lights and shadows",
+      "time_of_day": "Dusk, with the sun setting in the background, creating a golden hour light over the scene",
+      "style_modifiers": [
+        "cinematic",
+        "photorealistic",
+        "high-quality",
+        "vibrant",
+        "lively"
+      ],
+      "location_name": "Market alley at dusk",
+      "interaction": "",
+      "framing": "close-up portrait of both faces, high angle looking down, couple on the left third, walking together with natural motion"
+    },
+    "positive_prompt": "close-up portrait of both faces, high angle looking down, couple on the left third, walking together with natural motion, candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair; both fully clothed in elegant modest conservative attire, A high-quality, photorealistic romantic image of a mid-20s South Asian woman and a late-20s South Asian man standing side by side in a vibrant market alley at dusk, their shadows merging behind them as the market lights mix with the warm hues of the setting sun., in Market alley at dusk, Warm market lights mixed with dusk, vibrant, lively, authentic, intimate, loving, Warm golden hues, soft golden hue, vibrant spring colors, warm golden background with subtle market lights and shadows, Dusk, with the sun setting in the background, creating a golden hour light over the scene, cinematic, photorealistic, high-quality, vibrant, lively, shot on DSLR, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, deformed face, distorted face, asymmetric face, extra faces, extra heads, fused faces, malformed face, blurry face, disfigured eyes, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear",
+    "seed": 4129931159,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "d540dc0a026952d9a3eb08eeacd9a79771b1043ae69f4a79797bd585a06043e7",
+    "image_path": "out/20260827T174633Z.jpg",
+    "caption": "Feeling the glow of the setting sun and the warmth of your embrace. A moment frozen in time, yet forever in my heart. #cinematic #photorealistic #highquality #vibrant #lively #warmgoldenhues #softgoldenhue #vivantmarketalley #candidlove #marketalleydusk #lovingmoments #southasianlove #indianflair #couplemoment #marketstreetlove #photographyinspired #intimate #authenticlove #romanticimage #loveday #marketlights\n\n#cinematic #photorealistic #highquality #vibrant #lively #warmgoldenhues #softgoldenhue #vivantmarketalley #candidlove #marketalleydusk #lovingmoments #southasianlove #autogram #slowdesign",
+    "alt_text": "Photorealistic romantic image of a mid-20s South Asian woman and a late-20s South Asian man standing side by side in a vibrant market alley at dusk, their shadows merging behind them as the market lights mix with the warm hues of the setting sun.",
+    "hashtags": [
+      "#cinematic",
+      "#photorealistic",
+      "#highquality",
+      "#vibrant",
+      "#lively",
+      "#warmgoldenhues",
+      "#softgoldenhue",
+      "#vivantmarketalley",
+      "#candidlove",
+      "#marketalleydusk",
+      "#lovingmoments",
+      "#southasianlove",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "17985862502867407",
+    "post_url": "https://www.instagram.com/reel/DcjbjWpgUj5/",
+    "status": "posted"
   }
 ]
