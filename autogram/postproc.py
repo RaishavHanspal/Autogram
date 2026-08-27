@@ -101,8 +101,7 @@ def process_image(image: Image.Image, cfg: Config, out_path: str | Path) -> Proc
     aspect = target_w / target_h
     if not (IG_MIN_ASPECT <= aspect <= IG_MAX_ASPECT):
         raise PostprocError(
-            f"final aspect {aspect:.3f} outside Instagram range "
-            f"[{IG_MIN_ASPECT}, {IG_MAX_ASPECT}]"
+            f"final aspect {aspect:.3f} outside Instagram range [{IG_MIN_ASPECT}, {IG_MAX_ASPECT}]"
         )
 
     out = Path(out_path)
