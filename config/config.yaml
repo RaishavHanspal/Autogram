@@ -45,8 +45,18 @@ image:
   guidance_scale: 6.5                       # real CFG (turbo/FLUX use the hq_* values)
   hq_steps: 4                               # FLUX schnell / turbo: distilled, 4 steps
   hq_guidance_scale: 0.0                    # FLUX schnell / turbo want CFG 0.0
-  width: 512
-  height: 512
+  width: 512                                # native 4:5 (IG portrait) — no crop waste
+  height: 640                               # 640x800 is sharper but slower on CPU
+  # Quality levers for the SD1.5 CPU path (ignored on FLUX/GPU):
+  scheduler: "dpmpp_karras"                 # DPM++ 2M Karras: sharper, same steps ("" = default)
+  vae: "stabilityai/sd-vae-ft-mse"          # crisper detail + color ("" to disable)
+  # Hi-res fix = a 2nd img2img pass that adds real detail (biggest SD1.5 lever)
+  # but ~2x time per image. OFF by default so a 4-scene reel fits the 60-min job;
+  # turn it on and drop reel.num_scenes to ~2 for maximum quality.
+  hires_fix: false
+  hires_scale: 1.5
+  hires_denoise: 0.4
+  hires_steps: 16
   # SD prompt templates. {framing} (shot distance/angle/alignment/candid) leads
   # so distance & composition actually vary; {characters} is the fixed couple
   # (kept identical every run); the brief supplies the rotating scene/place.
