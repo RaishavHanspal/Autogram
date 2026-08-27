@@ -67,6 +67,8 @@ class ImageConfig(BaseModel):
         "plastic skin, deformed, disfigured, mutated hands, extra fingers, "
         "extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, "
         "jpeg artifacts, oversaturated, ugly, "
+        "deformed face, distorted face, asymmetric face, extra faces, extra heads, "
+        "fused faces, malformed face, blurry face, disfigured eyes, "
         "nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear"
     )
 
