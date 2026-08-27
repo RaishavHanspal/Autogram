@@ -62,3 +62,18 @@ jobs:
           pip install -e ".[dev]"
       - name: Dry-run smoke (mocked image + LLM + poster)
         run: python tests/smoke_dry_run.py
+
+  lint-workflows:
+    # Catches unbalanced ${{ }} expressions and unknown contexts before they
+    # reach main. An invalid workflow file silently deregisters its cron table,
+    # which is what stopped autogram-post from firing on 2026-08-27.
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: actionlint
+        run: |
+          set -euo pipefail
+          bash <(curl -sSf https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
+          ./actionlint -color
