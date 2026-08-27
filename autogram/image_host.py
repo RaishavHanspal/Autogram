@@ -8,7 +8,6 @@ The generated URL is intended for temporary AI processing.
 
 from __future__ import annotations
 
-import json
 import os
 import subprocess
 from pathlib import Path
@@ -38,17 +37,13 @@ def publish_image_to_github_release(
     image = Path(image_path)
 
     if not image.exists():
-        raise ImageHostError(
-            f"image does not exist: {image}"
-        )
+        raise ImageHostError(f"image does not exist: {image}")
 
     token = os.getenv("GITHUB_TOKEN")
     repository = os.getenv("GITHUB_REPOSITORY")
 
     if not token or not repository:
-        raise ImageHostError(
-            "GITHUB_TOKEN/GITHUB_REPOSITORY unavailable"
-        )
+        raise ImageHostError("GITHUB_TOKEN/GITHUB_REPOSITORY unavailable")
 
     env = {
         **os.environ,
@@ -75,15 +70,12 @@ def publish_image_to_github_release(
     )
 
     # Release already existing is fine.
-    if create.returncode != 0:
-        if "already_exists" not in (
-            create.stderr or ""
-        ).lower():
-            log.warning(
-                "release create returned %d: %s",
-                create.returncode,
-                create.stderr[-500:],
-            )
+    if create.returncode != 0 and "already_exists" not in (create.stderr or "").lower():
+        log.warning(
+            "release create returned %d: %s",
+            create.returncode,
+            create.stderr[-500:],
+        )
 
     # Upload.
     upload = subprocess.run(
@@ -104,15 +96,8 @@ def publish_image_to_github_release(
     )
 
     if upload.returncode != 0:
-        raise ImageHostError(
-            "GitHub release upload failed: "
-            + upload.stderr[-1000:]
-        )
+        raise ImageHostError("GitHub release upload failed: " + upload.stderr[-1000:])
 
     filename = image.name
 
-    return (
-        f"https://github.com/{repository}"
-        f"/releases/download/{tag}/"
-        f"{filename}"
-    )
+    return f"https://github.com/{repository}" f"/releases/download/{tag}/" f"{filename}"
