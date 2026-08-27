@@ -1694,5 +1694,59 @@
     "post_id": "18089091884447451",
     "post_url": "https://www.instagram.com/reel/DchWF38lFrr/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260827T091736Z",
+    "timestamp": "2026-08-27T09:17:36.457971+00:00",
+    "brief": {
+      "subject": "A mid-20s South Asian woman and a late-20s South Asian man standing in a sunlit temple garden with blooming wildflowers in the background.",
+      "setting": "Temple garden setting",
+      "lighting": "Diffused atmospheric light",
+      "mood": "spiritual, peaceful, connected, with a sense of natural beauty and harmony.",
+      "composition": "Three-quarter shot from head to knees, the couple side by side, with natural foreground elements framing their expressive faces and hands.",
+      "color_palette": "Soft golden hues, warm beige, soft green, soft pink, and rich olive skin tones.",
+      "time_of_day": "Summer, late afternoon with the sun setting in the background.",
+      "style_modifiers": [
+        "dutch angle",
+        "medium shot",
+        "cinematic lighting"
+      ],
+      "location_name": "Temple garden setting",
+      "interaction": "",
+      "framing": "three-quarter shot from head to knees, faces clearly visible, side profile view, framed by natural foreground elements, in-between moment, relaxed and unaware of the camera"
+    },
+    "positive_prompt": "three-quarter shot from head to knees, faces clearly visible, side profile view, framed by natural foreground elements, in-between moment, relaxed and unaware of the camera, candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair; both fully clothed in elegant modest conservative attire, A mid-20s South Asian woman and a late-20s South Asian man standing in a sunlit temple garden with blooming wildflowers in the background., in Temple garden setting, Diffused atmospheric light, spiritual, peaceful, connected, with a sense of natural beauty and harmony., Soft golden hues, warm beige, soft green, soft pink, and rich olive skin tones., Summer, late afternoon with the sun setting in the background., dutch angle, medium shot, cinematic lighting, shot on DSLR, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, deformed face, distorted face, asymmetric face, extra faces, extra heads, fused faces, malformed face, blurry face, disfigured eyes, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear",
+    "seed": 3438025616,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "7781a2f479c2e9fbafda8dd50785c7af0251662cb22b8964e72d77396643180b",
+    "image_path": "out/20260827T091736Z.jpg",
+    "caption": "This moment right here. Spiritual, peaceful, connected, with a sense of natural beauty and harmony. and real.\n\nIn Temple garden setting, under Diffused atmospheric light. Just us, just this. Three-quarter shot from head to knees, the couple side by side, with natural foreground elements framing their expressive faces and hands..\n\n#mid #20s #South #Asian #woman #and #late #man #standing #in #sunlit #temple #garden #with #blooming #wildflowers #the #background",
+    "alt_text": "A mid-20s South Asian woman and a late-20s South Asian man standing in a sunlit temple garden with blooming wildflowers in the background., Temple garden setting, Diffused atmospheric light.",
+    "hashtags": [
+      "#mid",
+      "#20s",
+      "#South",
+      "#Asian",
+      "#woman",
+      "#and",
+      "#late",
+      "#man",
+      "#standing",
+      "#in",
+      "#sunlit",
+      "#temple",
+      "#garden",
+      "#with",
+      "#blooming",
+      "#wildflowers",
+      "#the",
+      "#background"
+    ],
+    "backend": "graph",
+    "post_id": "18126238315838875",
+    "post_url": "https://www.instagram.com/reel/DcigRQJjMSu/",
+    "status": "posted"
   }
 ]
