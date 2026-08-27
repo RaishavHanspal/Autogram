@@ -49,7 +49,11 @@ jobs:
       IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
       IG_USER_ID: ${{ secrets.IG_USER_ID }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      GITHUB_REPOSITORY: ${{ github.repository }}
+      GITHUB_REPOSITORY: ${{ github.repository }}      
+      # Optional: free-tier AI image-to-video (PixVerse). If unset, the run
+      # falls back to the FFmpeg Ken-Burns reel automatically.
+      PIXVERSE_API_KEY: ${{ secrets.PIXVERSE_API_KEY }}
+      PIXVERSE_MODEL: ${{ secrets.PIXVERSE_MODEL }}
 
     steps:
       - uses: actions/checkout@v4
