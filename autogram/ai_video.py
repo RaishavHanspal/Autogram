@@ -318,6 +318,78 @@ def _pixverse_generate(
     raise AIVideoError(f"PixVerse generation timed out after " f"{cfg.reel.ai_video.timeout_s}s")
 
 
+def _huggingface_generate(
+    image_path: Path,
+    prompt: str,
+    cfg: Config,
+    output_path: Path,
+) -> Path:
+    """Hugging Face serverless image-to-video (free tier).
+
+    Unlike PixVerse this needs no public image URL — the still is POSTed as raw
+    bytes. Free serverless availability varies by model, and models cold-start
+    (HTTP 503 with an estimated_time); we retry within the configured timeout.
+    The whole call is wrapped by the fallback layer, so any failure just drops
+    back to the FFmpeg reel.
+    """
+    token = os.getenv("HF_TOKEN") or os.getenv("HUGGINGFACEHUB_API_TOKEN")
+    if not token:
+        raise AIVideoError("HF_TOKEN is not configured")
+
+    model = os.getenv("HF_VIDEO_MODEL", "stabilityai/stable-video-diffusion-img2vid-xt")
+    url = f"https://api-inference.huggingface.co/models/{model}"
+    data = image_path.read_bytes()
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "User-Agent": "Autogram/1.0",
+        "Content-Type": "image/jpeg",
+        "Accept": "video/mp4",
+        # Some models read a text prompt from this header; ignored otherwise.
+        "X-Prompt": prompt[:512],
+    }
+
+    poll = max(2, int(cfg.reel.ai_video.poll_interval_s))
+    deadline = time.monotonic() + cfg.reel.ai_video.timeout_s
+
+    while time.monotonic() < deadline:
+        request = urllib.request.Request(url, data=data, headers=headers, method="POST")
+        try:
+            with urllib.request.urlopen(request, timeout=120) as response:
+                content_type = response.headers.get("Content-Type", "")
+                payload = response.read()
+        except urllib.error.HTTPError as exc:
+            body = exc.read().decode("utf-8", "replace")
+            if exc.code == 503:  # model loading — wait and retry
+                log.info("HF model %s loading; retrying in %ds", model, poll)
+                time.sleep(poll)
+                continue
+            raise AIVideoError(f"HF HTTP {exc.code} for {model}: {body[-500:]}") from exc
+        except urllib.error.URLError as exc:
+            raise AIVideoError(f"HF network error for {model}: {exc}") from exc
+
+        if "video" in content_type or "octet-stream" in content_type:
+            if len(payload) < 10_000:
+                raise AIVideoError("HF returned a suspiciously small video")
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            output_path.write_bytes(payload)
+            return output_path
+
+        # Otherwise it's JSON — either a transient "loading" notice or an error.
+        try:
+            info = json.loads(payload.decode("utf-8"))
+        except (json.JSONDecodeError, UnicodeDecodeError) as exc:
+            raise AIVideoError(f"HF returned an unexpected non-video response for {model}") from exc
+        if isinstance(info, dict) and info.get("error"):
+            if info.get("estimated_time"):
+                log.info("HF %s warming up; retrying in %ds", model, poll)
+                time.sleep(poll)
+                continue
+            raise AIVideoError(f"HF error for {model}: {info.get('error')}")
+        raise AIVideoError(f"HF unexpected response for {model}: {str(info)[:300]}")
+
+    raise AIVideoError(f"HF generation timed out after {cfg.reel.ai_video.timeout_s}s")
+
+
 def generate_ai_video(
     image_path: str | Path,
     scene_description: str,
@@ -360,6 +432,14 @@ def generate_ai_video(
             cfg,
             output,
             image_url=image_url,
+        )
+
+    if provider in {"huggingface", "hf"}:
+        return _huggingface_generate(
+            image,
+            prompt,
+            cfg,
+            output,
         )
 
     raise AIVideoError(f"unsupported AI video provider: {provider}")
