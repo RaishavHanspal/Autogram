@@ -2164,5 +2164,57 @@
     "post_id": "18174116263434647",
     "post_url": "https://www.instagram.com/reel/Dcl-XfRmQ9m/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260828T184134Z",
+    "timestamp": "2026-08-28T18:41:34.946623+00:00",
+    "brief": {
+      "subject": "A mid-20s South Asian woman and a late-20s South Asian man standing in the middle of a sun-dappled cove under a canopy of blooming wildflowers and ancient trees, their hands intertwined, looking into each other's eyes.",
+      "setting": "Hidden mountain lake",
+      "lighting": "Soft overcast mountain light with cool reflections",
+      "mood": "Calm, contemplative, deeply in love, with a sense of natural beauty and serenity.",
+      "composition": "The cove is the main focus, with the couple in the center, facing each other, their hands intertwined. The dense forest and blooming wildflowers create a natural frame around them.",
+      "color_palette": "Soft greens, yellows, and sandy tones with warm golds and browns from the sunlight and foliage.",
+      "time_of_day": "Dawn, casting a warm, golden light.",
+      "style_modifiers": [
+        "photorealistic",
+        "high-quality",
+        "cinematic",
+        "natural beauty",
+        "deep emotional connection"
+      ],
+      "location_name": "Hidden mountain lake",
+      "interaction": "",
+      "framing": "full-body shot from behind as they walk into the landscape, overhead top-down view, couple on the left third, natural candid gesture, gazing at each other"
+    },
+    "positive_prompt": "full-body shot from behind as they walk into the landscape, overhead top-down view, couple on the left third, natural candid gesture, gazing at each other, candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair; both fully clothed in elegant modest conservative attire, A mid-20s South Asian woman and a late-20s South Asian man standing in the middle of a sun-dappled cove under a canopy of blooming wildflowers and ancient trees, their hands intertwined, looking into each other's eyes., in Hidden mountain lake, Soft overcast mountain light with cool reflections, Calm, contemplative, deeply in love, with a sense of natural beauty and serenity., Soft greens, yellows, and sandy tones with warm golds and browns from the sunlight and foliage., Dawn, casting a warm, golden light., photorealistic, high-quality, cinematic, natural beauty, deep emotional connection, shot on DSLR, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, deformed face, distorted face, asymmetric face, extra faces, extra heads, fused faces, malformed face, blurry face, disfigured eyes, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear",
+    "seed": 373420457,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "46ecd7ce73e21cf811146e92f67355ae31041a9d990bb5f8944f9d726aad9fb8",
+    "image_path": "out/20260828T184134Z.jpg",
+    "caption": "In the soft glow of dawn, we’re anchored in this sun-dappled cove. Our hands intertwined, we find ourselves in a moment of deep, calm love. A place where nature's beauty mirrors our own. #naturalbeauty #deepemotionalconnection\n\n#naturalbeauty #romanticphotography #lovestory #instagood #photographylove #instafashion #lovewholeheart #instalove #loveisawakening #instaglam #lovethewholeheart #lovethewholeheartmovement #autogram #slowdesign",
+    "alt_text": "A mid-20s South Asian woman and a late-20s South Asian man standing in the middle of a sun-dappled cove under a canopy of blooming wildflowers and ancient trees, their hands intertwined, looking into each other's eyes.",
+    "hashtags": [
+      "#naturalbeauty",
+      "#romanticphotography",
+      "#lovestory",
+      "#instagood",
+      "#photographylove",
+      "#instafashion",
+      "#lovewholeheart",
+      "#instalove",
+      "#loveisawakening",
+      "#instaglam",
+      "#lovethewholeheart",
+      "#lovethewholeheartmovement",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "17925808389282237",
+    "post_url": "https://www.instagram.com/reel/DcmFGb6iKwA/",
+    "status": "posted"
   }
 ]
