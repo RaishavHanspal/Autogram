@@ -419,7 +419,7 @@ def _scene_filter(
     # zoompan's iw/ih refer to the source dimensions after scaling.
     x_expr = f"(iw/2-(iw/zoom/2))+(({x_expr})-0.5)*iw/zoom"
 
-    y_expr = f"(ih/2-(ih/zoom/2))(({y_expr})-0.5)*ih/zoom"
+    y_expr = f"(ih/2-(ih/zoom/2))+(({y_expr})-0.5)*ih/zoom"
 
     # Different motion styles use different zoom curves.
     if motion == "push_in":
