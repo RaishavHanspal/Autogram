@@ -2011,5 +2011,54 @@
     "post_id": "18461853973142405",
     "post_url": "https://www.instagram.com/p/DckrUsxo0C3/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260828T110324Z",
+    "timestamp": "2026-08-28T11:03:24.106567+00:00",
+    "brief": {
+      "subject": "high-quality, photorealistic romantic images of couples deeply in love, with crystal-clear, expressive faces, natural emotions, realistic skin and details, cinematic lighting, beautiful backgrounds, and professional photography aesthetics. (variation 426)",
+      "setting": "Rocky beach with tide pools",
+      "lighting": "Dramatic coastal light with sea spray",
+      "mood": "serene",
+      "composition": "worm's-eye, close-up",
+      "color_palette": "muted neutral tones",
+      "time_of_day": "morning",
+      "style_modifiers": [
+        "50mm",
+        "photographic"
+      ],
+      "location_name": "Rocky beach with tide pools",
+      "interaction": "",
+      "framing": "extreme close-up of their faces, sharp facial detail, slight dutch tilt, asymmetric composition with depth layers, spontaneous documentary-style street photograph"
+    },
+    "positive_prompt": "extreme close-up of their faces, sharp facial detail, slight dutch tilt, asymmetric composition with depth layers, spontaneous documentary-style street photograph, candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair; both fully clothed in elegant modest conservative attire, high-quality, photorealistic romantic images of couples deeply in love, with crystal-clear, expressive faces, natural emotions, realistic skin and details, cinematic lighting, beautiful backgrounds, and professional photography aesthetics. (variation 426), in Rocky beach with tide pools, Dramatic coastal light with sea spray, serene, muted neutral tones, morning, 50mm, photographic, shot on DSLR, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, deformed face, distorted face, asymmetric face, extra faces, extra heads, fused faces, malformed face, blurry face, disfigured eyes, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear",
+    "seed": 1330334426,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "5faa2fbd0a8f1a70d97232005ec9b2e42e5274e530ab8a930be03d503de47e0f",
+    "image_path": "out/20260828T110324Z.jpg",
+    "caption": "Feels like a whisper in the morning breeze. Their eyes hold the ocean’s calm, each expression a tender story. So real, you can almost feel the cool spray tickling their cheeks.\n\n#romantic #love #instafamousphotography #beauty #instagood #photographic #lovelettersfromthemoon #instadaily #beautyphotography #instafavorite #instagoodmoments #loveinsta #autogram #slowdesign",
+    "alt_text": "High-quality, photorealistic romantic image of a couple standing on a rocky beach, their faces in close-up with dramatic coastal lighting and sea spray, captured with a 50mm lens in a documentary-style street photograph.",
+    "hashtags": [
+      "#romantic",
+      "#love",
+      "#instafamousphotography",
+      "#beauty",
+      "#instagood",
+      "#photographic",
+      "#lovelettersfromthemoon",
+      "#instadaily",
+      "#beautyphotography",
+      "#instafavorite",
+      "#instagoodmoments",
+      "#loveinsta",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "17927091717162278",
+    "post_url": "https://www.instagram.com/reel/DclSRonEbQQ/",
+    "status": "posted"
   }
 ]
