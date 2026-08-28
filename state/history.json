@@ -2216,5 +2216,56 @@
     "post_id": "17925808389282237",
     "post_url": "https://www.instagram.com/reel/DcmFGb6iKwA/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260828T193808Z",
+    "timestamp": "2026-08-28T19:38:08.329587+00:00",
+    "brief": {
+      "subject": "Mid-20s South Asian woman and late-20s South Asian man standing mid-laughter on a wooden pier extending deep into a tranquil river valley at dawn, with their shadows merging behind them under the cascading waterfall's soft natural light",
+      "setting": "Mountain cabin in snow",
+      "lighting": "Cool daylight contrasted with warm cabin glow",
+      "mood": "Contemplative, magical, with a sense of deep love and connection",
+      "composition": "Mid-shot of the couple standing side by side with their shadows merging behind them, the river valley and waterfall providing a peaceful and mysterious backdrop",
+      "color_palette": "Soft natural tones with a warm golden hue on the water and faces, with shadows and background elements in darker tones to create contrast",
+      "time_of_day": "Dawn",
+      "style_modifiers": [
+        "cinematic",
+        "high-quality",
+        "photorealistic",
+        "deeply romantic"
+      ],
+      "location_name": "Mountain cabin in snow",
+      "interaction": "",
+      "framing": "environmental wide shot from behind, couple silhouetted against the scenery, overhead top-down view, framed by natural foreground elements, candid unposed moment, not looking at the camera"
+    },
+    "positive_prompt": "environmental wide shot from behind, couple silhouetted against the scenery, overhead top-down view, framed by natural foreground elements, candid unposed moment, not looking at the camera, candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair; both fully clothed in elegant modest conservative attire, Mid-20s South Asian woman and late-20s South Asian man standing mid-laughter on a wooden pier extending deep into a tranquil river valley at dawn, with their shadows merging behind them under the cascading waterfall's soft natural light, in Mountain cabin in snow, Cool daylight contrasted with warm cabin glow, Contemplative, magical, with a sense of deep love and connection, Soft natural tones with a warm golden hue on the water and faces, with shadows and background elements in darker tones to create contrast, Dawn, cinematic, high-quality, photorealistic, deeply romantic, shot on DSLR, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, deformed face, distorted face, asymmetric face, extra faces, extra heads, fused faces, malformed face, blurry face, disfigured eyes, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear",
+    "seed": 3459474602,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "5374ae466ece3d99077551de7f69e52fe27fe4dd478bd4e68fc1a58281ef379a",
+    "image_path": "out/20260828T193808Z.jpg",
+    "caption": "Awash in the cool daylight contrasted with the warm glow of our mountain cabin, our shadows merge, a mystical duo lost in the magic of dawn. 💖\n\n#mountains #love #nature #mountaincabin #romantic #dawn #mountainsnow #couples #instadaily #couplespic #loveinsta #cabinlifestyle #autogram #slowdesign",
+    "alt_text": "A mid-shot of a couple, mid-laughter, standing side by side on a wooden pier extending into a tranquil river valley at dawn, with their shadows merging behind them under the cascading waterfall's soft natural light.",
+    "hashtags": [
+      "#mountains",
+      "#love",
+      "#nature",
+      "#mountaincabin",
+      "#romantic",
+      "#dawn",
+      "#mountainsnow",
+      "#couples",
+      "#instadaily",
+      "#couplespic",
+      "#loveinsta",
+      "#cabinlifestyle",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "18192524455385320",
+    "post_url": "https://www.instagram.com/reel/DcmM87ijCUI/",
+    "status": "posted"
   }
 ]
