@@ -2373,5 +2373,58 @@
     "post_id": "18088509494423920",
     "post_url": "https://www.instagram.com/reel/DcnFZyXESb-/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260829T045704Z",
+    "timestamp": "2026-08-29T04:57:04.127852+00:00",
+    "brief": {
+      "subject": "Close-up of a mid-20s South Asian woman and a late-20s South Asian man standing at the edge of a sunlit waterfall in a magical, mysterious forest at autumn twilight, their shadows merging with the natural formations, reflecting the setting sun's warm golden hues on the water.",
+      "setting": "Bioluminescent beach at night",
+      "lighting": "Soft bioluminescent ocean glow with subtle moonlight",
+      "mood": "magical, mysterious, otherworldly, transformative, with a sense of deep love and renewal.",
+      "composition": "Extreme close-up of their faces and hands intertwined, with their reflections in the water, the shadows of the waterfall's natural formations, and the bioluminescent forest glow creating a kaleidoscopic effect.",
+      "color_palette": "Warm golden hues, deep forest greens, soft bioluminescent blues and greens, rich olive tones, and soft shadows of the waterfall's natural formations.",
+      "time_of_day": "Autumn twilight, with the sun setting in the background, creating a golden glow.",
+      "style_modifiers": [
+        "natural beauty",
+        "mysterious forest",
+        "transformative moment",
+        "deep love"
+      ],
+      "location_name": "Bioluminescent beach at night",
+      "interaction": "",
+      "framing": "extreme close-up of their faces, sharp facial detail, high angle looking down, couple on the right third, spontaneous documentary-style street photograph"
+    },
+    "positive_prompt": "extreme close-up of their faces, sharp facial detail, high angle looking down, couple on the right third, spontaneous documentary-style street photograph, candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair; both fully clothed in elegant modest conservative attire, Close-up of a mid-20s South Asian woman and a late-20s South Asian man standing at the edge of a sunlit waterfall in a magical, mysterious forest at autumn twilight, their shadows merging with the natural formations, reflecting the setting sun's warm golden hues on the water., in Bioluminescent beach at night, Soft bioluminescent ocean glow with subtle moonlight, magical, mysterious, otherworldly, transformative, with a sense of deep love and renewal., Warm golden hues, deep forest greens, soft bioluminescent blues and greens, rich olive tones, and soft shadows of the waterfall's natural formations., Autumn twilight, with the sun setting in the background, creating a golden glow., natural beauty, mysterious forest, transformative moment, deep love, shot on DSLR, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, deformed face, distorted face, asymmetric face, extra faces, extra heads, fused faces, malformed face, blurry face, disfigured eyes, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear",
+    "seed": 2797643480,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "c1db79d079cfc9e2c1bd0c6260a4845c708050ac8391306b0b5d750b7b8bc1eb",
+    "image_path": "out/20260829T045704Z.jpg",
+    "caption": "Witnessing the magic of this moment, their love intertwined like the natural formations. The warm golden hues of the setting sun paint this magical scene, a perfect reflection of their deep connection. 🌃✨\n\n#bioluminescentbeach #amour #loveatnight #magicalforest #deeplove #autumntwilight #naturalbeauty #mysteriousforest #transformative #romanticmoment #instadreams #streetphotography #instafashion #instagood #autogram #slowdesign",
+    "alt_text": "Extreme close-up of a mid-20s South Asian woman and a late-20s South Asian man standing at the edge of a sunlit waterfall in a magical, mysterious forest at autumn twilight, their shadows merging with the natural formations, reflecting the setting sun's warm golden hues on the water.",
+    "hashtags": [
+      "#bioluminescentbeach",
+      "#amour",
+      "#loveatnight",
+      "#magicalforest",
+      "#deeplove",
+      "#autumntwilight",
+      "#naturalbeauty",
+      "#mysteriousforest",
+      "#transformative",
+      "#romanticmoment",
+      "#instadreams",
+      "#streetphotography",
+      "#instafashion",
+      "#instagood",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "18334043611256369",
+    "post_url": "https://www.instagram.com/reel/DcnNKTjj-b1/",
+    "status": "posted"
   }
 ]
