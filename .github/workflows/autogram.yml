@@ -6,7 +6,7 @@ name: autogram
 # hourly cron), so treat these as approximate, never as exact minutes.
 on:
   schedule:
-    - cron: "17 3 * * *"    # **.07 every other hour
+    - cron: "17 */4 * * *"    # **.07 every other hour
 
   workflow_dispatch:
     inputs:
