@@ -2267,5 +2267,55 @@
     "post_id": "18192524455385320",
     "post_url": "https://www.instagram.com/reel/DcmM87ijCUI/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260829T024714Z",
+    "timestamp": "2026-08-29T02:47:14.726587+00:00",
+    "brief": {
+      "subject": "A romantic couple mid-laughter on a wooden pier extending deep into a sunlit cove at golden hour, their shadows merging gracefully behind them under the cascading waterfall's soft natural light",
+      "setting": "Tropical beach at golden hour",
+      "lighting": "Warm golden hour sunlight creating long shadows",
+      "mood": "Contemplative, magical, with a sense of deep love and connection, romantic, and serene beauty.",
+      "composition": "Over-the-shoulder shot focusing on one clear face, shot from behind the couple, couple on the right third, mid-laughing and looking into each other's eyes with their shadows merging gracefully behind them.",
+      "color_palette": "Warm golden hues with soft green and brown tones from the wildflowers and foliage, and the cool blue hue from the cascading waterfall.",
+      "time_of_day": "Golden hour",
+      "style_modifiers": [
+        "cinematic",
+        "professional photography aesthetics",
+        "photorealistic"
+      ],
+      "location_name": "Tropical beach at golden hour",
+      "interaction": "",
+      "framing": "over-the-shoulder shot focusing on one clear face, shot from behind the couple, couple on the right third, walking together with natural motion"
+    },
+    "positive_prompt": "over-the-shoulder shot focusing on one clear face, shot from behind the couple, couple on the right third, walking together with natural motion, candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair; both fully clothed in elegant modest conservative attire, A romantic couple mid-laughter on a wooden pier extending deep into a sunlit cove at golden hour, their shadows merging gracefully behind them under the cascading waterfall's soft natural light, in Tropical beach at golden hour, Warm golden hour sunlight creating long shadows, Contemplative, magical, with a sense of deep love and connection, romantic, and serene beauty., Warm golden hues with soft green and brown tones from the wildflowers and foliage, and the cool blue hue from the cascading waterfall., Golden hour, cinematic, professional photography aesthetics, photorealistic, shot on DSLR, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, deformed face, distorted face, asymmetric face, extra faces, extra heads, fused faces, malformed face, blurry face, disfigured eyes, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear",
+    "seed": 3520793956,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "0cac1c3dbb334084418466a7384e8057b53c88912a943ffad680ede05cbae44f",
+    "image_path": "out/20260829T024714Z.jpg",
+    "caption": "Lost in the moment, their laughter blending with the whispers of the wind. So beautiful, isn't it? 💖\n\n#goldenHour #romanticSunset #loveConnection #tropicalBeach #instafamous #photoInspiration #loveStory #dreamComeTrue #coupleTime #amazingShot #natureWonders #photographyLovers #autogram #slowdesign",
+    "alt_text": "A couple mid-laugh on a wooden pier extending into a cove at a tropical beach during golden hour, their shadows merging under cascading waterfall's soft natural light.",
+    "hashtags": [
+      "#goldenHour",
+      "#romanticSunset",
+      "#loveConnection",
+      "#tropicalBeach",
+      "#instafamous",
+      "#photoInspiration",
+      "#loveStory",
+      "#dreamComeTrue",
+      "#coupleTime",
+      "#amazingShot",
+      "#natureWonders",
+      "#photographyLovers",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "18164355916482507",
+    "post_url": "https://www.instagram.com/reel/Dcm-Cv_FfHZ/",
+    "status": "posted"
   }
 ]
