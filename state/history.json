@@ -2317,5 +2317,61 @@
     "post_id": "18164355916482507",
     "post_url": "https://www.instagram.com/reel/Dcm-Cv_FfHZ/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260829T035110Z",
+    "timestamp": "2026-08-29T03:51:10.884570+00:00",
+    "brief": {
+      "subject": "A high-quality, photorealistic romantic image of a mid-20s South Asian woman and a late-20s South Asian man standing at the edge of a sunlit waterfall, their expressions of deep affection under the cascading waterfall's soft natural light.",
+      "setting": "Mountain ridge at sunset",
+      "lighting": "Warm golden and amber sunset lighting",
+      "mood": "Dramatic, transformative, with a sense of renewal and deep love, and a magical, enchanting atmosphere.",
+      "composition": "The couple standing mid-laughter on a wooden pier extending deep into the waterfall, their shadows merging gracefully behind them under the cascading waterfall's soft natural light, with an expansive view of the river valley and ancient trees in the background.",
+      "color_palette": "Warm golden and amber hues, with soft golden tones and deep, rich blue tones to capture the reflective water and mist-covered river valley.",
+      "time_of_day": "Golden hour with dramatic, transforming sunlight and a mist-covered river valley.",
+      "style_modifiers": [
+        "dramatic",
+        "transformational",
+        "enchanted forest",
+        "magical atmosphere",
+        "deep love"
+      ],
+      "location_name": "Mountain ridge at sunset",
+      "interaction": "",
+      "framing": "medium shot from the waist up, faces clearly visible, slight dutch tilt, framed by natural foreground elements, candid unposed moment, not looking at the camera"
+    },
+    "positive_prompt": "medium shot from the waist up, faces clearly visible, slight dutch tilt, framed by natural foreground elements, candid unposed moment, not looking at the camera, candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair; both fully clothed in elegant modest conservative attire, A high-quality, photorealistic romantic image of a mid-20s South Asian woman and a late-20s South Asian man standing at the edge of a sunlit waterfall, their expressions of deep affection under the cascading waterfall's soft natural light., in Mountain ridge at sunset, Warm golden and amber sunset lighting, Dramatic, transformative, with a sense of renewal and deep love, and a magical, enchanting atmosphere., Warm golden and amber hues, with soft golden tones and deep, rich blue tones to capture the reflective water and mist-covered river valley., Golden hour with dramatic, transforming sunlight and a mist-covered river valley., dramatic, transformational, enchanted forest, magical atmosphere, deep love, shot on DSLR, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, deformed face, distorted face, asymmetric face, extra faces, extra heads, fused faces, malformed face, blurry face, disfigured eyes, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear",
+    "seed": 1403795108,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "3e6cc00cb55f7f1bf44026e17cd930949307f33afc2ba235775693fd7c50691a",
+    "image_path": "out/20260829T035110Z.jpg",
+    "caption": "Lost in the moment. The sky, the water, the love. Such a peaceful, magical, and enchanting moment. #mountainridge #sunset #romance #love #nature #photorealistic #hearts #magic #melodrama #enchantedforest #glimmer #goldenhour #silhouettes #candid #deeplove #photography #serendipity #awestruck\n\n#mountainridge #sunset #romance #love #nature #photorealistic #hearts #magic #melodrama #enchantedforest #glimmer #goldenhour #silhouettes #candid #deeplove #photography #serendipity #awestruck",
+    "alt_text": "A high-quality, photorealistic romantic image of a mid-20s South Asian woman and a late-20s South Asian man standing at the edge of a sunlit waterfall, their expressions of deep affection under the cascading waterfall's soft natural light.",
+    "hashtags": [
+      "#mountainridge",
+      "#sunset",
+      "#romance",
+      "#love",
+      "#nature",
+      "#photorealistic",
+      "#hearts",
+      "#magic",
+      "#melodrama",
+      "#enchantedforest",
+      "#glimmer",
+      "#goldenhour",
+      "#silhouettes",
+      "#candid",
+      "#deeplove",
+      "#photography",
+      "#serendipity",
+      "#awestruck"
+    ],
+    "backend": "graph",
+    "post_id": "18088509494423920",
+    "post_url": "https://www.instagram.com/reel/DcnFZyXESb-/",
+    "status": "posted"
   }
 ]
