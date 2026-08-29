@@ -2479,5 +2479,55 @@
     "post_id": "17889337536436024",
     "post_url": "https://www.instagram.com/reel/DcnWnJMD92G/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260829T074226Z",
+    "timestamp": "2026-08-29T07:42:26.844652+00:00",
+    "brief": {
+      "subject": "Mid-20s South Asian woman and late-20s South Asian man, standing side by side at the edge of a sunlit waterfall in a serene, mist-covered river valley at golden hour.",
+      "setting": "Vintage architecture alley",
+      "lighting": "Soft warm light with long architectural shadows",
+      "mood": "romantic, magical, and serene with a sense of deep love and connection.",
+      "composition": "side-by-side portrait, close-up of their faces, with their shadows merging behind them.",
+      "color_palette": "golden hues, warm browns and greens, soft pastels.",
+      "time_of_day": "golden hour",
+      "style_modifiers": [
+        "cinematic",
+        "highly realistic",
+        "soft lighting"
+      ],
+      "location_name": "Vintage architecture alley",
+      "interaction": "",
+      "framing": "close-up portrait of both faces, side profile view, couple on the left third, spontaneous documentary-style street photograph"
+    },
+    "positive_prompt": "close-up portrait of both faces, side profile view, couple on the left third, spontaneous documentary-style street photograph, candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair; both fully clothed in elegant modest conservative attire, Mid-20s South Asian woman and late-20s South Asian man, standing side by side at the edge of a sunlit waterfall in a serene, mist-covered river valley at golden hour., in Vintage architecture alley, Soft warm light with long architectural shadows, romantic, magical, and serene with a sense of deep love and connection., golden hues, warm browns and greens, soft pastels., golden hour, cinematic, highly realistic, soft lighting, shot on DSLR, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, deformed face, distorted face, asymmetric face, extra faces, extra heads, fused faces, malformed face, blurry face, disfigured eyes, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear",
+    "seed": 1912946288,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "85eb04823fcfd542a31f0fd26fb6b55541222c683e9e4bb10bf25e653af555bf",
+    "image_path": "out/20260829T074226Z.jpg",
+    "caption": "Feels like stepping into a storybook. Our shadows blending as one, lost in each other's eyes. Magic happens when we're together. #cinematic #highlyrealistic #softlighting\n\n#vintagearchitecture #photography #goldenhour #serenemoments #instagood #streetphotography #romantic #magic #love #serenity #couple #instadaily #autogram #slowdesign",
+    "alt_text": "A close-up side-by-side portrait of a mid-20s woman and late-20s man standing at the edge of a sunlit waterfall in a vintage architecture alley, their shadows merging behind them.",
+    "hashtags": [
+      "#vintagearchitecture",
+      "#photography",
+      "#goldenhour",
+      "#serenemoments",
+      "#instagood",
+      "#streetphotography",
+      "#romantic",
+      "#magic",
+      "#love",
+      "#serenity",
+      "#couple",
+      "#instadaily",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "17951964330255244",
+    "post_url": "https://www.instagram.com/reel/DcngP30jZ4Y/",
+    "status": "posted"
   }
 ]
