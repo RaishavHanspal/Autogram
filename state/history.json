@@ -2784,5 +2784,58 @@
     "post_id": "18279193075290071",
     "post_url": "https://www.instagram.com/reel/DcocB_jFDVJ/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260829T175453Z",
+    "timestamp": "2026-08-29T17:54:53.379337+00:00",
+    "brief": {
+      "subject": "high-quality, photorealistic romantic images of couples deeply in love, with crystal-clear, expressive faces, natural emotions, realistic skin and details, cinematic lighting, beautiful backgrounds, and professional photography aesthetics. (variation 776)",
+      "setting": "Crystal cave cavern",
+      "lighting": "Soft directional light revealing crystal formations",
+      "mood": "serene",
+      "composition": "high angle, medium shot",
+      "color_palette": "muted neutral tones",
+      "time_of_day": "morning",
+      "style_modifiers": [
+        "16mm wide",
+        "photographic"
+      ],
+      "location_name": "Crystal cave cavern",
+      "interaction": "",
+      "framing": "extreme close-up of their faces, sharp facial detail, side profile view, couple on the right third, spontaneous documentary-style street photograph"
+    },
+    "positive_prompt": "extreme close-up of their faces, sharp facial detail, side profile view, couple on the right third, spontaneous documentary-style street photograph, candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair; both fully clothed in elegant modest conservative attire, high-quality, photorealistic romantic images of couples deeply in love, with crystal-clear, expressive faces, natural emotions, realistic skin and details, cinematic lighting, beautiful backgrounds, and professional photography aesthetics. (variation 776), in Crystal cave cavern, Soft directional light revealing crystal formations, serene, muted neutral tones, morning, 16mm wide, photographic, shot on DSLR, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, deformed face, distorted face, asymmetric face, extra faces, extra heads, fused faces, malformed face, blurry face, disfigured eyes, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear",
+    "seed": 1570939776,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "20c63e55d1bd23f95e25b38bfd2a2a3621b3c32a9a0cb0c163738bfcaa5addf1",
+    "image_path": "out/20260829T175453Z.jpg",
+    "caption": "Witnessing the beauty of love and nature in this serene morning moment. Their expressions speak volumes, captured with such care and artistry. #photorealistic #highqualityphotography #instagood #loveinlight #serenity #photographylove #documentarystyle #nostalgia #instafilter #couplesphotography #photographicstyle #instaengagement #cinematiclighting #instadreams #photorealisticart #instafantasy #photographylovers #instahot #instapics #instasocial #instafashion #photographyinspiration #instapics #instaengagement #photographyvibes #instaheaven #photographylove #instaglam #photographygoals\n\n#photorealistic #highqualityphotography #instagood #loveinlight #serenity #photographylove #documentarystyle #nostalgia #instafilter #couplesphotography #photographicstyle #instaengagement #cinematiclighting #instahot #instapics #instasocial #instafashion #photographyinspiration",
+    "alt_text": "Photorealistic romantic image of a couple in a crystal cave, captured with cinematic lighting, showing natural expressions and side profile views.",
+    "hashtags": [
+      "#photorealistic",
+      "#highqualityphotography",
+      "#instagood",
+      "#loveinlight",
+      "#serenity",
+      "#photographylove",
+      "#documentarystyle",
+      "#nostalgia",
+      "#instafilter",
+      "#couplesphotography",
+      "#photographicstyle",
+      "#instaengagement",
+      "#cinematiclighting",
+      "#instahot",
+      "#instapics",
+      "#instasocial",
+      "#instafashion",
+      "#photographyinspiration"
+    ],
+    "backend": "graph",
+    "post_id": "18111239033042244",
+    "post_url": "https://www.instagram.com/reel/Dcok-H1DlKJ/",
+    "status": "posted"
   }
 ]
