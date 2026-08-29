@@ -2578,5 +2578,58 @@
     "post_id": "17937483096348320",
     "post_url": "https://www.instagram.com/reel/Dcnstp_DsrQ/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260829T105757Z",
+    "timestamp": "2026-08-29T10:57:57.556394+00:00",
+    "brief": {
+      "subject": "high-quality, photorealistic romantic images of couples deeply in love, with crystal-clear, expressive faces, natural emotions, realistic skin and details, cinematic lighting, beautiful backgrounds, and professional photography aesthetics. (variation 628)",
+      "setting": "Alpine meadow with wildflowers",
+      "lighting": "Golden hour sunlight filtering through thin clouds",
+      "mood": "serene",
+      "composition": "worm's-eye, close-up",
+      "color_palette": "muted neutral tones",
+      "time_of_day": "morning",
+      "style_modifiers": [
+        "85mm portrait",
+        "photographic"
+      ],
+      "location_name": "Alpine meadow with wildflowers",
+      "interaction": "",
+      "framing": "medium shot from the waist up, faces clearly visible, high angle looking down, framed by natural foreground elements, caught mid-laugh, natural genuine expression"
+    },
+    "positive_prompt": "medium shot from the waist up, faces clearly visible, high angle looking down, framed by natural foreground elements, caught mid-laugh, natural genuine expression, candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair; both fully clothed in elegant modest conservative attire, high-quality, photorealistic romantic images of couples deeply in love, with crystal-clear, expressive faces, natural emotions, realistic skin and details, cinematic lighting, beautiful backgrounds, and professional photography aesthetics. (variation 628), in Alpine meadow with wildflowers, Golden hour sunlight filtering through thin clouds, serene, muted neutral tones, morning, 85mm portrait, photographic, shot on DSLR, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, deformed face, distorted face, asymmetric face, extra faces, extra heads, fused faces, malformed face, blurry face, disfigured eyes, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear",
+    "seed": 2253296628,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "da61092c5c9dd525af6d0687fa4e0b0449c02a8965f3000d1bf6496163f85984",
+    "image_path": "out/20260829T105757Z.jpg",
+    "caption": "Caught in the moment. A serene Alpine meadow with wildflowers, bathed in golden hour sunlight. Softer than soft, capturing the playful laughter and natural beauty of two hearts. #photorealistic #portraitphotography #instadaily #romancedesign #loveatfirstglance #photographiclove #alpineadventures #portraitphotography #instaportrait #instaportrait #lovemoment #lovestory #photorealism #natureportrait #instaportraitgram #loveinsta #photorealism #beautifullove #photographymoment #loveinstaglam #lovetraditional #photographiclove #instalove #photorealisticlove\n\n#photorealistic #instadaily #romancedesign #lovedesign #loveatfirstglance #photographiclove #alpineadventures #portraitphotography #instaportrait #lovemoment #lovestory #photorealism #natureportrait #instaportraitgram #loveinsta #beautifullove #photographymoment #lovetraditional",
+    "alt_text": "Photorealistic romantic image of two laughing lovers in a meadow with wildflowers, taken in the early morning with golden hour sunlight filtering through thin clouds.",
+    "hashtags": [
+      "#photorealistic",
+      "#instadaily",
+      "#romancedesign",
+      "#lovedesign",
+      "#loveatfirstglance",
+      "#photographiclove",
+      "#alpineadventures",
+      "#portraitphotography",
+      "#instaportrait",
+      "#lovemoment",
+      "#lovestory",
+      "#photorealism",
+      "#natureportrait",
+      "#instaportraitgram",
+      "#loveinsta",
+      "#beautifullove",
+      "#photographymoment",
+      "#lovetraditional"
+    ],
+    "backend": "graph",
+    "post_id": "18005326121975566",
+    "post_url": "https://www.instagram.com/reel/Dcn1gc6jqqq/",
+    "status": "posted"
   }
 ]
