@@ -2731,5 +2731,58 @@
     "post_id": "18137170918611095",
     "post_url": "https://www.instagram.com/reel/DcoNdI5AmH9/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260829T162542Z",
+    "timestamp": "2026-08-29T16:25:42.371123+00:00",
+    "brief": {
+      "subject": "high-quality, photorealistic romantic images of couples deeply in love, with crystal-clear, expressive faces, natural emotions, realistic skin and details, cinematic lighting, beautiful backgrounds, and professional photography aesthetics. (variation 759)",
+      "setting": "Rushing river gorge",
+      "lighting": "Cool natural light",
+      "mood": "serene",
+      "composition": "low angle, medium shot",
+      "color_palette": "muted neutral tones",
+      "time_of_day": "morning",
+      "style_modifiers": [
+        "50mm",
+        "photographic"
+      ],
+      "location_name": "Rushing river gorge",
+      "interaction": "",
+      "framing": "environmental wide shot from behind, couple silhouetted against the scenery, high angle looking down, asymmetric composition with depth layers, caught mid-laugh, natural genuine expression"
+    },
+    "positive_prompt": "environmental wide shot from behind, couple silhouetted against the scenery, high angle looking down, asymmetric composition with depth layers, caught mid-laugh, natural genuine expression, candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair; both fully clothed in elegant modest conservative attire, high-quality, photorealistic romantic images of couples deeply in love, with crystal-clear, expressive faces, natural emotions, realistic skin and details, cinematic lighting, beautiful backgrounds, and professional photography aesthetics. (variation 759), in Rushing river gorge, Cool natural light, serene, muted neutral tones, morning, 50mm, photographic, shot on DSLR, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, deformed face, distorted face, asymmetric face, extra faces, extra heads, fused faces, malformed face, blurry face, disfigured eyes, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear",
+    "seed": 3367942759,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "5fcdf86caf453a173f42a06c68685638eb0d9136e8f49dcf967ea3095f759057",
+    "image_path": "out/20260829T162542Z.jpg",
+    "caption": "What a beautiful moment. Captured in the cool natural light of the rushing river gorge, they laughed at the beauty around them. Feeling truly connected, their expressions were as real as the crisp muted neutral tones. #photographic #photorealistic #cinematic #mutedneon #softlights #rushingrivergorge #lowangle #midshot #naturelovers #photowallpaper #50mm #romantic #amazinglyreal #photographygoals #photorealistic #naturephotography #photodreams #photographyart #creativeshots\n\n#photographic #photorealistic #cinematic #mutedneon #softlights #rushingrivergorge #lowangle #midshot #naturelovers #photowallpaper #50mm #romantic #amazinglyreal #photographygoals #naturephotography #photodreams #photographyart #creativeshots",
+    "alt_text": "Photorealistic romantic image of a couple laughing and enjoying nature, captured in the cooling natural light of the rushing river gorge, with soft muted neutral tones and a low angle shot from behind.",
+    "hashtags": [
+      "#photographic",
+      "#photorealistic",
+      "#cinematic",
+      "#mutedneon",
+      "#softlights",
+      "#rushingrivergorge",
+      "#lowangle",
+      "#midshot",
+      "#naturelovers",
+      "#photowallpaper",
+      "#50mm",
+      "#romantic",
+      "#amazinglyreal",
+      "#photographygoals",
+      "#naturephotography",
+      "#photodreams",
+      "#photographyart",
+      "#creativeshots"
+    ],
+    "backend": "graph",
+    "post_id": "18279193075290071",
+    "post_url": "https://www.instagram.com/reel/DcocB_jFDVJ/",
+    "status": "posted"
   }
 ]
