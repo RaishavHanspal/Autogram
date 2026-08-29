@@ -2631,5 +2631,56 @@
     "post_id": "18005326121975566",
     "post_url": "https://www.instagram.com/reel/Dcn1gc6jqqq/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260829T124156Z",
+    "timestamp": "2026-08-29T12:41:56.829128+00:00",
+    "brief": {
+      "subject": "A mid-20s South Asian woman and a late-20s South Asian man, mid-laugh on a wooden pier extending deep into a sunlit forest clearing at golden hour, with blooming wildflowers and dense evergreen trees framing the scene.",
+      "setting": "Rose garden in bloom",
+      "lighting": "Soft daylight",
+      "mood": "Relaxed, joyful, and intimate with a sense of natural beauty and serenity.",
+      "composition": "Three-quarter shot from the couple's perspective, with the wooden pier framing them, wildflowers and trees in the background, the couple mid-laugh with soft, natural expressions.",
+      "color_palette": "Warm golden tones with soft pastel green and soft beige tones.",
+      "time_of_day": "Golden hour, late morning.",
+      "style_modifiers": [
+        "cinematic",
+        "naturalistic",
+        "photorealistic"
+      ],
+      "location_name": "Rose garden in bloom",
+      "interaction": "",
+      "framing": "three-quarter shot from head to knees, faces clearly visible, overhead top-down view, couple on the right third, caught mid-laugh, natural genuine expression"
+    },
+    "positive_prompt": "three-quarter shot from head to knees, faces clearly visible, overhead top-down view, couple on the right third, caught mid-laugh, natural genuine expression, candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair; both fully clothed in elegant modest conservative attire, A mid-20s South Asian woman and a late-20s South Asian man, mid-laugh on a wooden pier extending deep into a sunlit forest clearing at golden hour, with blooming wildflowers and dense evergreen trees framing the scene., in Rose garden in bloom, Soft daylight, Relaxed, joyful, and intimate with a sense of natural beauty and serenity., Warm golden tones with soft pastel green and soft beige tones., Golden hour, late morning., cinematic, naturalistic, photorealistic, shot on DSLR, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, deformed face, distorted face, asymmetric face, extra faces, extra heads, fused faces, malformed face, blurry face, disfigured eyes, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear",
+    "seed": 1625504846,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "cabed7cdef6ebb8776a62d11f6fb4cde51d0c74c045578c089eed06d5aafe8de",
+    "image_path": "out/20260829T124156Z.jpg",
+    "caption": "Caught in a shared smile. Perfect moment captured under the golden hour. So glad we were here. 💕\n\n#RoseGarden #GoldenHour #SouthAsianLove #WarmSunlight #RelaxedJoy #Photorealistic #Cinematic #Naturalistic #SouthAsianLoveStory #LoveAtFirstSight #GoldenTones #SoftBeige #GorgeousNature #autogram #slowdesign",
+    "alt_text": "A mid-20s South Asian woman and a late-20s South Asian man mid-laugh on a wooden pier extending into a sunlit forest clearing with blooming wildflowers and dense evergreen trees framing the scene, under soft golden hour daylight, the couple's faces clearly visible in a three-quarter shot.",
+    "hashtags": [
+      "#RoseGarden",
+      "#GoldenHour",
+      "#SouthAsianLove",
+      "#WarmSunlight",
+      "#RelaxedJoy",
+      "#Photorealistic",
+      "#Cinematic",
+      "#Naturalistic",
+      "#SouthAsianLoveStory",
+      "#LoveAtFirstSight",
+      "#GoldenTones",
+      "#SoftBeige",
+      "#GorgeousNature",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "18103335779218874",
+    "post_url": "https://www.instagram.com/reel/DcoCVVjlI_q/",
+    "status": "posted"
   }
 ]
