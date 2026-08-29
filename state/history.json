@@ -2837,5 +2837,58 @@
     "post_id": "18111239033042244",
     "post_url": "https://www.instagram.com/reel/Dcok-H1DlKJ/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260829T224324Z",
+    "timestamp": "2026-08-29T22:43:24.497917+00:00",
+    "brief": {
+      "subject": "high-quality, photorealistic romantic images of couples deeply in love, with crystal-clear, expressive faces, natural emotions, realistic skin and details, cinematic lighting, beautiful backgrounds, and professional photography aesthetics. (variation 925)",
+      "setting": "Japanese zen garden",
+      "lighting": "Balanced diffused natural light",
+      "mood": "serene",
+      "composition": "high angle, medium shot",
+      "color_palette": "muted neutral tones",
+      "time_of_day": "morning",
+      "style_modifiers": [
+        "135mm telephoto",
+        "photographic"
+      ],
+      "location_name": "Japanese zen garden",
+      "interaction": "",
+      "framing": "full-body shot from behind as they walk into the landscape, three-quarter back view, couple on the right third, caught mid-laugh, natural genuine expression"
+    },
+    "positive_prompt": "full-body shot from behind as they walk into the landscape, three-quarter back view, couple on the right third, caught mid-laugh, natural genuine expression, candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair; both fully clothed in elegant modest conservative attire, high-quality, photorealistic romantic images of couples deeply in love, with crystal-clear, expressive faces, natural emotions, realistic skin and details, cinematic lighting, beautiful backgrounds, and professional photography aesthetics. (variation 925), in Japanese zen garden, Balanced diffused natural light, serene, muted neutral tones, morning, 135mm telephoto, photographic, shot on DSLR, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, deformed face, distorted face, asymmetric face, extra faces, extra heads, fused faces, malformed face, blurry face, disfigured eyes, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear",
+    "seed": 3803964925,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "a6ecc098d8fdfd7942358f71912751a7cacf35e53f9685a167f8467196dc1d13",
+    "image_path": "out/20260829T224324Z.jpg",
+    "caption": "Caught in a moment of pure joy. The soft smile, the gentle laugh. A serene Japanese zen garden setting where two souls find solace and laughter together. #photographic #135mmtelephoto #JapaneseZenGarden #CouplesLove #Photorealistic #ProfessionalAesthetics #ZenGarden #MidMood #LoveInPictures #NaturePhotography #CinematicLighting #MutedTones #Roses #Leaves #NudeSkin #GardenLove #Sunrise #LoveInPictures #NaturalLighting #PhotographicAesthetics #CalmMoments #Love #GardenJourney #BehindTheCamera #CapturedInTime #PhotographyLovers #NaturePhotography #ArtisticMoments #LoveInPictures #PhotographyLovers\n\n#photographic #135mmtelephoto #JapaneseZenGarden #CouplesLove #photorealistic #ProfessionalAesthetics #ZenGarden #MidMood #LoveInPictures #NaturePhotography #CinematicLighting #MutedTones #Roses #Leaves #NudeSkin #GardenLove #Sunrise #NaturalLighting",
+    "alt_text": "Two people smiling and laughing in a Japanese zen garden setting, captured in a high angle, medium shot with soft, diffused natural lighting, showcasing their joyful expressions and the beautiful natural scenery.",
+    "hashtags": [
+      "#photographic",
+      "#135mmtelephoto",
+      "#JapaneseZenGarden",
+      "#CouplesLove",
+      "#photorealistic",
+      "#ProfessionalAesthetics",
+      "#ZenGarden",
+      "#MidMood",
+      "#LoveInPictures",
+      "#NaturePhotography",
+      "#CinematicLighting",
+      "#MutedTones",
+      "#Roses",
+      "#Leaves",
+      "#NudeSkin",
+      "#GardenLove",
+      "#Sunrise",
+      "#NaturalLighting"
+    ],
+    "backend": "graph",
+    "post_id": "17909828340463093",
+    "post_url": "https://www.instagram.com/reel/DcpGIviCm-o/",
+    "status": "posted"
   }
 ]
