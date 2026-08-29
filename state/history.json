@@ -2529,5 +2529,54 @@
     "post_id": "17951964330255244",
     "post_url": "https://www.instagram.com/reel/DcngP30jZ4Y/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260829T094010Z",
+    "timestamp": "2026-08-29T09:40:10.085172+00:00",
+    "brief": {
+      "subject": "high-quality, photorealistic romantic images of couples deeply in love, with crystal-clear, expressive faces, natural emotions, realistic skin and details, cinematic lighting, beautiful backgrounds, and professional photography aesthetics. (variation 159)",
+      "setting": "Riverside bend with autumn colors",
+      "lighting": "Soft autumn afternoon light",
+      "mood": "serene",
+      "composition": "low angle, close-up",
+      "color_palette": "muted neutral tones",
+      "time_of_day": "morning",
+      "style_modifiers": [
+        "50mm",
+        "photographic"
+      ],
+      "location_name": "Riverside bend with autumn colors",
+      "interaction": "",
+      "framing": "wide shot seen from behind, the couple facing away toward the view, overhead top-down view, off-center with strong leading lines, in-between moment, relaxed and unaware of the camera"
+    },
+    "positive_prompt": "wide shot seen from behind, the couple facing away toward the view, overhead top-down view, off-center with strong leading lines, in-between moment, relaxed and unaware of the camera, candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair; both fully clothed in elegant modest conservative attire, high-quality, photorealistic romantic images of couples deeply in love, with crystal-clear, expressive faces, natural emotions, realistic skin and details, cinematic lighting, beautiful backgrounds, and professional photography aesthetics. (variation 159), in Riverside bend with autumn colors, Soft autumn afternoon light, serene, muted neutral tones, morning, 50mm, photographic, shot on DSLR, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, deformed face, distorted face, asymmetric face, extra faces, extra heads, fused faces, malformed face, blurry face, disfigured eyes, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear",
+    "seed": 2999451159,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "6d2fb1bfdff611cf80bd90ab481d8f309e3e9297edc5c28e5bc9d3a37c19be93",
+    "image_path": "out/20260829T094010Z.jpg",
+    "caption": "Witnessing the quiet serenity of love. A moment frozen in time, where every expression is raw and real. #PhotographicLove #RiversideLove #AutumnRiverside #PhotorealisticCouples #CinematicPhotography #LoveInAction #LoveThroughTheLens #PhotographyMoment #CouplesInNature #LoveInNature #PhotographyArt #LoveThroughPhotos #PhotographicLoveMoment\n\n#PhotographicLove #RiversideLove #AutumnRiverside #CouplesInNature #LoveInNature #PhotographyArt #LoveThroughPhotos #PhotographicLoveMoment #PhotorealisticCouples #CinematicPhotography #LoveInAction #LoveThroughTheLens #autogram #slowdesign",
+    "alt_text": "Photorealistic romantic images of a couple in a riverside setting during autumn, taken from a low angle, showing their expressive faces and natural emotions in cinematic lighting with a soft autumn afternoon light, set against a beautiful background.",
+    "hashtags": [
+      "#PhotographicLove",
+      "#RiversideLove",
+      "#AutumnRiverside",
+      "#CouplesInNature",
+      "#LoveInNature",
+      "#PhotographyArt",
+      "#LoveThroughPhotos",
+      "#PhotographicLoveMoment",
+      "#PhotorealisticCouples",
+      "#CinematicPhotography",
+      "#LoveInAction",
+      "#LoveThroughTheLens",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "17937483096348320",
+    "post_url": "https://www.instagram.com/reel/Dcnstp_DsrQ/",
+    "status": "posted"
   }
 ]
