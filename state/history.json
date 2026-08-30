@@ -2939,5 +2939,62 @@
     "post_id": "18036169898837160",
     "post_url": "https://www.instagram.com/reel/Dcp1aVbnduP/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260830T091014Z",
+    "timestamp": "2026-08-30T09:10:14.884480+00:00",
+    "brief": {
+      "subject": "A romantic couple standing side by side at the edge of a serene, sunlit forest pond in an Indian palace courtyard, their shadows merging gracefully behind them under the gentle, natural light of the setting sun.",
+      "setting": "Indian palace courtyard",
+      "lighting": "Golden hour light",
+      "mood": "regal, elegant, heritage, serene, magical, intimate, magical atmosphere, transformative, with a sense of deep love and renewal",
+      "composition": "Leading lines, side profile view, off-center framing, three-quarter shot, strong leading lines, in-between moment, relaxed and unaware of the camera, expressive faces, natural emotion, cinematic lighting, beautiful backgrounds, professional photography aesthetics, moderate depth of field",
+      "color_palette": "Warm golds, deep blues, rich blacks, soft greens, soft grays, warm tones, moody dark romantic grading",
+      "time_of_day": "Golden hour, summer season",
+      "style_modifiers": [
+        "Worm's-eye view",
+        "Macro focal length",
+        "Extreme close-up subject scale",
+        "Intimate, contemplative moment",
+        "Photorealistic romantic image",
+        "Professional photography aesthetics"
+      ],
+      "location_name": "Indian palace courtyard",
+      "interaction": "gazing into each other's eyes",
+      "framing": "three-quarter shot from head to knees, faces clearly visible, side profile view, off-center with strong leading lines, in-between moment, relaxed and unaware of the camera"
+    },
+    "positive_prompt": "three-quarter shot from head to knees, faces clearly visible, side profile view, off-center with strong leading lines, in-between moment, relaxed and unaware of the camera, candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair and a small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, a defined square jawline, short groomed dark beard and thick black hair; both fully clothed in elegant modest attire, gazing into each other's eyes, A romantic couple standing side by side at the edge of a serene, sunlit forest pond in an Indian palace courtyard, their shadows merging gracefully behind them under the gentle, natural light of the setting sun., in Indian palace courtyard, Golden hour light, regal, elegant, heritage, serene, magical, intimate, magical atmosphere, transformative, with a sense of deep love and renewal, Warm golds, deep blues, rich blacks, soft greens, soft grays, warm tones, moody dark romantic grading, Golden hour, summer season, Worm's-eye view, Macro focal length, Extreme close-up subject scale, Intimate, contemplative moment, Photorealistic romantic image, Professional photography aesthetics, shot on DSLR, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, deformed face, distorted face, asymmetric face, extra faces, extra heads, fused faces, malformed face, blurry face, disfigured eyes, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear",
+    "seed": 753430704,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "bd5cdbf8e123521fb1c4b8fb3b2043e0c46b553ce5276271653a68f4905ce5db",
+    "image_path": "out/20260830T091014Z.jpg",
+    "caption": "Aww, they look like they've found the perfect spot to share their love. The golden hour light casts a warm glow over their intertwined gazes. Perfect moment for a photo op. #romantic #photorealistic #heritage #photography #photographylovers #love #naturephotography #photooftheday #goldinghour #couplephotography #loveinpictures #instaphotography #dreamyphotos #indianpalace #magicmoment #intimatemoment #loveinstyle\n\n#romantic #photorealistic #heritage #photography #photographylovers #love #naturephotography #photooftheday #goldinghour #couplephotography #loveinpictures #instaphotography #dreamyphotos #indianpalace #magicmoment #intimatemoment #loveinstyle #travelphotography",
+    "alt_text": "A romantic couple standing side by side at the edge of a serene, sunlit forest pond in an Indian palace courtyard, their shadows merging gracefully behind them under the gentle, natural light of the setting sun.",
+    "hashtags": [
+      "#romantic",
+      "#photorealistic",
+      "#heritage",
+      "#photography",
+      "#photographylovers",
+      "#love",
+      "#naturephotography",
+      "#photooftheday",
+      "#goldinghour",
+      "#couplephotography",
+      "#loveinpictures",
+      "#instaphotography",
+      "#dreamyphotos",
+      "#indianpalace",
+      "#magicmoment",
+      "#intimatemoment",
+      "#loveinstyle",
+      "#travelphotography"
+    ],
+    "backend": "graph",
+    "post_id": "18113049856804058",
+    "post_url": "https://www.instagram.com/reel/DcqMif3CJ1u/",
+    "status": "posted"
   }
 ]
