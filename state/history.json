@@ -2890,5 +2890,54 @@
     "post_id": "17909828340463093",
     "post_url": "https://www.instagram.com/reel/DcpGIviCm-o/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260830T052833Z",
+    "timestamp": "2026-08-30T05:28:33.237818+00:00",
+    "brief": {
+      "subject": "Aerial view of a couple standing at the edge of a serene, sunlit forest pond, their shadows merging gracefully behind them under the gentle, natural light of the setting sun, with a full moon illuminating their expressions in the background, casting a subtle, ethereal glow.",
+      "setting": "Rain reflection",
+      "lighting": "Cool overcast atmospheric light",
+      "mood": "Calm, introspective, and intimate, with a sense of magic and romance.",
+      "composition": "Wide angle shot taken from an overhead perspective, the couple's heads and shoulders are centered in the frame with the moonlight playing across their faces and the water.",
+      "color_palette": "Golden hues, soft silvery tones, and the natural greens and browns of the forest.",
+      "time_of_day": "Golden hour with a full moon in the sky.",
+      "style_modifiers": [
+        "Highly detailed photorealism",
+        "Cinematic lighting",
+        "Natural background details"
+      ],
+      "location_name": "Rain reflection",
+      "interaction": "",
+      "framing": "wide shot seen from behind, the couple facing away toward the view, side profile view, framed by natural foreground elements, candid unposed moment, not looking at the camera"
+    },
+    "positive_prompt": "wide shot seen from behind, the couple facing away toward the view, side profile view, framed by natural foreground elements, candid unposed moment, not looking at the camera, candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, defined square jawline, short groomed dark beard, thick black hair; both fully clothed in elegant modest conservative attire, Aerial view of a couple standing at the edge of a serene, sunlit forest pond, their shadows merging gracefully behind them under the gentle, natural light of the setting sun, with a full moon illuminating their expressions in the background, casting a subtle, ethereal glow., in Rain reflection, Cool overcast atmospheric light, Calm, introspective, and intimate, with a sense of magic and romance., Golden hues, soft silvery tones, and the natural greens and browns of the forest., Golden hour with a full moon in the sky., Highly detailed photorealism, Cinematic lighting, Natural background details, shot on DSLR, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, deformed face, distorted face, asymmetric face, extra faces, extra heads, fused faces, malformed face, blurry face, disfigured eyes, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear",
+    "seed": 287342676,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "3e20e4f08867dc2b109f6f030f7d5ff01d9a94436611c4140de80b514b18498a",
+    "image_path": "out/20260830T052833Z.jpg",
+    "caption": "As the sun dipped below the horizon, casting a soft, golden glow, I found myself drawn to this magical moment.\n\nPerfect stillness, the gentle breeze rustling through the trees. The way their eyes met, a silent conversation in the twilight.\n\nFeels like a whisper of magic, a glimpse of the universe's tenderest embrace. #RainReflection ~mid #GoldenHour ~mid #CinematicLighting ~mid #Photorealism ~mid #MoonlitPond ~niche #ReflectionsOfMagic ~mid #NatureLovers ~niche #CalmMoments ~mid #UnderstatedCinematic ~broad #SilentLove ~broad #GentleBreeze ~niche\n\n#RainReflection #GoldenHour #CinematicLighting #Photorealism #MoonlitPond #ReflectionsOfMagic #NatureLovers #CalmMoments #UnderstatedCinematic #SilentLove #GentleBreeze #autogram #slowdesign",
+    "alt_text": "Aerial view of a couple standing at the edge of a serene, sunlit forest pond, their shadows merging gracefully behind them under the gentle, natural light of the setting sun, with a full moon illuminating their expressions in the background, casting a subtle, ethereal glow.",
+    "hashtags": [
+      "#RainReflection",
+      "#GoldenHour",
+      "#CinematicLighting",
+      "#Photorealism",
+      "#MoonlitPond",
+      "#ReflectionsOfMagic",
+      "#NatureLovers",
+      "#CalmMoments",
+      "#UnderstatedCinematic",
+      "#SilentLove",
+      "#GentleBreeze",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "18036169898837160",
+    "post_url": "https://www.instagram.com/reel/Dcp1aVbnduP/",
+    "status": "posted"
   }
 ]
