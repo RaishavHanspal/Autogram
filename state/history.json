@@ -2996,5 +2996,60 @@
     "post_id": "18113049856804058",
     "post_url": "https://www.instagram.com/reel/DcqMif3CJ1u/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260830T135303Z",
+    "timestamp": "2026-08-30T13:53:03.251506+00:00",
+    "brief": {
+      "subject": "A romantic couple in the high-altitude meadow, mid-laugh under the golden hour sunlight, with the snow-capped peaks and mist in the background.",
+      "setting": "Alpine meadow with wildflowers",
+      "lighting": "Golden hour sunlight",
+      "mood": "serene, adventurous, intimate, deep emotional connection, magical atmosphere",
+      "composition": "close-up portrait of both faces, low angle looking up, couple on the left third, caught mid-laugh, natural genuine expression, layered foreground, middle ground and background, moderate depth of field",
+      "color_palette": "dark tones with cool blue and warm gold, warm gold for skin tones and highlights, dark romantic grading, cool blue hour grading, golden hour sunlight",
+      "time_of_day": "golden hour, cool blue hour, golden hour sunlight",
+      "style_modifiers": [
+        "high-quality",
+        "photorealistic",
+        "romantic",
+        "South Asian",
+        "expressive faces",
+        "natural emotion",
+        "cinematic lighting",
+        "beautiful backgrounds",
+        "professional photography aesthetics"
+      ],
+      "location_name": "Alpine meadow with wildflowers",
+      "interaction": "walking hand-in-hand",
+      "framing": "close-up portrait of both faces, low angle looking up, couple on the left third, caught mid-laugh, natural genuine expression"
+    },
+    "positive_prompt": "close-up portrait of both faces, low angle looking up, couple on the left third, caught mid-laugh, natural genuine expression, candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair and a small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, a defined square jawline, short groomed dark beard and thick black hair; both fully clothed in elegant modest attire, walking hand-in-hand, A romantic couple in the high-altitude meadow, mid-laugh under the golden hour sunlight, with the snow-capped peaks and mist in the background., in Alpine meadow with wildflowers, Golden hour sunlight, serene, adventurous, intimate, deep emotional connection, magical atmosphere, dark tones with cool blue and warm gold, warm gold for skin tones and highlights, dark romantic grading, cool blue hour grading, golden hour sunlight, golden hour, cool blue hour, golden hour sunlight, high-quality, photorealistic, romantic, South Asian, expressive faces, natural emotion, cinematic lighting, beautiful backgrounds, professional photography aesthetics, shot on DSLR, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, deformed face, distorted face, asymmetric face, extra faces, extra heads, fused faces, malformed face, blurry face, disfigured eyes, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear",
+    "seed": 2857354445,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "24d785ec0c9c01df01b21668c2baa0c1d89445b5d42a89ec760e3086699fd7af",
+    "image_path": "out/20260830T135303Z.jpg",
+    "caption": "A golden hour glow casts a warm embrace around their laughter. So much love in these shared moments of joy. #SouthAsianLove #Photorealistic #CinematicLighting #BeautifulBackdrops #ProfessionalAesthetics #HighQualityPhotography #MidgroundMagic #GoldenHourSunlight #SouthAsianFlowerMeadow #GlowingLighting #NatureLovers #CinematicAesthetic #LoveInAlpine #MidAngleCapture #LoveInAction #LoveOnFilm #LoveThroughLens #LoveAcrossBorders #LoveInLighting #LoveInFrames #LoveInCinematicLight\n\n#SouthAsianLove #photorealistic #cinematiclighting #beautifulbackdrops #highquality #midgroundmagic #goldenhoursunlight #southafricanflowermeadow #glowinglighting #naturelovers #cinecam #autogram #slowdesign",
+    "alt_text": "A romantic couple mid-laugh in a high-altitude meadow under golden hour sunlight, with snow-capped peaks and mist in the background. They are walking hand-in-hand and have a deep emotional connection.",
+    "hashtags": [
+      "#SouthAsianLove",
+      "#photorealistic",
+      "#cinematiclighting",
+      "#beautifulbackdrops",
+      "#highquality",
+      "#midgroundmagic",
+      "#goldenhoursunlight",
+      "#southafricanflowermeadow",
+      "#glowinglighting",
+      "#naturelovers",
+      "#cinecam",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "18113033183098632",
+    "post_url": "https://www.instagram.com/reel/DcqtN4ogng2/",
+    "status": "posted"
   }
 ]
