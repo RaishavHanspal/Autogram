@@ -3103,5 +3103,54 @@
     "post_id": "17892170748611726",
     "post_url": "https://www.instagram.com/reel/DcrUiLoChWn/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260830T224646Z",
+    "timestamp": "2026-08-30T22:46:46.042512+00:00",
+    "brief": {
+      "subject": "high-quality, photorealistic romantic images of couples deeply in love, with expressive faces, natural emotion, cinematic lighting, beautiful backgrounds, and professional photography aesthetics (variation 328)",
+      "setting": "Rain-soaked city street",
+      "lighting": "Cool neon mixed with warm city light",
+      "mood": "peaceful and serene",
+      "composition": "environmental storytelling",
+      "color_palette": "warm earthy tones with muted saturation",
+      "time_of_day": "morning",
+      "style_modifiers": [
+        "50mm",
+        "photographic"
+      ],
+      "location_name": "Rain-soaked city street",
+      "interaction": "walking hand-in-hand",
+      "framing": "wide shot seen from behind, the couple facing away toward the view, side profile view, couple on the right third, in-between moment, relaxed and unaware of the camera"
+    },
+    "positive_prompt": "wide shot seen from behind, the couple facing away toward the view, side profile view, couple on the right third, in-between moment, relaxed and unaware of the camera, candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair and a small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, a defined square jawline, short groomed dark beard and thick black hair; both fully clothed in elegant modest attire, walking hand-in-hand, high-quality, photorealistic romantic images of couples deeply in love, with expressive faces, natural emotion, cinematic lighting, beautiful backgrounds, and professional photography aesthetics (variation 328), in Rain-soaked city street, Cool neon mixed with warm city light, peaceful and serene, warm earthy tones with muted saturation, morning, 50mm, photographic, shot on DSLR, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, deformed face, distorted face, asymmetric face, extra faces, extra heads, fused faces, malformed face, blurry face, disfigured eyes, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear",
+    "seed": 3829691328,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "cd19c3e1613ee96d66da4e5d63ffe536e8d8c3f4d403a2daece0e4a9d3985dbd",
+    "image_path": "out/20260830T224646Z.jpg",
+    "caption": "Walking hand-in-hand under the cool neon lights, feeling the morning dew on our cheeks. Peaceful and serene, the perfect moment captured in a moment of connection. #photographic #50mm\n\n#photographic #50mm #love #couples #citystreet #rain #morning #underneath #handinhand #coolneon #cinematic #beautiful #autogram #slowdesign",
+    "alt_text": "Photorealistic romantic image of a couple walking hand-in-hand on a rainy city street, captured from behind with cool neon and warm city lights, in a cinematic style with warm earthy tones.",
+    "hashtags": [
+      "#photographic",
+      "#50mm",
+      "#love",
+      "#couples",
+      "#citystreet",
+      "#rain",
+      "#morning",
+      "#underneath",
+      "#handinhand",
+      "#coolneon",
+      "#cinematic",
+      "#beautiful",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "18406595305086191",
+    "post_url": "https://www.instagram.com/reel/DcrsqZGjBnK/",
+    "status": "posted"
   }
 ]
