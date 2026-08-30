@@ -20,7 +20,6 @@ from .brief import (
     build_character_block,
     compute_seed,
     generate_brief,
-    load_characters_data,
     render_prompts,
 )
 from .caption import (
@@ -57,7 +56,8 @@ class PipelineError(Exception):
 
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p = argparse.ArgumentParser(prog="autogram", description="Self-hosted Instagram auto-poster.")
-    p.add_argument("--description", help="One-off override of the standing theme.")
+    p.add_argument("--description", help="One-off override of the active profile theme.")
+    p.add_argument("--content-profile", help="Select a named content profile from config.yaml.")
     p.add_argument("--dry-run", action="store_true", help="Run everything, post nothing.")
     p.add_argument("--image-only", action="store_true", help="Skip caption and posting.")
     p.add_argument("--seed", type=int, help="Reproducible run seed.")
@@ -114,12 +114,18 @@ def run_pipeline(args: argparse.Namespace, cfg: Config, secrets: Secrets) -> int
     run_date = now.strftime("%Y-%m-%d")
     stamp = now.strftime("%Y%m%dT%H%M%SZ")
 
+    if args.content_profile:
+        cfg.content.active_profile = args.content_profile
+        # Fail early with a useful profile-name error before starting a model.
+        cfg.active_content
+        log.info("content profile selected via CLI: %s", args.content_profile)
+
     if args.description:
-        cfg.theme = args.description
+        cfg.active_content.theme = args.description
         log.info("theme overridden via --description")
 
     # Seed from the per-second run stamp (not the calendar day) so repeated runs
-    # — the schedule fires several times a day — never reuse a seed and never
+    # Scheduled runs can fire several times a day; do not reuse a seed.
     # regenerate an identical image. --seed still forces full reproducibility.
     seed = args.seed if args.seed is not None else compute_seed(stamp, cfg.seed_salt)
     log.info(
@@ -163,7 +169,7 @@ def run_pipeline(args: argparse.Namespace, cfg: Config, secrets: Secrets) -> int
 
         # Inject the fixed couple description directly into the image prompt so
         # the SAME characters appear every time, independent of the LLM.
-        characters_block = build_character_block(load_characters_data())
+        characters_block = build_character_block(cfg)
         positive, negative = render_prompts(brief, cfg, characters_block=characters_block)
         log.info("positive prompt: %s", positive)
 
@@ -199,7 +205,7 @@ def run_pipeline(args: argparse.Namespace, cfg: Config, secrets: Secrets) -> int
         # --- extra Reel scenes (same couple, different places) ---
         # Reuse the already-loaded pipeline (gen) so the model loads once. Each
         # scene diverges via history + a distinct seed. A failed scene is skipped,
-        # never fatal — the Reel just uses whatever scenes succeeded (>=1).
+        # never fatal Ã¢â‚¬â€ the Reel just uses whatever scenes succeeded (>=1).
         reel_scene_paths: list[Path] = [processed.path]
         reel_scene_descs: list[str] = [brief.subject]
         if cfg.reel.enabled and not args.image_only and cfg.reel.num_scenes > 1:
@@ -299,7 +305,7 @@ def run_pipeline(args: argparse.Namespace, cfg: Config, secrets: Secrets) -> int
         from .reel import ReelError, assemble_ai_clips, build_reel
 
         # Try real AI motion for the configured scene indexes. Any failure (no
-        # key, no credits, timeout) is non-fatal — we fall back to the FFmpeg
+        # key, no credits, timeout) is non-fatal Ã¢â‚¬â€ we fall back to the FFmpeg
         # reel. PixVerse needs a public image URL (hosted via GitHub Release);
         # Hugging Face POSTs the image bytes directly, so no hosting is needed.
         ai_clips: list[Path] = []
@@ -313,7 +319,7 @@ def run_pipeline(args: argparse.Namespace, cfg: Config, secrets: Secrets) -> int
                 if idx >= len(reel_scene_paths):
                     continue
                 still = reel_scene_paths[idx]
-                desc = reel_scene_descs[idx] if idx < len(reel_scene_descs) else cfg.theme
+                desc = reel_scene_descs[idx] if idx < len(reel_scene_descs) else cfg.active_content.theme
                 try:
                     with stage_timer(log, f"ai_video.scene{idx}"):
                         url = (

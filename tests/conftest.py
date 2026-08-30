@@ -8,6 +8,8 @@ from autogram.brief import Brief
 from autogram.config import (
     CaptionConfig,
     Config,
+    ContentConfig,
+    ContentProfileConfig,
     GatesConfig,
     HashtagsConfig,
     PostprocConfig,
@@ -17,7 +19,7 @@ from autogram.config import (
 @pytest.fixture
 def cfg() -> Config:
     return Config(
-        theme="minimalist Scandinavian interiors with warm morning light",
+        content=ContentConfig(active_profile="test", profiles={"test": ContentProfileConfig(theme="minimalist Scandinavian interiors with warm morning light")}),
         hashtags=HashtagsConfig(min_count=3, max_count=6, brand_tags=["autogram", "slowdesign"]),
         caption=CaptionConfig(emoji_budget=2, max_length=2200, hashtag_placement="caption"),
         postproc=PostprocConfig(aspect="1:1", max_bytes=8 * 1024 * 1024),

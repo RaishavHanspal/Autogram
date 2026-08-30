@@ -199,15 +199,56 @@ class ReelConfig(BaseModel):
     ai_video: AiVideoConfig = Field(default_factory=AiVideoConfig)
 
 
+class YouTubeConfig(BaseModel):
+    """Non-secret settings for the YouTube Shorts publishing backend."""
+
+    privacy_status: str = "private"
+    category_id: str = "22"
+
+    @field_validator("privacy_status")
+    @classmethod
+    def _valid_privacy(cls, v: str) -> str:
+        if v not in {"private", "unlisted", "public"}:
+            raise ValueError("youtube.privacy_status must be private, unlisted, or public")
+        return v
+
 class StateConfig(BaseModel):
     history_path: str = "state/history.json"
     session_path: str = "state/ig_session.json"
     out_dir: str = "out"
 
+class ContentProfileConfig(BaseModel):
+    """Self-contained editorial direction for one selectable content mode."""
+
+    theme: str
+    system_prompt: str = "You are an editorial art director."
+    subject_instruction: str = "Create one fresh, specific, visually concrete scene."
+    prompt_anchor: str = ""
+    visual: dict[str, Any] = Field(default_factory=dict)
+
+
+class ContentConfig(BaseModel):
+    active_profile: str = "default"
+    profiles: dict[str, ContentProfileConfig] = Field(
+        default_factory=lambda: {
+            "default": ContentProfileConfig(
+                theme="minimalist Scandinavian interiors with warm morning light"
+            )
+        }
+    )
+
+    def active(self) -> ContentProfileConfig:
+        try:
+            return self.profiles[self.active_profile]
+        except KeyError as exc:
+            choices = ", ".join(sorted(self.profiles)) or "(none configured)"
+            raise ValueError(
+                f"content.active_profile '{self.active_profile}' does not exist; available: {choices}"
+            ) from exc
 
 class Config(BaseModel):
-    theme: str = "minimalist Scandinavian interiors with warm morning light"
     seed_salt: str = "autogram-v1"
+    content: ContentConfig = Field(default_factory=ContentConfig)
     brief: BriefConfig = Field(default_factory=BriefConfig)
     llm: LlmConfig = Field(default_factory=LlmConfig)
     image: ImageConfig = Field(default_factory=ImageConfig)
@@ -216,7 +257,12 @@ class Config(BaseModel):
     hashtags: HashtagsConfig = Field(default_factory=HashtagsConfig)
     gates: GatesConfig = Field(default_factory=GatesConfig)
     reel: ReelConfig = Field(default_factory=ReelConfig)
+    youtube: YouTubeConfig = Field(default_factory=YouTubeConfig)
     state: StateConfig = Field(default_factory=StateConfig)
+
+    @property
+    def active_content(self) -> ContentProfileConfig:
+        return self.content.active()
 
 
 # --------------------------------------------------------------------------- #
@@ -239,6 +285,10 @@ class Secrets(BaseSettings):
 
     GITHUB_TOKEN: str | None = None
     GITHUB_REPOSITORY: str | None = None
+
+    YOUTUBE_CLIENT_ID: str | None = None
+    YOUTUBE_CLIENT_SECRET: str | None = None
+    YOUTUBE_REFRESH_TOKEN: str | None = None
 
     OLLAMA_HOST: str = "http://127.0.0.1:11434"
 
@@ -285,6 +335,12 @@ def load_config(path: str | Path | None = None) -> Config:
         if loaded:
             data = loaded
     data = _apply_env_overrides(data)
+    legacy_theme = data.pop("theme", None)
+    if legacy_theme is not None and "content" not in data:
+        data["content"] = {
+            "active_profile": "default",
+            "profiles": {"default": {"theme": legacy_theme}},
+        }
     return Config.model_validate(data)
 
 

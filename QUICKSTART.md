@@ -20,10 +20,11 @@ macOS/Windows install Ollama once from https://ollama.com/download.
 cp .env.example .env
 ```
 
-Edit **`config/config.yaml`** and set your standing theme:
+Edit **`config/config.yaml`** and choose a `content.active_profile`; edit or add profiles under `content.profiles`:
 
 ```yaml
-theme: "minimalist Scandinavian interiors with warm morning light"
+content:
+  active_profile: "ai_tools"
 ```
 
 That's the only required config. Everything else has sane defaults.
@@ -100,7 +101,8 @@ python -m autogram.run
 python -m autogram.run --dry-run                 # generate, gate, save, no post
 python -m autogram.run --image-only              # image only, no caption/post
 python -m autogram.run --seed 1234               # reproducible
-python -m autogram.run --description "new theme" # one-off theme
+python -m autogram.run --content-profile psychology # select a configured mode
+python -m autogram.run --description "new theme" # one-off active-profile theme
 ```
 
 ## Troubleshooting

@@ -83,7 +83,8 @@ caption `.txt` in `out/`, with no GPU and no paid API.
 
 ```bash
 python -m autogram.run                        # full pipeline from config
-python -m autogram.run --description "..."    # one-off theme override
+python -m autogram.run --content-profile ai_tools # select a configured content mode
+python -m autogram.run --description "..."    # one-off active-profile theme override
 python -m autogram.run --dry-run              # generate + gate + save, do NOT post
 python -m autogram.run --image-only           # skip caption and post
 python -m autogram.run --seed 1234            # reproducible run
@@ -98,16 +99,31 @@ Exit codes (distinct per failure class): `0` ok, `1` config, `2` brief/LLM,
 ## Configuration
 
 All non-secret settings live in **`config/config.yaml`** (validated by pydantic).
-Two logical inputs only: **Instagram credentials** (env) and the **content theme**
-(config / `--description`). Everything else has a sane default.
 
+The `content` block is the single source of truth for editorial direction. Change `content.active_profile` (or pass `--content-profile`) to switch an entire channel. Each profile owns its theme, prompt anchor, creative direction, and location pool. The included profiles are `romance`, `ai_tools`, and `psychology`; add a new profile instead of changing pipeline logic.
+
+Pipeline settings remain in the same YAML file. Instagram credentials remain environment-only. `--description` is a one-run override of the selected profile's theme.
 Env vars override any YAML value:
 
 ```bash
-AUTOGRAM_THEME="cats in tiny hats"       # override a top-level key
+AUTOGRAM_CONTENT__ACTIVE_PROFILE=ai_tools # select a configured content mode
 AUTOGRAM_IMAGE__STEPS=4                    # override nested keys with __
 AUTOGRAM_GATES__NSFW=false
 ```
+
+### YouTube Shorts backend
+
+Set `POST_BACKEND=youtube` to publish the rendered Reel MP4 to YouTube. The backend uses the official YouTube Data API and accepts only video files, so keep `reel.enabled: true`. The default `1080×1920` Reel layout is vertical; YouTube categorizes vertical or square videos up to three minutes as Shorts.
+
+Create a Google Cloud project, enable **YouTube Data API v3**, and create OAuth 2.0 credentials. Store these only in `.env` or your CI secret store:
+
+| Variable | Purpose |
+|---|---|
+| `YOUTUBE_CLIENT_ID` | OAuth 2.0 client ID |
+| `YOUTUBE_CLIENT_SECRET` | OAuth 2.0 client secret |
+| `YOUTUBE_REFRESH_TOKEN` | Long-lived user token with the `youtube.upload` scope |
+
+Set `youtube.privacy_status` in `config/config.yaml` to `private`, `unlisted`, or `public`; it defaults to `private`. Do not use an API key or service account for uploads.
 
 ### Secrets (environment only — never in YAML)
 

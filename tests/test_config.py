@@ -13,7 +13,7 @@ def test_env_override(monkeypatch, tmp_path):
     monkeypatch.setenv("AUTOGRAM_THEME", "overridden")
     cfg = load_config(cfg_file)
     assert cfg.image.steps == 4
-    assert cfg.theme == "overridden"
+    assert cfg.active_content.theme == "overridden"
 
 
 def test_defaults_when_no_file(tmp_path):
@@ -36,5 +36,5 @@ def test_invalid_placement_rejected():
 
 def test_repo_config_loads():
     cfg = load_config("config/config.yaml")
-    assert cfg.theme
+    assert cfg.active_content.theme
     assert cfg.brief.axes  # axes present

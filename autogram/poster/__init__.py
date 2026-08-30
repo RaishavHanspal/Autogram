@@ -7,6 +7,7 @@ from .base import Poster, PosterError, PostResult
 from .graph_poster import GraphApiPoster
 from .image_host import GitHubReleaseHost, ImageHost
 from .instagrapi_poster import InstagrapiPoster
+from .youtube_poster import YouTubePoster
 
 __all__ = [
     "Poster",
@@ -14,6 +15,7 @@ __all__ = [
     "PostResult",
     "GraphApiPoster",
     "InstagrapiPoster",
+    "YouTubePoster",
     "ImageHost",
     "GitHubReleaseHost",
     "build_poster",
@@ -51,7 +53,16 @@ def build_poster(secrets: Secrets, cfg: Config, dry_run: bool = False) -> Poster
             image_host=host,
             dry_run=dry_run,
         )
-    raise PosterError(f"unknown POST_BACKEND: {backend!r} (expected instagrapi|graph)")
+    if backend == "youtube":
+        return YouTubePoster(
+            client_id=secrets.YOUTUBE_CLIENT_ID,
+            client_secret=secrets.YOUTUBE_CLIENT_SECRET,
+            refresh_token=secrets.YOUTUBE_REFRESH_TOKEN,
+            privacy_status=cfg.youtube.privacy_status,
+            category_id=cfg.youtube.category_id,
+            dry_run=dry_run,
+        )
+    raise PosterError(f"unknown POST_BACKEND: {backend!r} (expected instagrapi|graph|youtube)")
 
 
 class _NullImageHost(ImageHost):

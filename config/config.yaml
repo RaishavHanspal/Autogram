@@ -4,9 +4,50 @@
 # Credentials live in the environment / .env, never here.
 # ---------------------------------------------------------------------------
 
-# The ONE standing content input. Every run varies a fresh brief from this.
-theme: "high-quality, photorealistic romantic images of couples deeply in love, with crystal-clear, expressive faces, natural emotions, realistic skin and details, cinematic lighting, beautiful backgrounds, and professional photography aesthetics."
-
+# The single source of truth for editorial direction. Change active_profile to
+# switch the entire content mode; all functional pipeline settings stay shared.
+content:
+  active_profile: "romance"
+  profiles:
+    romance:
+      theme: "high-quality, photorealistic romantic images of couples deeply in love, with expressive faces, natural emotion, cinematic lighting, beautiful backgrounds, and professional photography aesthetics"
+      system_prompt: "You are an art director generating a single creative brief for one photorealistic image of a romantic South Asian couple."
+      subject_instruction: "Produce one fresh, specific, visually concrete brief featuring the couple in the described location."
+      prompt_anchor: "the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair and a small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, a defined square jawline, short groomed dark beard and thick black hair; both fully clothed in elegant modest attire"
+      visual:
+        interaction_styles: ["walking hand-in-hand", "gazing into each other's eyes", "intimate embrace", "laughing while walking", "quiet contemplation side-by-side"]
+        moods_and_emotions: ["tender and romantic", "playful and joyful", "peaceful and serene", "nostalgic and reflective"]
+        photography_trends:
+          compositions: ["rule of thirds", "leading lines", "environmental storytelling", "layered foreground, middle ground and background"]
+          lighting_styles: ["golden hour warm backlighting", "soft overcast daylight", "dramatic side lighting", "cool blue hour"]
+          color_grading: ["warm earthy tones with muted saturation", "vintage film aesthetic", "moody dark romantic grading"]
+          depth_of_field: ["deep focus with the environment readable", "moderate depth of field", "selective focus"]
+        locations:
+          nature:
+            - {name: "Alpine meadow with wildflowers", description: "Expansive alpine meadow with wildflowers, distant snow-capped peaks and mist", lighting: "Golden hour sunlight", mood: "serene, adventurous, intimate"}
+            - {name: "Tropical beach at golden hour", description: "White sand beach, turquoise ocean, palm trees and an expansive golden sky", lighting: "Warm golden hour sunlight", mood: "romantic, carefree, tropical"}
+            - {name: "Misty forest morning", description: "Long forest path fading into atmospheric mist beneath tall trees", lighting: "Soft diffused dawn light", mood: "dreamlike and intimate"}
+          city:
+            - {name: "Rain-soaked city street", description: "Wet urban street with neon reflections, storefronts and blurred city lights", lighting: "Cool neon mixed with warm city light", mood: "romantic, moody, cinematic"}
+            - {name: "Indian palace courtyard", description: "Ornate palace courtyard with tile work, marble arches and fountains", lighting: "Golden hour light", mood: "regal, elegant, heritage"}
+    ai_tools:
+      theme: "clear, useful editorial content about AI tools, workflows, and practical productivity"
+      system_prompt: "You are an editorial art director for an approachable AI-tools publication."
+      subject_instruction: "Create a concrete, useful visual story about a specific AI workflow, feature, comparison, or productivity moment; avoid hype and unreadable text in the image."
+      prompt_anchor: "clean modern editorial technology illustration, no logos, no readable interface text"
+      visual:
+        moods_and_emotions: ["clear and confident", "curious and optimistic", "focused and practical"]
+        photography_trends: {compositions: ["clean grid composition", "desktop workflow scene", "human-and-tool collaboration"], lighting_styles: ["soft studio light", "calm daylight"], color_grading: ["clean neutral palette with one electric accent", "modern blue and violet palette"], depth_of_field: ["crisp editorial detail", "moderate depth of field"]}
+        locations: {workflows: [{name: "Focused creator workspace", description: "A tidy desk with a laptop, notebook and abstract AI workflow visuals", lighting: "Soft window light", mood: "focused and practical"}, {name: "Collaborative product studio", description: "A modern creative studio discussing an abstract AI workflow board", lighting: "Balanced editorial lighting", mood: "curious and productive"}]}
+    psychology:
+      theme: "thoughtful, evidence-aware visual content about psychology, habits, emotions, and self-understanding"
+      system_prompt: "You are an editorial art director for a compassionate psychology publication."
+      subject_instruction: "Create a grounded, respectful visual story about an everyday psychological concept, habit, emotion, or reflection; never imply diagnosis or medical advice."
+      prompt_anchor: "warm human-centered editorial photograph, diverse adult subjects, respectful natural expressions"
+      visual:
+        moods_and_emotions: ["reflective and calm", "hopeful", "grounded and compassionate"]
+        photography_trends: {compositions: ["quiet observational scene", "symbolic everyday still life", "environmental portrait with negative space"], lighting_styles: ["soft morning light", "gentle overcast daylight", "warm reading-lamp light"], color_grading: ["muted calming earth tones", "soft natural documentary color"], depth_of_field: ["moderate depth of field", "deep focus with environmental context"]}
+        locations: {everyday: [{name: "Quiet reading nook", description: "A comfortable reading nook with journal, tea and soft natural light", lighting: "Soft morning light", mood: "reflective and calm"}, {name: "Peaceful park walk", description: "A leafy city park path with a person taking a thoughtful walk", lighting: "Gentle overcast daylight", mood: "grounded and hopeful"}]}
 # Deterministic-variation salt. Change it to reshuffle the axis-hint stream
 # without changing the theme.
 seed_salt: "autogram-v1"
@@ -142,6 +183,10 @@ reel:
     # Keep generated AI clips temporary.
     keep_intermediate: false
 
+youtube:
+  # Keep initial uploads private until you confirm your channel workflow.
+  privacy_status: "private"  # private, unlisted, or public
+  category_id: "22"          # People & Blogs
 state:
   history_path: "state/history.json"
   session_path: "state/ig_session.json"   # instagrapi session settings (gitignored)

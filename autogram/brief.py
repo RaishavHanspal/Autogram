@@ -8,9 +8,7 @@ Variety is guaranteed several ways:
   2. The prompt includes the last N briefs and demands explicit divergence.
   3. Near-duplicate subjects (rapidfuzz token_set_ratio > threshold) are
      rejected and retried, up to max_retries.
-  4. A fixed character block loaded from characters.json is injected directly
-     into the Stable-Diffusion prompt, keeping the SAME couple across every
-     image while the location and photographic style rotate every run.
+  4. A profile-specific prompt anchor is injected directly into the Stable-Diffusion prompt.
   5. Locations are rotated using recorded history so a place is not reused
      until the pool is exhausted.
 """
@@ -18,7 +16,6 @@ Variety is guaranteed several ways:
 from __future__ import annotations
 
 import hashlib
-import json
 import random
 import re
 from typing import Any
@@ -76,16 +73,6 @@ def is_near_duplicate(subject: str, history_subjects: list[str], threshold: floa
     return False
 
 
-def load_characters_data(path: str = "config/characters.json") -> dict[str, Any]:
-    """Load character descriptors, locations, and style trends from JSON."""
-    try:
-        with open(path, encoding="utf-8") as fh:
-            return json.load(fh)
-    except (FileNotFoundError, json.JSONDecodeError) as exc:
-        log.warning("characters.json not found or invalid: %s; using defaults", exc)
-        return {"characters": {}, "locations": {}}
-
-
 def flatten_locations(locations_dict: dict[str, list[dict[str, str]]]) -> list[dict[str, str]]:
     """Flatten nested location categories into a single list."""
     all_locations: list[dict[str, str]] = []
@@ -109,7 +96,7 @@ def select_unique_location(
 
 
 def _pick(rng: random.Random, data: dict[str, Any], key: str) -> str:
-    """Pick one value from a top-level list in characters.json, or ''."""
+    """Pick one value from the active content profile, or ''."""
     values = data.get(key)
     if isinstance(values, list) and values:
         return str(rng.choice(values))
@@ -202,27 +189,13 @@ def select_style(rng: random.Random, characters_data: dict[str, Any]) -> dict[st
     }
 
 
-def build_character_block(characters_data: dict[str, Any]) -> str:
-    """Build a compact, deterministic couple description for the image prompt.
+def build_character_block(cfg: Config) -> str:
+    """Return the selected profile's deterministic image prompt anchor.
 
-    Deterministic (no RNG) so the SAME recognizable couple appears in every
-    image. Kept concise to survive the CLIP 77-token limit on SD models while
-    still anchoring identity (FLUX on GPU handles the full detail comfortably).
+    Despite its historical name, an anchor may describe recurring people, a
+    product, an illustration style, or be empty for topic-led content.
     """
-    chars = characters_data.get("characters", {})
-    female = chars.get("female", {}) if isinstance(chars, dict) else {}
-    male = chars.get("male", {}) if isinstance(chars, dict) else {}
-    if not female and not male:
-        return ""
-    return (
-        "the same recognizable romantic couple: "
-        "a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, "
-        "high cheekbones, full lips, long wavy jet-black side-swept hair, small red bindi; "
-        "and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, "
-        "defined square jawline, short groomed dark beard, thick black hair; "
-        "both fully clothed in elegant modest conservative attire"
-    )
-
+    return cfg.active_content.prompt_anchor.strip()
 
 def render_prompts(brief: Brief, cfg: Config, characters_block: str = "") -> tuple[str, str]:
     """Render (positive, negative) Stable Diffusion prompts from the brief.
@@ -256,8 +229,7 @@ def _build_messages(
         '"time_of_day": "string", "style_modifiers": ["string", ...]}'
     )
     system = (
-        "You are an art director generating a single creative brief for one "
-        "photorealistic image of a romantic South Asian couple. Respond ONLY with a "
+        f"{cfg.active_content.system_prompt.strip()} Respond ONLY with a "
         f"JSON object matching this schema exactly: {schema}. No prose, no code fences."
     )
 
@@ -310,16 +282,16 @@ def _build_messages(
         or "(none yet)"
     )
     user = (
-        f"Standing theme (stay on-brand): {cfg.theme}\n"
+        f"Active content profile: {cfg.content.active_profile}\n"
+        f"Standing theme (stay on-brand): {cfg.active_content.theme}\n"
         f"{char_section}"
         f"{location_section}"
         f"{style_section}"
         f"\nIncorporate these pre-selected creative constraints:\n{hints}\n\n"
-        f"These are the most recent briefs already used — your brief MUST be "
+        f"These are the most recent briefs already used ? your brief MUST be "
         f"clearly different in subject and composition from ALL of them:\n{prev_lines}\n\n"
-        f"Produce one fresh, specific, visually concrete brief featuring the couple in the "
-        f"described location. The 'subject' must be a distinct scene, not a rephrasing of a "
-        f"previous one."
+        f"{cfg.active_content.subject_instruction}\n"
+        f"The 'subject' must be a distinct scene, not a rephrasing of a previous one."
     )
     if error_feedback:
         user += (
@@ -367,8 +339,8 @@ def _fallback_brief(
     """Deterministic brief if the LLM never returns valid JSON."""
     log.warning("using deterministic fallback brief")
     brief = Brief(
-        subject=f"{cfg.theme} (variation {seed % 1000})",
-        setting=cfg.theme,
+        subject=f"{cfg.active_content.theme} (variation {seed % 1000})",
+        setting=cfg.active_content.theme,
         lighting=axis_hints.get("season", "soft") + " light",
         mood=style.get("emotion") or "serene",
         composition=style.get("composition")
@@ -409,7 +381,7 @@ def generate_brief(
     log.info("axis hints: %s", axis_hints)
 
     # Load character/location/style data and rotate a fresh location + style.
-    characters_data = load_characters_data()
+    characters_data = cfg.active_content.visual
     all_locations = flatten_locations(characters_data.get("locations", {}))
     history_locations = extract_location_from_history(recent_briefs)
     selected_location = select_unique_location(rng, all_locations, history_locations)
