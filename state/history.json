@@ -3051,5 +3051,57 @@
     "post_id": "18113033183098632",
     "post_url": "https://www.instagram.com/reel/DcqtN4ogng2/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260830T192143Z",
+    "timestamp": "2026-08-30T19:21:43.818150+00:00",
+    "brief": {
+      "subject": "A mid-20s South Asian woman and a late-20s South Asian man walking hand-in-hand under a canopy of blooming wildflowers in an Indian palace courtyard during golden hour",
+      "setting": "Indian palace courtyard",
+      "lighting": "Golden hour light",
+      "mood": "Regal, elegant, heritage, serene, intimate, magical atmosphere, transformative, with a sense of deep love and renewal",
+      "composition": "Layered foreground, middle ground and background, Dutch angle",
+      "color_palette": "Warm earthy tones with muted saturation",
+      "time_of_day": "Golden hour",
+      "style_modifiers": [
+        "High-Quality",
+        "Photorealistic",
+        "Romantic",
+        "Cinematic Lighting"
+      ],
+      "location_name": "Indian palace courtyard",
+      "interaction": "walking hand-in-hand",
+      "framing": "extreme close-up of their faces, sharp facial detail, eye-level angle, rule-of-thirds composition, couple off to one side, candid unposed moment, not looking at the camera"
+    },
+    "positive_prompt": "extreme close-up of their faces, sharp facial detail, eye-level angle, rule-of-thirds composition, couple off to one side, candid unposed moment, not looking at the camera, candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair and a small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, a defined square jawline, short groomed dark beard and thick black hair; both fully clothed in elegant modest attire, walking hand-in-hand, A mid-20s South Asian woman and a late-20s South Asian man walking hand-in-hand under a canopy of blooming wildflowers in an Indian palace courtyard during golden hour, in Indian palace courtyard, Golden hour light, Regal, elegant, heritage, serene, intimate, magical atmosphere, transformative, with a sense of deep love and renewal, Warm earthy tones with muted saturation, Golden hour, High-Quality, Photorealistic, Romantic, Cinematic Lighting, shot on DSLR, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, deformed face, distorted face, asymmetric face, extra faces, extra heads, fused faces, malformed face, blurry face, disfigured eyes, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear",
+    "seed": 3459882932,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "b2f3569f3beb98e958a2a4faf213628b30cb8adc66a4c2a3dbc3bb94d0c00dcf",
+    "image_path": "out/20260830T192143Z.jpg",
+    "caption": "Walking hand-in-hand under the golden hour light, feeling like royalty in this serene, magical moment. The warm earthy tones create a feeling of deep love and renewal. 🌺✨\n\n#IndianPalace #GoldenHourLight #WarmEarthTones #CinematicLighting #HighQualityPhotography #Photorealistic #RomanticMoment #IntimateConnection #Transformation #Heritage #RoyalAurora #DeepLove #RenewalMoment #autogram #slowdesign",
+    "alt_text": "A mid-20s South Asian woman and a late-20s South Asian man walking hand-in-hand under a canopy of blooming wildflowers in an Indian palace courtyard during golden hour.",
+    "hashtags": [
+      "#IndianPalace",
+      "#GoldenHourLight",
+      "#WarmEarthTones",
+      "#CinematicLighting",
+      "#HighQualityPhotography",
+      "#Photorealistic",
+      "#RomanticMoment",
+      "#IntimateConnection",
+      "#Transformation",
+      "#Heritage",
+      "#RoyalAurora",
+      "#DeepLove",
+      "#RenewalMoment",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "17892170748611726",
+    "post_url": "https://www.instagram.com/reel/DcrUiLoChWn/",
+    "status": "posted"
   }
 ]
