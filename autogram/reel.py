@@ -1,1060 +1,1173 @@
-"""
-CPU-friendly Instagram Reel renderer.
+"""Creative brief generation for the romantic-couple profile.
 
-Turns generated still images into a genuine 1080x1920 MP4 video.
+The scene is deliberately controlled in Python rather than relying entirely
+on the LLM. Each run deterministically selects:
 
-Features:
-- Randomized camera movement
-- Random zoom/pan/focal point
-- Subtle rotation
-- Random visual treatments
-- Random transitions
-- Variable scene durations
-- Seeded per-Reel uniqueness
-- Generated royalty-free ambient/music-like audio
-- Optional royalty-free audio tracks from reel.audio_dir
-- Beat/pulse timing derived from the generated soundtrack
-- H.264 + AAC + faststart
+    * boy proposes to girl OR girl proposes to boy
+    * optional third woman in a love triangle
+    * proposal action
+    * ring / flowers
+    * emotional reactions
+    * cinematic framing
+    * location
+    * photographic style
 
-NOTE:
-This creates animated video from still images. It does NOT generate
-true human/object motion like an AI image-to-video model.
+The selected proposal metadata is stamped onto Brief and injected directly
+into the final Stable Diffusion prompt so the image generator receives the
+same scene direction even when the LLM varies its JSON response.
 """
 
 from __future__ import annotations
 
+import hashlib
 import random
 import re
-import shutil
-import subprocess
-from collections.abc import Sequence
-from pathlib import Path
+from typing import Any
 
+from pydantic import BaseModel, Field, ValidationError
+from rapidfuzz import fuzz
+
+from .caption import OllamaClient, OllamaError
 from .config import Config
 from .logging_utils import get_logger
 
-log = get_logger("reel")
+
+log = get_logger("brief")
 
 
-VIDEO_SUFFIXES = {".mp4", ".mov"}
+class Brief(BaseModel):
+    subject: str
+    setting: str
+    lighting: str
+    mood: str
+    composition: str
+    color_palette: str
+    time_of_day: str
+    style_modifiers: list[str] = Field(default_factory=list)
 
-_AUDIO_SUFFIXES = {
-    ".mp3",
-    ".wav",
-    ".m4a",
-    ".aac",
-    ".ogg",
-    ".flac",
-}
+    # Existing history/scene metadata.
+    location_name: str = ""
+    interaction: str = ""
+    framing: str = ""
 
-
-class ReelError(RuntimeError):
-    """Raised when a Reel cannot be produced."""
-
-
-# ---------------------------------------------------------------------------
-# Camera / visual presets
-# ---------------------------------------------------------------------------
-
-# Movement is expressed as normalized offsets rather than fixed pixels.
-# This makes the effect work better across different resolutions.
-_MOTIONS = [
-    "push_in",
-    "pull_out",
-    "pan_left",
-    "pan_right",
-    "pan_up",
-    "pan_down",
-    "diagonal_tl",
-    "diagonal_tr",
-    "diagonal_bl",
-    "diagonal_br",
-    "orbit_left",
-    "orbit_right",
-    "float",
-    "dramatic_push",
-    "dramatic_pull",
-]
-
-_TRANSITIONS = [
-    "fade",
-    "fadeblack",
-    "fadewhite",
-    "wipeleft",
-    "wiperight",
-    "slideleft",
-    "slideright",
-    "circleopen",
-    "smoothleft",
-    "smoothright",
-]
-
-_EFFECTS = [
-    "clean",
-    "warm",
-    "cinematic",
-    "dreamy",
-    "soft",
-    "contrast",
-    "vignette",
-]
+    # Romance-specific metadata.
+    proposal_direction: str = ""
+    proposal_action: str = ""
+    third_person_present: bool = False
+    third_person_role: str = ""
+    romantic_details: str = ""
 
 
-# ---------------------------------------------------------------------------
-# Utility
-# ---------------------------------------------------------------------------
+def compute_seed(run_date: str, salt: str) -> int:
+    """Return a deterministic 31-bit seed."""
+    digest = hashlib.sha256(
+        f"{run_date}|{salt}".encode()
+    ).hexdigest()
+
+    return int(digest[:8], 16)
 
 
-def is_video(path: str | Path) -> bool:
-    """True if the path looks like a video file."""
-    return Path(path).suffix.lower() in VIDEO_SUFFIXES
-
-
-def ffmpeg_available() -> bool:
-    return shutil.which("ffmpeg") is not None
-
-
-def _normalize_images(
-    image_paths: str | Path | Sequence[str | Path],
-) -> list[Path]:
-    if isinstance(image_paths, str | Path):
-        items: Sequence[str | Path] = [image_paths]
-    else:
-        items = image_paths
-
-    return [Path(p) for p in items if p]
-
-
-def _pick_audio(
-    audio_dir: str,
+def select_axis_hints(
     rng: random.Random,
-) -> Path | None:
-    """
-    Pick a random royalty-free audio file.
-
-    If no valid audio exists, the Reel uses generated audio.
-    """
-    d = Path(audio_dir)
-
-    if not d.is_dir():
-        return None
-
-    tracks = sorted(p for p in d.iterdir() if p.is_file() and p.suffix.lower() in _AUDIO_SUFFIXES)
-
-    if not tracks:
-        return None
-
-    return rng.choice(tracks)
+    axes: dict[str, list[str]],
+) -> dict[str, str]:
+    """Select one value from every configured creative axis."""
+    return {
+        axis: rng.choice(values)
+        for axis, values in axes.items()
+        if values
+    }
 
 
-# ---------------------------------------------------------------------------
-# Random scene planning
-# ---------------------------------------------------------------------------
+def _normalize_subject(subject: str) -> str:
+    return re.sub(
+        r"\s+",
+        " ",
+        subject.lower().strip(),
+    )
 
 
-def _random_scene_plan(
-    n: int,
-    rc,
+def is_near_duplicate(
+    subject: str,
+    history_subjects: list[str],
+    threshold: float,
+) -> bool:
+    """Reject subjects that are too similar to recent subjects."""
+    norm = _normalize_subject(subject)
+
+    for previous in history_subjects:
+        if fuzz.token_set_ratio(
+            norm,
+            _normalize_subject(previous),
+        ) > threshold:
+            return True
+
+    return False
+
+
+def flatten_locations(
+    locations_dict: dict[str, list[dict[str, str]]],
+) -> list[dict[str, str]]:
+    """Flatten location categories into one list."""
+    all_locations: list[dict[str, str]] = []
+
+    for scenarios in locations_dict.values():
+        if isinstance(scenarios, list):
+            all_locations.extend(scenarios)
+
+    return all_locations
+
+
+def select_unique_location(
     rng: random.Random,
-) -> list[dict]:
-    """
-    Generate a unique visual plan for this Reel.
+    all_locations: list[dict[str, str]],
+    history_locations: list[str],
+) -> dict[str, str] | None:
+    """Select a location not recently used."""
+    available = [
+        location
+        for location in all_locations
+        if location.get("name", "") not in history_locations
+    ]
 
-    We intentionally avoid completely random values. Instead, values are
-    constrained to ranges that still look like intentional photography.
-    """
-
-    plan: list[dict] = []
-
-    previous_motion = None
-    previous_transition = None
-    previous_effect = None
-
-    for i in range(n):
-        # ---------------------------------------------------------------
-        # Duration
-        # ---------------------------------------------------------------
-        # First/last scenes are slightly longer on average.
-        if i == 0:
-            duration = rng.uniform(
-                max(2.8, rc.seconds_per_image - 0.6),
-                rc.seconds_per_image + 0.7,
-            )
-        else:
-            duration = rng.uniform(
-                max(2.2, rc.seconds_per_image - 0.8),
-                rc.seconds_per_image + 0.8,
-            )
-
-        # ---------------------------------------------------------------
-        # Motion
-        # ---------------------------------------------------------------
-        motions = [m for m in _MOTIONS if m != previous_motion]
-        motion = rng.choice(motions)
-
-        # ---------------------------------------------------------------
-        # Zoom
-        # ---------------------------------------------------------------
-        if motion in {"dramatic_push", "dramatic_pull"}:
-            zoom = rng.uniform(1.14, 1.28)
-        else:
-            zoom = rng.uniform(1.035, 1.14)
-
-        # ---------------------------------------------------------------
-        # Focal point
-        # ---------------------------------------------------------------
-        # Avoid always centering the couple.
-        focal_x = rng.uniform(0.38, 0.62)
-        focal_y = rng.uniform(0.35, 0.65)
-
-        # ---------------------------------------------------------------
-        # Rotation
-        # ---------------------------------------------------------------
-        rotation = rng.uniform(-0.006, 0.006)
-
-        # Occasionally use a more noticeable cinematic tilt.
-        if rng.random() < 0.16:
-            rotation = rng.uniform(-0.012, 0.012)
-
-        # ---------------------------------------------------------------
-        # Effect
-        # ---------------------------------------------------------------
-        effects = [e for e in _EFFECTS if e != previous_effect]
-        effect = rng.choice(effects)
-
-        # ---------------------------------------------------------------
-        # Transition
-        # ---------------------------------------------------------------
-        transitions = [t for t in _TRANSITIONS if t != previous_transition]
-
-        transition = rng.choice(transitions)
-
-        # Keep the first scene simple.
-        if i == 0:
-            transition = "fade"
-
-        plan.append(
-            {
-                "duration": duration,
-                "motion": motion,
-                "zoom": zoom,
-                "focal_x": focal_x,
-                "focal_y": focal_y,
-                "rotation": rotation,
-                "effect": effect,
-                "transition": transition,
-            }
+    if not available:
+        log.warning(
+            "all locations used within history window; cycling through pool"
         )
+        available = all_locations
 
-        previous_motion = motion
-        previous_transition = transition
-        previous_effect = effect
-
-    return plan
+    return rng.choice(available) if available else None
 
 
-# ---------------------------------------------------------------------------
-# Camera motion
-# ---------------------------------------------------------------------------
+def _pick(
+    rng: random.Random,
+    data: dict[str, Any],
+    key: str,
+) -> str:
+    """Pick a string from a configured list."""
+    values = data.get(key)
+
+    if isinstance(values, list) and values:
+        return str(rng.choice(values))
+
+    return ""
 
 
-def _motion_expression(
-    motion: str,
-    focal_x: float,
-    focal_y: float,
-) -> tuple[str, str]:
-    """
-    Return normalized x/y movement expressions.
+def _pick_trend(
+    rng: random.Random,
+    trends: dict[str, Any],
+    key: str,
+) -> str:
+    """Pick a photographic trend."""
+    values = trends.get(key)
 
-    'p' is progress from 0 -> 1.
-    """
-
-    # Maximum movement in normalized image coordinates.
-    amount = 0.13
-
-    cx = focal_x
-    cy = focal_y
-
-    if motion == "push_in" or motion == "pull_out":
-        x = f"{cx}"
-        y = f"{cy}"
-
-    elif motion == "pan_left":
-        x = f"{cx + amount / 2} - {amount}*p"
-        y = f"{cy}"
-
-    elif motion == "pan_right":
-        x = f"{cx - amount / 2} + {amount}*p"
-        y = f"{cy}"
-
-    elif motion == "pan_up":
-        x = f"{cx}"
-        y = f"{cy + amount / 2} - {amount}*p"
-
-    elif motion == "pan_down":
-        x = f"{cx}"
-        y = f"{cy - amount / 2} + {amount}*p"
-
-    elif motion == "diagonal_tl":
-        x = f"{cx + amount / 2} - {amount}*p"
-        y = f"{cy + amount / 2} - {amount}*p"
-
-    elif motion == "diagonal_tr":
-        x = f"{cx - amount / 2} + {amount}*p"
-        y = f"{cy + amount / 2} - {amount}*p"
-
-    elif motion == "diagonal_bl":
-        x = f"{cx + amount / 2} - {amount}*p"
-        y = f"{cy - amount / 2} + {amount}*p"
-
-    elif motion == "diagonal_br":
-        x = f"{cx - amount / 2} + {amount}*p"
-        y = f"{cy - amount / 2} + {amount}*p"
-
-    elif motion == "orbit_left":
-        x = f"{cx} + 0.045*sin(2*PI*p)"
-        y = f"{cy} + 0.025*cos(2*PI*p)"
-
-    elif motion == "orbit_right":
-        x = f"{cx} - 0.045*sin(2*PI*p)"
-        y = f"{cy} + 0.025*cos(2*PI*p)"
-
-    elif motion == "float":
-        x = f"{cx} + 0.025*sin(2*PI*p)"
-        y = f"{cy} + 0.035*cos(2*PI*p)"
-
-    elif motion == "dramatic_push" or motion == "dramatic_pull":
-        x = f"{cx}"
-        y = f"{cy}"
-
-    else:
-        x = f"{cx}"
-        y = f"{cy}"
-
-    return x, y
-
-
-# ---------------------------------------------------------------------------
-# Visual effects
-# ---------------------------------------------------------------------------
-
-
-def _effect_filter(effect: str) -> str:
-    """Return a lightweight FFmpeg visual treatment."""
-
-    if effect == "clean":
-        return ""
-
-    if effect == "warm":
-        return "eq=brightness=0.025:contrast=1.04:saturation=1.10"
-
-    if effect == "cinematic":
-        return "eq=brightness=-0.015:contrast=1.10:saturation=0.94"
-
-    if effect == "dreamy":
-        return "eq=brightness=0.025:contrast=0.96:saturation=1.05,gblur=sigma=0.35"
-
-    if effect == "soft":
-        return "eq=brightness=0.015:contrast=0.98:saturation=1.02,unsharp=5:5:0.35:5:5:0"
-
-    if effect == "contrast":
-        return "eq=brightness=-0.01:contrast=1.15:saturation=1.04"
-
-    if effect == "vignette":
-        return "eq=brightness=0.01:contrast=1.05:saturation=1.03,vignette=PI/5"
+    if isinstance(values, list) and values:
+        return str(rng.choice(values))
 
     return ""
 
 
 # ---------------------------------------------------------------------------
-# Scene filter
+# Framing
 # ---------------------------------------------------------------------------
 
-
-def _scene_filter(
-    idx: int,
-    width: int,
-    height: int,
-    fps: int,
-    frames: int,
-    scene: dict,
-) -> str:
-    """
-    Build a single animated scene.
-
-    The image is oversized, then zoompan continuously moves through it.
-    """
-
-    # Work on a larger canvas before cropping.
-    up_w = width * 2
-    up_h = height * 2
-
-    zoom = float(scene["zoom"])
-
-    focal_x = float(scene["focal_x"])
-    focal_y = float(scene["focal_y"])
-
-    motion = scene["motion"]
-    rotation = float(scene["rotation"])
-    effect = scene["effect"]
-
-    # zoompan has a frame counter "on".
-    # p is normalized progress from 0 -> 1.
-    progress = f"(on/{max(frames - 1, 1)})"
-
-    x_expr, y_expr = _motion_expression(
-        motion,
-        focal_x,
-        focal_y,
-    )
-
-    # _motion_expression returns expressions in terms of 'p' (progress 0->1),
-    # but zoompan has no 'p' variable â substitute the concrete progress in
-    # terms of its frame counter 'on'. \bp\b avoids touching PI/pow/etc.
-    x_expr = re.sub(r"\bp\b", progress, x_expr)
-    y_expr = re.sub(r"\bp\b", progress, y_expr)
-
-    # Convert normalized coordinates to actual coordinates.
-    #
-    # zoompan's iw/ih refer to the source dimensions after scaling.
-    x_expr = f"(iw/2-(iw/zoom/2))+(({x_expr})-0.5)*iw/zoom"
-
-    y_expr = f"(ih/2-(ih/zoom/2))+(({y_expr})-0.5)*ih/zoom"
-
-    # Different motion styles use different zoom curves.
-    if motion == "push_in":
-        zoom_expr = f"1+({zoom - 1:.5f})*({progress})"
-
-    elif motion == "pull_out":
-        zoom_expr = f"{zoom:.5f}-({zoom - 1:.5f})*({progress})"
-
-    elif motion == "dramatic_push":
-        zoom_expr = f"1+({zoom - 1:.5f})*pow({progress},0.72)"
-
-    elif motion == "dramatic_pull":
-        zoom_expr = f"{zoom:.5f}-({zoom - 1:.5f})*pow({progress},0.72)"
-
-    else:
-        # Subtle breathing motion.
-        zoom_expr = f"1+({zoom - 1:.5f})*" f"({progress})+0.006*sin(2*PI*{progress})"
-
-    filters = [
-        f"scale={up_w}:{up_h}:" "force_original_aspect_ratio=increase",
-        f"crop={up_w}:{up_h}",
-        (
-            "zoompan="
-            f"z='{zoom_expr}':"
-            f"x='{x_expr}':"
-            f"y='{y_expr}':"
-            f"d={frames}:"
-            f"s={width}x{height}:"
-            f"fps={fps}"
-        ),
-    ]
-
-    # NOTE: no rotate filter here. zoompan already supplies the motion, and a
-    # rotate after it (a) can't use 'on' outside zoompan and (b) leaves black
-    # corners on the WxH frame. Left out to keep every scene clean.
-    _ = rotation
-
-    effect = _effect_filter(effect)
-    if effect:
-        filters.append(effect)
-
-    filters.extend(
-        [
-            "setsar=1",
-            f"fps={fps}",
-            "format=yuv420p",
-            "setpts=PTS-STARTPTS",
-        ]
-    )
-
-    return f"[{idx}:v]" + ",".join(filters) + f"[v{idx}]"
+_SHOT_DISTANCES = [
+    "medium shot from the waist up with both faces clearly visible",
+    "three-quarter shot from head to knees with the proposal action visible",
+    "full-body cinematic shot showing the kneeling proposal clearly",
+    "medium-wide cinematic shot with the couple dominant in the frame",
+    "three-quarter view emphasizing the kneeling proposer and recipient",
+    "over-the-shoulder view from behind the recipient toward the proposer",
+    "side-profile cinematic view showing both emotional reactions",
+    "wide cinematic romantic scene with the proposal couple prominent",
+]
 
 
-# ---------------------------------------------------------------------------
-# Filter graph
-# ---------------------------------------------------------------------------
+_CAMERA_ANGLES = [
+    "eye-level cinematic angle",
+    "slightly low romantic hero angle",
+    "gentle three-quarter angle",
+    "slightly elevated cinematic angle",
+    "side profile view",
+    "over-the-shoulder perspective",
+    "low cinematic angle emphasizing the proposal",
+]
 
 
-def _build_filtergraph(
-    scenes: list[dict],
-    cfg: Config,
-) -> tuple[str, str]:
-    """
-    Build the complete video filter graph.
-    """
-
-    rc = cfg.reel
-
-    parts: list[str] = []
-
-    frame_counts = [
-        max(
-            1,
-            int(round(scene["duration"] * rc.fps)),
-        )
-        for scene in scenes
-    ]
-
-    for idx, scene in enumerate(scenes):
-        parts.append(
-            _scene_filter(
-                idx=idx,
-                width=rc.width,
-                height=rc.height,
-                fps=rc.fps,
-                frames=frame_counts[idx],
-                scene=scene,
-            )
-        )
-
-    if len(scenes) == 1:
-        return ";".join(parts), "v0"
-
-    previous = "v0"
-    accumulated = scenes[0]["duration"]
-
-    for i in range(1, len(scenes)):
-        transition = scenes[i]["transition"]
-
-        # Keep transitions short enough for short scenes.
-        crossfade = min(
-            float(rc.crossfade_s),
-            float(scenes[i - 1]["duration"]) * 0.35,
-            float(scenes[i]["duration"]) * 0.35,
-        )
-
-        offset = accumulated - crossfade
-
-        label = "vout" if i == len(scenes) - 1 else f"x{i}"
-
-        parts.append(
-            f"[{previous}][v{i}]"
-            f"xfade="
-            f"transition={transition}:"
-            f"duration={crossfade:.3f}:"
-            f"offset={offset:.3f}"
-            f"[{label}]"
-        )
-
-        previous = label
-        accumulated += scenes[i]["duration"] - crossfade
-
-    return ";".join(parts), "vout"
+_ALIGNMENTS = [
+    "rule-of-thirds composition",
+    "proposer on one third and recipient on the opposite third",
+    "couple centered with strong cinematic depth",
+    "proposal action placed in the lower third",
+    "asymmetric composition with depth layers",
+    "foreground flowers framing the couple",
+    "strong leading lines toward the kneeling proposer",
+]
 
 
-# ---------------------------------------------------------------------------
-# Generated audio
-# ---------------------------------------------------------------------------
+_CANDID_CUES = [
+    "genuine emotional expressions",
+    "natural romantic body language",
+    "authentic surprise and heartfelt reaction",
+    "caught in an intimate emotional moment",
+    "expressive eyes and realistic emotion",
+    "cinematic candid emotional reaction",
+]
 
 
-def _build_generated_audio(
-    duration: float,
-    rng: random.Random,
-) -> str:
-    """
-    Generate a unique ambient/cinematic music bed using FFmpeg's aevalsrc.
-
-    No downloaded music is required.
-
-    Each Reel gets:
-    - different root note
-    - different chord interval
-    - different BPM
-    - different pulse frequency
-    - different shimmer
-    - different low-frequency movement
-    """
-
-    roots = [
-        196.00,  # G3
-        207.65,  # Ab3
-        220.00,  # A3
-        233.08,  # Bb3
-        246.94,  # B3
-        261.63,  # C4
-        277.18,  # Db4
-        293.66,  # D4
-        311.13,  # Eb4
-        329.63,  # E4
-        349.23,  # F4
-    ]
-
-    root = rng.choice(roots)
-
-    # Major-ish or suspended intervals.
-    interval_sets = [
-        (1.0, 1.25, 1.50),
-        (1.0, 1.20, 1.50),
-        (1.0, 1.3333, 1.6667),
-        (1.0, 1.125, 1.50),
-    ]
-
-    a, b, c = rng.choice(interval_sets)
-
-    bpm = rng.choice([68, 72, 76, 80, 84, 88, 92])
-
-    pulse = bpm / 60.0
-
-    # Randomize harmonic strength.
-    amp1 = rng.uniform(0.11, 0.17)
-    amp2 = rng.uniform(0.07, 0.12)
-    amp3 = rng.uniform(0.055, 0.10)
-
-    shimmer_freq = rng.uniform(880, 1320)
-    shimmer_amp = rng.uniform(0.008, 0.018)
-
-    # Low-frequency pulse.
-    low_freq = rng.uniform(65, 95)
-
-    # The expression is deliberately soft so AAC encoding does not clip.
-    expression = (
-        f"(0.82+0.18*sin(2*PI*0.11*t))*("
-        f"{amp1:.4f}*sin(2*PI*{root:.3f}*t)"
-        f"+{amp2:.4f}*sin(2*PI*{root * a:.3f}*t)"
-        f"+{amp3:.4f}*sin(2*PI*{root * b:.3f}*t)"
-        f"+{amp3 * 0.75:.4f}*sin(2*PI*{root * c:.3f}*t)"
-        f")"
-        f"+"
-        f"({shimmer_amp:.4f}*"
-        f"sin(2*PI*{shimmer_freq:.2f}*t)*"
-        f"(0.5+0.5*sin(2*PI*0.07*t)))"
-        f"+"
-        f"(0.035*"
-        f"exp(-24*mod(t*{pulse:.5f},1))*"
-        f"sin(2*PI*{low_freq:.2f}*t))"
-    )
-
-    return "aevalsrc=" f"'{expression}'" ":s=44100" f":d={duration:.3f}"
-
-
-def _build_audio_filter(
-    duration: float,
-    rng: random.Random,
-) -> str:
-    """
-    Build generated audio processing.
-
-    The fade lengths are intentionally proportional to the Reel duration.
-    """
-
-    audio_source = _build_generated_audio(
-        duration=duration,
-        rng=rng,
-    )
-
-    fade_in = min(1.2, max(0.25, duration * 0.08))
-    fade_out = min(1.8, max(0.4, duration * 0.12))
-
-    fade_out_start = max(
-        0.0,
-        duration - fade_out,
-    )
-
+def select_framing(rng: random.Random) -> str:
+    """Select a proposal-friendly composition."""
     return (
-        f"{audio_source},"
-        f"afade=t=in:st=0:d={fade_in:.3f},"
-        f"afade=t=out:st={fade_out_start:.3f}:d={fade_out:.3f},"
-        "highpass=f=55,"
-        "lowpass=f=11000,"
-        "volume=0.78,"
-        "aresample=44100"
+        f"{rng.choice(_SHOT_DISTANCES)}, "
+        f"{rng.choice(_CAMERA_ANGLES)}, "
+        f"{rng.choice(_ALIGNMENTS)}, "
+        f"{rng.choice(_CANDID_CUES)}"
     )
 
 
 # ---------------------------------------------------------------------------
-# Main renderer
+# Romance scene selection
 # ---------------------------------------------------------------------------
 
+_DEFAULT_PROPOSAL_DIRECTIONS = [
+    "boy_proposes_to_girl",
+    "girl_proposes_to_boy",
+]
 
-def build_reel(
-    image_paths: str | Path | Sequence[str | Path],
+
+_BOY_PROPOSALS = [
+    (
+        "boy kneeling on one knee before the girl, "
+        "opening a ring box and presenting her with a clearly visible "
+        "marquise-cut engagement ring while holding a romantic bouquet"
+    ),
+    (
+        "boy down on one knee, extending a marquise-cut engagement ring "
+        "toward the girl while holding fresh flowers in his other hand"
+    ),
+    (
+        "boy kneeling romantically before the girl, offering a delicate "
+        "marquise-cut engagement ring and flowers with a deeply emotional "
+        "expression"
+    ),
+    (
+        "grand marriage proposal with the boy kneeling before the girl, "
+        "presenting a sparkling marquise-cut ring and a beautiful bouquet"
+    ),
+]
+
+
+_GIRL_PROPOSALS = [
+    (
+        "girl kneeling on one knee before the boy and presenting him with "
+        "an elegant engagement ring while looking deeply emotional"
+    ),
+    (
+        "girl down on one knee, offering the boy an engagement ring and "
+        "flowers while he reacts with genuine surprise and emotion"
+    ),
+    (
+        "girl making a heartfelt marriage proposal to the boy, kneeling "
+        "romantically and presenting an engagement ring"
+    ),
+    (
+        "girl kneeling during a grand romantic proposal, holding out an "
+        "engagement ring toward the boy as he realizes what is happening"
+    ),
+]
+
+
+_FLOWERS = [
+    "fresh red roses",
+    "a romantic bouquet of red and white roses",
+    "a lush bouquet of roses and delicate flowers",
+    "a large elegant bouquet of fresh flowers",
+    "soft pastel flowers mixed with romantic roses",
+]
+
+
+_THIRD_GIRL_ROLES = [
+    (
+        "third woman who is secretly in love with the boy, "
+        "watching the proposal from a respectful distance"
+    ),
+    (
+        "heartbroken woman experiencing unrequited love for the boy, "
+        "standing apart from the couple"
+    ),
+    (
+        "devastated third woman who loves the boy but realizes he has "
+        "chosen the other girl"
+    ),
+    (
+        "third woman emotionally attached to the boy, watching the "
+        "proposal alone from the background"
+    ),
+]
+
+
+_THIRD_GIRL_EMOTIONS = [
+    "crying with visible tears on her cheeks",
+    "quietly sobbing with tears streaming down her face",
+    "heartbroken and visibly crying",
+    "tearful eyes and trembling emotional expression",
+    "deep sadness with restrained sobbing",
+]
+
+
+_ROMANTIC_STYLES = [
+    (
+        "grand cinematic Indian romantic-film atmosphere, "
+        "emotional storytelling, expressive eyes, dramatic romantic lighting"
+    ),
+    (
+        "sweeping cinematic Indian love-story atmosphere, "
+        "heartfelt emotion, elegant romantic composition"
+    ),
+    (
+        "iconic Indian romantic-film energy, "
+        "grand emotional storytelling and expressive faces"
+    ),
+    (
+        "lush cinematic romance, emotional performances, "
+        "dreamlike Indian romantic-film atmosphere"
+    ),
+]
+
+
+def _configured_proposal_directions(cfg: Config) -> list[str]:
+    """Return configured proposal directions with safe defaults."""
+    directions = cfg.romance.proposal_directions
+
+    valid = [
+        direction
+        for direction in directions
+        if direction in {
+            "boy_proposes_to_girl",
+            "girl_proposes_to_boy",
+        }
+    ]
+
+    return valid or _DEFAULT_PROPOSAL_DIRECTIONS
+
+
+def select_proposal_scene(
+    rng: random.Random,
     cfg: Config,
-    out_path: str | Path,
-    seed: int = 0,
-) -> Path:
-    """
-    Render a unique 1080x1920 Reel from still images.
+) -> dict[str, Any]:
+    """Select a complete deterministic romantic proposal scene."""
 
-    Args:
-        image_paths:
-            One or more generated still images.
+    directions = _configured_proposal_directions(cfg)
 
-        cfg:
-            Existing Config object.
+    direction = rng.choice(directions)
 
-        out_path:
-            Output MP4 path.
-
-        seed:
-            Seed controlling visual/audio uniqueness.
-
-    Returns:
-        Path to the generated Reel.
-    """
-
-    if not ffmpeg_available():
-        raise ReelError("ffmpeg not found on PATH; cannot build a Reel")
-
-    imgs = _normalize_images(image_paths)
-
-    if not imgs:
-        raise ReelError("no images supplied for the Reel")
-
-    # Validate images early.
-    missing = [str(p) for p in imgs if not p.exists()]
-
-    if missing:
-        raise ReelError("image(s) not found: " + ", ".join(missing))
-
-    rc = cfg.reel
-
-    out = Path(out_path)
-    out.parent.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
-
-    # ------------------------------------------------------------------
-    # Unique seed
-    # ------------------------------------------------------------------
-    #
-    # If seed=0, automatically create a different seed each invocation.
-    #
-    # If your workflow passes a deterministic seed, the same seed will
-    # intentionally recreate the same Reel.
-    # ------------------------------------------------------------------
-
-    if seed == 0:
-        seed = random.SystemRandom().randrange(
-            1,
-            2_147_483_647,
+    if direction == "boy_proposes_to_girl":
+        proposal_action = (
+            f"{rng.choice(_BOY_PROPOSALS)}; "
+            f"{rng.choice(_FLOWERS)}"
+        )
+    else:
+        proposal_action = (
+            f"{rng.choice(_GIRL_PROPOSALS)}; "
+            f"{rng.choice(_FLOWERS)}"
         )
 
-    rng = random.Random(seed)
-
-    # ------------------------------------------------------------------
-    # Scene planning
-    # ------------------------------------------------------------------
-
-    scenes = _random_scene_plan(
-        n=len(imgs),
-        rc=rc,
-        rng=rng,
+    third_probability = max(
+        0.0,
+        min(
+            1.0,
+            cfg.romance.third_person_probability,
+        ),
     )
 
-    # Calculate final duration after crossfades.
-    total = sum(scene["duration"] for scene in scenes)
+    third_person_present = (
+        rng.random() < third_probability
+    )
 
-    for i in range(1, len(scenes)):
-        previous = scenes[i - 1]["duration"]
-        current = scenes[i]["duration"]
+    third_role = ""
+    third_emotion = ""
 
-        crossfade = min(
-            float(rc.crossfade_s),
-            previous * 0.35,
-            current * 0.35,
+    if third_person_present:
+        third_role = rng.choice(
+            _THIRD_GIRL_ROLES
+        )
+        third_emotion = rng.choice(
+            _THIRD_GIRL_EMOTIONS
         )
 
-        total -= crossfade
+    return {
+        "proposal_direction": direction,
+        "proposal_action": proposal_action,
+        "third_person_present": third_person_present,
+        "third_person_role": third_role,
+        "third_person_emotion": third_emotion,
+        "romantic_details": (
+            cfg.romance.cinematic_style
+            or rng.choice(_ROMANTIC_STYLES)
+        ),
+    }
 
-    total = max(1.0, total)
 
-    # ------------------------------------------------------------------
-    # Audio
-    # ------------------------------------------------------------------
+def select_style(
+    rng: random.Random,
+    cfg: Config,
+    characters_data: dict[str, Any],
+) -> dict[str, str]:
+    """Select photographic and romance direction."""
 
-    audio = _pick_audio(
-        rc.audio_dir,
+    trends = characters_data.get(
+        "photography_trends",
+        {},
+    )
+
+    if not isinstance(trends, dict):
+        trends = {}
+
+    proposal = select_proposal_scene(
         rng,
+        cfg,
     )
 
-    # ------------------------------------------------------------------
-    # FFmpeg command
-    # ------------------------------------------------------------------
-
-    cmd: list[str] = [
-        "ffmpeg",
-        "-y",
-        "-hide_banner",
-        "-loglevel",
-        "error",
-    ]
-
-    # Each image becomes an input stream.
-    for idx, image in enumerate(imgs):
-        duration = scenes[idx]["duration"]
-
-        cmd += [
-            "-loop",
-            "1",
-            "-t",
-            f"{duration:.3f}",
-            "-i",
-            str(image),
-        ]
-
-    audio_idx = len(imgs)
-
-    if audio is not None:
-        # Loop external royalty-free track.
-        cmd += [
-            "-stream_loop",
-            "-1",
-            "-i",
-            str(audio),
-        ]
-    else:
-        # Generate unique audio directly inside FFmpeg.
-        audio_filter = _build_audio_filter(
-            duration=total,
-            rng=rng,
-        )
-
-        cmd += [
-            "-f",
-            "lavfi",
-            "-i",
-            audio_filter,
-        ]
-
-    # ------------------------------------------------------------------
-    # Video graph
-    # ------------------------------------------------------------------
-
-    filter_complex, video_label = _build_filtergraph(
-        scenes=scenes,
-        cfg=cfg,
-    )
-
-    cmd += [
-        "-filter_complex",
-        filter_complex,
-        "-map",
-        f"[{video_label}]",
-        "-map",
-        f"{audio_idx}:a",
-        "-t",
-        f"{total:.3f}",
-        # --------------------------------------------------------------
-        # Video
-        # --------------------------------------------------------------
-        "-c:v",
-        "libx264",
-        # Veryfast is suitable for GitHub Actions CPU.
-        "-preset",
-        "veryfast",
-        # Good Reel quality without huge files.
-        "-crf",
-        "20",
-        "-pix_fmt",
-        "yuv420p",
-        "-r",
-        str(rc.fps),
-        # NOTE: no -vf here â the complex filtergraph already outputs
-        # width x height. Adding -vf on a complex-filtered stream makes ffmpeg
-        # abort ("Simple and complex filtering cannot be used together").
-        # --------------------------------------------------------------
-        # Audio
-        # --------------------------------------------------------------
-        "-c:a",
-        "aac",
-        "-b:a",
-        "128k",
-        "-ar",
-        "44100",
-        "-ac",
-        "2",
-        # --------------------------------------------------------------
-        # Instagram-friendly MP4
-        # --------------------------------------------------------------
-        "-movflags",
-        "+faststart",
-        "-shortest",
-        str(out),
-    ]
-
-    # ------------------------------------------------------------------
-    # Logging
-    # ------------------------------------------------------------------
-
-    log.info(
-        "building unique reel: seed=%d scenes=%d duration=%.2fs resolution=%dx%d fps=%d audio=%s",
-        seed,
-        len(imgs),
-        total,
-        rc.width,
-        rc.height,
-        rc.fps,
-        audio.name if audio else "generated-unique-ambient",
-    )
-
-    for i, scene in enumerate(scenes):
-        log.info(
-            "scene %d: duration=%.2fs motion=%s zoom=%.3f "
-            "transition=%s effect=%s focal=(%.2f,%.2f)",
-            i + 1,
-            scene["duration"],
-            scene["motion"],
-            scene["zoom"],
-            scene["transition"],
-            scene["effect"],
-            scene["focal_x"],
-            scene["focal_y"],
-        )
-
-    # ------------------------------------------------------------------
-    # Execute
-    # ------------------------------------------------------------------
-
-    try:
-        subprocess.run(
-            cmd,
-            check=True,
-            capture_output=True,
-        )
-
-    except subprocess.CalledProcessError as exc:
-        detail = (
-            exc.stderr.decode(
-                "utf-8",
-                "replace",
-            )[-4000:]
-            if exc.stderr
-            else str(exc)
-        )
-
-        raise ReelError("ffmpeg failed to assemble the Reel:\n" + detail) from exc
-
-    if not out.exists():
-        raise ReelError(f"ffmpeg completed but output was not created: {out}")
-
-    if out.stat().st_size < 50_000:
-        raise ReelError(f"generated Reel appears invalid or empty: {out}")
-
-    log.info(
-        "reel successfully created: %s (%.2f MB)",
-        out,
-        out.stat().st_size / (1024 * 1024),
-    )
-
-    return out
+    return {
+        "framing": select_framing(rng),
+        "interaction": _pick(
+            rng,
+            characters_data,
+            "interaction_styles",
+        ),
+        "emotion": _pick(
+            rng,
+            characters_data,
+            "moods_and_emotions",
+        ),
+        "composition": _pick_trend(
+            rng,
+            trends,
+            "compositions",
+        ),
+        "lighting_style": _pick_trend(
+            rng,
+            trends,
+            "lighting_styles",
+        ),
+        "color_grading": _pick_trend(
+            rng,
+            trends,
+            "color_grading",
+        ),
+        "depth_of_field": _pick_trend(
+            rng,
+            trends,
+            "depth_of_field",
+        ),
+        **{
+            key: str(value)
+            for key, value in proposal.items()
+        },
+    }
 
 
-def _video_duration(path: Path) -> float:
-    """Best-effort clip duration via ffprobe; 0.0 if it can't be read."""
-    try:
-        res = subprocess.run(
-            [
-                "ffprobe",
-                "-v",
-                "error",
-                "-show_entries",
-                "format=duration",
-                "-of",
-                "default=noprint_wrappers=1:nokey=1",
-                str(path),
-            ],
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-        return float(res.stdout.strip())
-    except (subprocess.CalledProcessError, ValueError, OSError):
-        return 0.0
+def build_character_block(cfg: Config) -> str:
+    """Return the configured recurring-character prompt anchor."""
+    return cfg.active_content.prompt_anchor.strip()
 
 
-def assemble_ai_clips(
-    clips: Sequence[str | Path],
+def _render_romantic_prompt(
+    brief: Brief,
     cfg: Config,
-    out_path: str | Path,
-    seed: int = 0,
-) -> Path:
-    """Assemble AI-generated video clips (real motion) into a final Reel.
-
-    Kept deliberately separate from the still-image filtergraph: the clips
-    already contain motion, so each is only normalized to width x height and the
-    clips are hard-concatenated (robust to varying provider clip lengths), then
-    audio is muxed (a royalty-free track from reel.audio_dir, else a synthesized
-    ambient bed). H.264 + AAC + faststart, same as the FFmpeg reel.
-    """
-    if not ffmpeg_available():
-        raise ReelError("ffmpeg not found on PATH; cannot assemble AI clips")
-    vids = [Path(c) for c in clips if c]
-    if not vids:
-        raise ReelError("no AI clips supplied")
-
-    rc = cfg.reel
-    out = Path(out_path)
-    out.parent.mkdir(parents=True, exist_ok=True)
-    rng = random.Random(seed)
-    audio = _pick_audio(rc.audio_dir, rng)
-
-    cmd: list[str] = ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error"]
-    for v in vids:
-        cmd += ["-i", str(v)]
-
-    # Real total duration so audio always covers the video (no -shortest cut).
-    total = sum(_video_duration(v) for v in vids)
-    if total <= 0:
-        total = len(vids) * float(cfg.reel.ai_video.duration_s)
-
-    audio_idx = len(vids)
-    if audio is not None:
-        cmd += ["-stream_loop", "-1", "-i", str(audio)]
-    else:
-        # Over-provision the bed; -shortest trims it to the concatenated video.
-        cmd += ["-f", "lavfi", "-i", _build_audio_filter(duration=total + 2.0, rng=rng)]
+) -> str:
+    """Create deterministic high-priority romance instructions."""
 
     parts = [
-        f"[{i}:v]scale={rc.width}:{rc.height}:force_original_aspect_ratio=increase,"
-        f"crop={rc.width}:{rc.height},setsar=1,fps={rc.fps},format=yuv420p,"
-        f"setpts=PTS-STARTPTS[v{i}]"
-        for i in range(len(vids))
-    ]
-    concat_inputs = "".join(f"[v{i}]" for i in range(len(vids)))
-    parts.append(f"{concat_inputs}concat=n={len(vids)}:v=1:a=0[vout]")
-    filter_complex = ";".join(parts)
-
-    cmd += [
-        "-filter_complex",
-        filter_complex,
-        "-map",
-        "[vout]",
-        "-map",
-        f"{audio_idx}:a",
-        "-c:v",
-        "libx264",
-        "-preset",
-        "veryfast",
-        "-crf",
-        "20",
-        "-pix_fmt",
-        "yuv420p",
-        "-r",
-        str(rc.fps),
-        "-c:a",
-        "aac",
-        "-b:a",
-        "128k",
-        "-ar",
-        "44100",
-        "-ac",
-        "2",
-        "-movflags",
-        "+faststart",
-        "-shortest",
-        str(out),
+        "photorealistic cinematic Indian romance",
+        "realistic human anatomy",
+        "natural realistic skin",
+        "expressive realistic faces",
+        "strong emotional storytelling",
     ]
 
-    log.info("assembling reel from %d AI clip(s): %s", len(vids), out)
-    try:
-        subprocess.run(cmd, check=True, capture_output=True)
-    except subprocess.CalledProcessError as exc:
-        detail = exc.stderr.decode("utf-8", "replace")[-2000:] if exc.stderr else str(exc)
-        raise ReelError("ffmpeg failed to assemble AI clips:\n" + detail) from exc
-    if not out.exists() or out.stat().st_size < 50_000:
-        raise ReelError(f"assembled AI reel appears invalid: {out}")
-    return out
+    if brief.proposal_direction == "boy_proposes_to_girl":
+        parts.extend(
+            [
+                "BOY PROPOSES TO GIRL",
+                "the male character is the proposer",
+                "the boy is clearly kneeling on one knee",
+                "the boy is facing the girl",
+                "the boy presents the girl with a marquise-cut engagement ring",
+                "the marquise-cut ring is clearly visible",
+                "the boy gives the girl a romantic bouquet of flowers",
+                "the girl is receiving the proposal",
+                "the girl has a loving emotional reaction",
+                "grand romantic Indian-film hero energy",
+            ]
+        )
+
+    elif brief.proposal_direction == "girl_proposes_to_boy":
+        parts.extend(
+            [
+                "GIRL PROPOSES TO BOY",
+                "the female character is the proposer",
+                "the girl is clearly kneeling on one knee",
+                "the girl is facing the boy",
+                "the girl presents the boy with an engagement ring",
+                "the engagement ring is clearly visible",
+                "the girl gives the boy romantic flowers",
+                "the boy is receiving the proposal",
+                "the boy has a surprised emotional reaction",
+                "grand cinematic Indian romantic-film energy",
+            ]
+        )
+
+    if cfg.romance.require_kneeling:
+        parts.append(
+            "the proposer must visibly be kneeling on one knee"
+        )
+
+    if cfg.romance.require_ring:
+        parts.extend(
+            [
+                f"the ring is {cfg.romance.ring_style}",
+                "the engagement ring must be visible",
+            ]
+        )
+
+    if cfg.romance.require_flowers:
+        parts.append(
+            "romantic flowers or bouquet must be visible"
+        )
+
+    if brief.third_person_present:
+        parts.extend(
+            [
+                "THREE-PERSON LOVE TRIANGLE",
+                "a third woman is present as a real person in the story",
+                (
+                    f"the third woman is "
+                    f"{cfg.romance.third_person_role}"
+                ),
+                "she is visually separate from the main couple",
+                "she watches the proposal from a respectful distance",
+                "she is visibly crying",
+                "tears are clearly visible on her cheeks",
+                "she is quietly sobbing and heartbroken",
+                (
+                    f"her emotion is "
+                    f"{cfg.romance.third_person_emotion}"
+                ),
+                "she is not a villain",
+                "she is not attacking anyone",
+                "the main couple remains the visual focus",
+            ]
+        )
+
+    if brief.proposal_action:
+        parts.append(
+            brief.proposal_action
+        )
+
+    if brief.romantic_details:
+        parts.append(
+            brief.romantic_details
+        )
+
+    return ", ".join(
+        part.strip()
+        for part in parts
+        if part and part.strip()
+    )
+
+
+def render_prompts(
+    brief: Brief,
+    cfg: Config,
+    characters_block: str = "",
+) -> tuple[str, str]:
+    """Render final positive and negative SD prompts."""
+
+    fields: dict[str, Any] = brief.model_dump()
+
+    fields["style_modifiers"] = ", ".join(
+        brief.style_modifiers
+    )
+
+    fields["characters"] = characters_block
+
+    positive = cfg.image.positive_template.format(
+        **fields
+    )
+
+    romantic_prompt = _render_romantic_prompt(
+        brief,
+        cfg,
+    )
+
+    if romantic_prompt:
+        positive = (
+            f"{romantic_prompt}, "
+            f"{positive}"
+        )
+
+    negative = cfg.image.negative_template
+
+    positive = re.sub(
+        r"(,\s*){2,}",
+        ", ",
+        positive,
+    ).strip(" ,")
+
+    return positive, negative
+
+
+def _build_messages(
+    cfg: Config,
+    axis_hints: dict[str, str],
+    recent_briefs: list[dict[str, Any]],
+    error_feedback: str | None,
+    characters_data: dict[str, Any],
+    selected_location: dict[str, str] | None,
+    style: dict[str, str],
+) -> list[dict[str, str]]:
+
+    schema = (
+        '{"subject": "string", "setting": "string", '
+        '"lighting": "string", "mood": "string", '
+        '"composition": "string", "color_palette": "string", '
+        '"time_of_day": "string", '
+        '"style_modifiers": ["string", ...]}'
+    )
+
+    system = (
+        f"{cfg.active_content.system_prompt.strip()} "
+        f"Respond ONLY with a JSON object matching this schema exactly: "
+        f"{schema}. No prose, no code fences."
+    )
+
+    char_section = ""
+
+    if characters_data.get("characters"):
+        female = characters_data["characters"].get(
+            "female",
+            {},
+        )
+
+        male = characters_data["characters"].get(
+            "male",
+            {},
+        )
+
+        char_section = (
+            "\nRECURRING COUPLE — keep these two people consistent:\n"
+            f"Female: {female.get('identity', '')}. "
+            f"Features: {female.get('facial_features', '')}. "
+            f"Hair: {female.get('hair', '')}. "
+            f"Accessories: {female.get('accessories', '')}.\n"
+            f"Male: {male.get('identity', '')}. "
+            f"Features: {male.get('facial_features', '')}. "
+            f"Hair: {male.get('hair', '')}. "
+            f"Beard: {male.get('facial_hair', '')}.\n"
+        )
+
+    location_section = ""
+
+    if selected_location:
+        location_section = (
+            "\nLOCATION:\n"
+            f"Name: {selected_location.get('name', '')}\n"
+            f"Description: {selected_location.get('description', '')}\n"
+            f"Lighting: {selected_location.get('lighting', '')}\n"
+            f"Mood: {selected_location.get('mood', '')}\n"
+        )
+
+    proposal_direction = style.get(
+        "proposal_direction",
+        "boy_proposes_to_girl",
+    )
+
+    if proposal_direction == "boy_proposes_to_girl":
+        proposal_section = """
+PROPOSAL DIRECTION — BOY PROPOSES TO GIRL.
+
+This direction is mandatory.
+
+The boy is the person proposing.
+The boy must kneel on one knee.
+The boy must present the girl with a marquise-cut engagement ring.
+The ring should be visible.
+The boy should give/present flowers.
+The girl is receiving the proposal.
+The girl should have a sincere emotional reaction.
+
+Do NOT reverse the proposal roles.
+Do NOT turn this into a generic standing couple scene.
+"""
+    else:
+        proposal_section = """
+PROPOSAL DIRECTION — GIRL PROPOSES TO BOY.
+
+This direction is mandatory.
+
+The girl is the person proposing.
+The girl must kneel on one knee.
+The girl must present the boy with an engagement ring.
+The ring should be visible.
+The girl should give/present flowers.
+The boy is receiving the proposal.
+The boy should have a sincere emotional reaction.
+
+Do NOT reverse the proposal roles.
+Do NOT turn this into a generic standing couple scene.
+"""
+
+    triangle_section = ""
+
+    if style.get("third_person_present") == "True":
+        triangle_section = f"""
+LOVE TRIANGLE — THIRD WOMAN PRESENT.
+
+A third woman is part of the emotional story.
+
+She is {cfg.romance.third_person_role}.
+
+She must:
+- remain visually separate from the main couple;
+- watch the proposal from a respectful distance;
+- visibly cry;
+- have tears on her cheeks;
+- appear to be quietly sobbing;
+- communicate heartbreak through her face and body language.
+
+She is not a villain and is not attacking anyone.
+
+Her emotional pain comes from seeing the person she loves choose
+someone else.
+
+Third-woman emotion:
+{cfg.romance.third_person_emotion}
+
+The main couple remains the visual focus.
+"""
+
+    style_section = (
+        "\nPHOTOGRAPHIC DIRECTION:\n"
+        f"Framing: {style.get('framing', '')}\n"
+        f"Interaction: {style.get('interaction', '')}\n"
+        f"Emotion: {style.get('emotion', '')}\n"
+        f"Composition: {style.get('composition', '')}\n"
+        f"Lighting: {style.get('lighting_style', '')}\n"
+        f"Color grading: {style.get('color_grading', '')}\n"
+        f"Depth of field: {style.get('depth_of_field', '')}\n"
+        f"Cinematic style: {style.get('romantic_details', '')}\n"
+        "Respect the selected framing and do not default to a generic "
+        "centered portrait.\n"
+    )
+
+    hints = "\n".join(
+        f"- {key.replace('_', ' ')}: {value}"
+        for key, value in axis_hints.items()
+    )
+
+    prev_lines = (
+        "\n".join(
+            f"- {brief.get('subject', '?')} / "
+            f"{brief.get('mood', '?')}"
+            for brief in recent_briefs
+        )
+        or "(none yet)"
+    )
+
+    user = (
+        f"Active content profile: {cfg.content.active_profile}\n"
+        f"Standing theme: {cfg.active_content.theme}\n"
+        f"{char_section}"
+        f"{location_section}"
+        f"{proposal_section}"
+        f"{triangle_section}"
+        f"{style_section}\n"
+        f"Creative constraints:\n{hints}\n\n"
+        "Recent briefs already used. The new scene must be substantially "
+        f"different from them:\n{prev_lines}\n\n"
+        f"{cfg.active_content.subject_instruction}\n\n"
+        "The subject must describe a specific marriage-proposal event. "
+        "The pre-selected proposal direction is authoritative and must not "
+        "be changed.\n"
+        "Make the image feel like a dramatic, emotionally rich, "
+        "photorealistic Indian romantic film while remaining tasteful."
+    )
+
+    if error_feedback:
+        user += (
+            f"\n\nPrevious response was invalid: "
+            f"{error_feedback}\n"
+            "Return valid JSON only."
+        )
+
+    return [
+        {
+            "role": "system",
+            "content": system,
+        },
+        {
+            "role": "user",
+            "content": user,
+        },
+    ]
+
+
+def _apply_scene(
+    brief: Brief,
+    selected_location: dict[str, str] | None,
+    style: dict[str, str],
+) -> Brief:
+    """Stamp deterministic scene metadata."""
+
+    if selected_location:
+        brief.location_name = selected_location.get(
+            "name",
+            "",
+        )
+
+        if brief.location_name:
+            brief.setting = brief.location_name
+
+        location_lighting = selected_location.get(
+            "lighting",
+            "",
+        )
+
+        if location_lighting:
+            brief.lighting = location_lighting
+
+    brief.framing = style.get(
+        "framing",
+        "",
+    )
+
+    brief.proposal_direction = style.get(
+        "proposal_direction",
+        "",
+    )
+
+    brief.proposal_action = style.get(
+        "proposal_action",
+        "",
+    )
+
+    brief.third_person_present = (
+        style.get(
+            "third_person_present",
+            "False",
+        )
+        == "True"
+    )
+
+    brief.third_person_role = style.get(
+        "third_person_role",
+        "",
+    )
+
+    brief.romantic_details = style.get(
+        "romantic_details",
+        "",
+    )
+
+    interaction = style.get(
+        "interaction",
+        "",
+    )
+
+    if brief.proposal_direction == "boy_proposes_to_girl":
+        proposal_summary = (
+            "boy kneeling and proposing to girl with "
+            "marquise-cut engagement ring and flowers"
+        )
+    else:
+        proposal_summary = (
+            "girl kneeling and proposing to boy with "
+            "engagement ring and flowers"
+        )
+
+    if brief.third_person_present:
+        proposal_summary += (
+            ", third woman crying and sobbing from "
+            "unrequited love in the love triangle"
+        )
+
+    brief.interaction = (
+        f"{interaction}, {proposal_summary}"
+        if interaction
+        else proposal_summary
+    )
+
+    return brief
+
+
+def _fallback_brief(
+    cfg: Config,
+    axis_hints: dict[str, str],
+    seed: int,
+    selected_location: dict[str, str] | None,
+    style: dict[str, str],
+) -> Brief:
+    """Create a deterministic proposal brief when Ollama fails."""
+
+    log.warning(
+        "using deterministic romantic fallback brief"
+    )
+
+    direction = style.get(
+        "proposal_direction",
+        "boy_proposes_to_girl",
+    )
+
+    if direction == "boy_proposes_to_girl":
+        subject = (
+            "boy kneeling on one knee proposing marriage to the girl, "
+            "presenting her with a marquise-cut engagement ring and flowers"
+        )
+    else:
+        subject = (
+            "girl kneeling on one knee proposing marriage to the boy, "
+            "presenting him with an engagement ring and flowers"
+        )
+
+    if style.get("third_person_present") == "True":
+        subject += (
+            ", while a heartbroken third woman watches from a distance, "
+            "crying and quietly sobbing"
+        )
+
+    brief = Brief(
+        subject=subject,
+        setting=cfg.active_content.theme,
+        lighting=(
+            axis_hints.get(
+                "season",
+                "soft",
+            )
+            + " romantic light"
+        ),
+        mood=(
+            style.get(
+                "emotion",
+                "",
+            )
+            or "deeply emotional romantic anticipation"
+        ),
+        composition=(
+            style.get(
+                "composition",
+                "",
+            )
+            or axis_hints.get(
+                "camera_angle",
+                "eye-level",
+            )
+        ),
+        color_palette=(
+            style.get(
+                "color_grading",
+                "",
+            )
+            or "warm cinematic romantic tones"
+        ),
+        time_of_day=axis_hints.get(
+            "time_of_day",
+            "golden hour",
+        ),
+        style_modifiers=[
+            axis_hints.get(
+                "focal_length",
+                "50mm",
+            ),
+            "cinematic Indian romance",
+            "photorealistic",
+        ],
+    )
+
+    return _apply_scene(
+        brief,
+        selected_location,
+        style,
+    )
+
+
+def extract_location_from_history(
+    history_briefs: list[dict[str, Any]],
+) -> list[str]:
+    """Extract recent location names."""
+    locations: list[str] = []
+
+    for brief in history_briefs:
+        name = brief.get(
+            "location_name",
+        )
+
+        if name:
+            locations.append(
+                str(name)
+            )
+
+    return locations
+
+
+def generate_brief(
+    client: OllamaClient,
+    cfg: Config,
+    seed: int,
+    run_date: str,
+    history_subjects: list[str],
+    recent_briefs: list[dict[str, Any]],
+    model: str,
+) -> Brief:
+    """Generate a fresh romantic proposal brief."""
+
+    rng = random.Random(
+        compute_seed(
+            run_date,
+            cfg.seed_salt,
+        )
+        ^ seed
+    )
+
+    axis_hints = select_axis_hints(
+        rng,
+        cfg.brief.axes,
+    )
+
+    characters_data = cfg.active_content.visual
+
+    all_locations = flatten_locations(
+        characters_data.get(
+            "locations",
+            {},
+        )
+    )
+
+    history_locations = extract_location_from_history(
+        recent_briefs
+    )
+
+    selected_location = select_unique_location(
+        rng,
+        all_locations,
+        history_locations,
+    )
+
+    style = select_style(
+        rng,
+        cfg,
+        characters_data,
+    )
+
+    log.info(
+        "axis hints: %s",
+        axis_hints,
+    )
+
+    log.info(
+        "selected proposal direction: %s",
+        style.get(
+            "proposal_direction",
+            "unknown",
+        ),
+    )
+
+    log.info(
+        "third woman present: %s",
+        style.get(
+            "third_person_present",
+            "False",
+        ),
+    )
+
+    if selected_location:
+        log.info(
+            "selected location: %s",
+            selected_location.get(
+                "name",
+                "unknown",
+            ),
+        )
+
+    error_feedback: str | None = None
+
+    for attempt in range(
+        1,
+        cfg.brief.max_retries + 1,
+    ):
+        try:
+            raw = client.chat_json(
+                model=model,
+                messages=_build_messages(
+                    cfg,
+                    axis_hints,
+                    recent_briefs,
+                    error_feedback,
+                    characters_data,
+                    selected_location,
+                    style,
+                ),
+                seed=seed + attempt,
+                temperature=cfg.llm.temperature,
+            )
+
+            brief = Brief.model_validate(
+                raw
+            )
+
+        except (
+            OllamaError,
+            ValidationError,
+        ) as exc:
+            error_feedback = str(exc)[:300]
+
+            log.warning(
+                "brief attempt %d/%d invalid: %s",
+                attempt,
+                cfg.brief.max_retries,
+                error_feedback,
+            )
+
+            continue
+
+        if is_near_duplicate(
+            brief.subject,
+            history_subjects,
+            cfg.brief.dedupe_threshold,
+        ):
+            error_feedback = (
+                f"subject '{brief.subject}' is too similar "
+                "to a recent post; create a substantially "
+                "different proposal scene"
+            )
+
+            log.warning(
+                "brief attempt %d rejected as near-duplicate",
+                attempt,
+            )
+
+            continue
+
+        brief = _apply_scene(
+            brief,
+            selected_location,
+            style,
+        )
+
+        log.info(
+            "brief accepted: %s @ %s | proposal=%s | third_woman=%s",
+            brief.subject,
+            brief.location_name or "(no location)",
+            brief.proposal_direction,
+            brief.third_person_present,
+        )
+
+        return brief
+
+    return _fallback_brief(
+        cfg,
+        axis_hints,
+        seed,
+        selected_location,
+        style,
+    )
