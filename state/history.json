@@ -3152,5 +3152,57 @@
     "post_id": "18406595305086191",
     "post_url": "https://www.instagram.com/reel/DcrsqZGjBnK/",
     "status": "posted"
+  },
+  {
+    "stamp": "20260831T053840Z",
+    "timestamp": "2026-08-31T05:38:40.247817+00:00",
+    "brief": {
+      "subject": "A mid-20s South Asian woman and a late-20s South Asian man mid-laugh on a wooden pier extending deep into a sunlit city street during golden hour, their expressions of deep affection under the city lights and neon reflections.",
+      "setting": "Rain-soaked city street",
+      "lighting": "Cool neon mixed with warm city light",
+      "mood": "Dramatic, moody, and intimate with a sense of passionate and romantic connection, featuring natural emotion and expressive faces under the city lights and neon.",
+      "composition": "The couple is framed at a high angle looking down from the left third of the frame, their expressions of deep affection under the city lights and neon reflections. The wide establishing shot shows the wet city street with blurred storefronts and neon reflections in the background.",
+      "color_palette": "Vivid hues with a vintage film aesthetic, featuring a mix of cool neon and warm city light colors. The scene features a range of golden, orange, and soft gray tones.",
+      "time_of_day": "Golden hour, with the sun low in the sky creating a golden glow and soft shadows.",
+      "style_modifiers": [
+        "high-quality",
+        "photorealistic",
+        "romantic",
+        "cinematic",
+        "professional"
+      ],
+      "location_name": "Rain-soaked city street",
+      "interaction": "laughing while walking",
+      "framing": "three-quarter shot from head to knees, faces clearly visible, high angle looking down, couple on the left third, spontaneous documentary-style street photograph"
+    },
+    "positive_prompt": "three-quarter shot from head to knees, faces clearly visible, high angle looking down, couple on the left third, spontaneous documentary-style street photograph, candid photograph of the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair and a small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, a defined square jawline, short groomed dark beard and thick black hair; both fully clothed in elegant modest attire, laughing while walking, A mid-20s South Asian woman and a late-20s South Asian man mid-laugh on a wooden pier extending deep into a sunlit city street during golden hour, their expressions of deep affection under the city lights and neon reflections., in Rain-soaked city street, Cool neon mixed with warm city light, Dramatic, moody, and intimate with a sense of passionate and romantic connection, featuring natural emotion and expressive faces under the city lights and neon., Vivid hues with a vintage film aesthetic, featuring a mix of cool neon and warm city light colors. The scene features a range of golden, orange, and soft gray tones., Golden hour, with the sun low in the sky creating a golden glow and soft shadows., high-quality, photorealistic, romantic, cinematic, professional, shot on DSLR, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k",
+    "negative_prompt": "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, deformed face, distorted face, asymmetric face, extra faces, extra heads, fused faces, malformed face, blurry face, disfigured eyes, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear",
+    "seed": 77165984,
+    "image_model": "Lykon/dreamshaper-8",
+    "device": "cpu",
+    "image_sha256": "3edc3aa2caaa0becd8773050f6b7b129ca5847ea3d27dd6b9dfc15ea254fbb65",
+    "image_path": "out/20260831T053840Z.jpg",
+    "caption": "A moment captured in golden hour light, their laughter mingling with the cool neon and warm city glow. Deep affection in their eyes under the spell of the city lights and neon reflections. So beautifully raw and intimate.\n\n#insta_love #instalove #insta_couple #instacouple #insta_casual #instacasual #insta_goldenhour #instagoldenhour #insta_laugh #instalaugh #insta_nightlife #instanightlife #autogram #slowdesign",
+    "alt_text": "A mid-20s South Asian woman and a late-20s South Asian man laughing mid-walk on a rain-soaked city street under cool neon mixed with warm city light, their expressions of deep affection under the city lights and neon reflections.",
+    "hashtags": [
+      "#insta_love",
+      "#instalove",
+      "#insta_couple",
+      "#instacouple",
+      "#insta_casual",
+      "#instacasual",
+      "#insta_goldenhour",
+      "#instagoldenhour",
+      "#insta_laugh",
+      "#instalaugh",
+      "#insta_nightlife",
+      "#instanightlife",
+      "#autogram",
+      "#slowdesign"
+    ],
+    "backend": "graph",
+    "post_id": "18127302058688343",
+    "post_url": "https://www.instagram.com/reel/DcsbpSVgYaM/",
+    "status": "posted"
   }
 ]
