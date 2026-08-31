@@ -1,193 +1,608 @@
 # ---------------------------------------------------------------------------
-# autogram configuration. Non-secret only. Env vars override any value here
-# (see autogram/config.py for the AUTOGRAM_* override scheme).
-# Credentials live in the environment / .env, never here.
+# AUTOGRAM CONFIGURATION
+#
+# Non-secret configuration only.
+# Environment variables override values here.
+#
+# Examples:
+#   AUTOGRAM_CONTENT__ACTIVE_PROFILE=romance
+#   AUTOGRAM_ROMANCE__THIRD_PERSON_PROBABILITY=0.60
+#   AUTOGRAM_IMAGE__STEPS=26
+#
+# Credentials live in .env / GitHub Actions secrets.
 # ---------------------------------------------------------------------------
 
-# The single source of truth for editorial direction. Change active_profile to
-# switch the entire content mode; all functional pipeline settings stay shared.
+
+# ---------------------------------------------------------------------------
+# Editorial content
+# ---------------------------------------------------------------------------
+
+theme: >
+  high-quality photorealistic cinematic Indian romance centered on dramatic
+  marriage proposals between the same recurring couple, with crystal-clear
+  expressive faces, natural emotions, realistic skin, realistic anatomy,
+  engagement rings, flowers, emotional reactions, beautiful locations,
+  cinematic lighting and professional photography aesthetics.
+
+seed_salt: "autogram-romance-v2"
+
+
 content:
+
+  # The active profile controls the entire creative direction.
   active_profile: "romance"
+
   profiles:
+
     romance:
-      theme: "high-quality, photorealistic romantic images of couples deeply in love, with expressive faces, natural emotion, cinematic lighting, beautiful backgrounds, and professional photography aesthetics"
-      system_prompt: "You are an art director generating a single creative brief for one photorealistic image of a romantic South Asian couple."
-      subject_instruction: "Produce one fresh, specific, visually concrete brief featuring the couple in the described location."
-      prompt_anchor: "the same recognizable romantic couple: a mid-20s South Asian woman with warm olive skin, soft almond dark-brown eyes, high cheekbones, full lips, long wavy jet-black side-swept hair and a small red bindi; and a late-20s South Asian man with wheatish-tan skin, deep-set dark-brown eyes, a defined square jawline, short groomed dark beard and thick black hair; both fully clothed in elegant modest attire"
+
+      theme: >
+        photorealistic cinematic Indian romance centered on dramatic marriage
+        proposals between the same recurring couple, emotional love stories,
+        meaningful gestures, beautiful locations, expressive faces, realistic
+        skin, cinematic lighting, flowers, engagement rings and heartfelt
+        romantic storytelling.
+
+      system_prompt: >
+        You are the creative director for a photorealistic romantic
+        photography account. Create specific, visually obvious scenes featuring
+        the same recurring couple. The scene must communicate a clear physical
+        action rather than a generic description of love. Follow the supplied
+        proposal direction exactly. Prioritize realistic human anatomy,
+        natural facial expressions, clear faces, believable body language,
+        cinematic composition and emotionally powerful storytelling.
+
+      subject_instruction: >
+        Create one specific cinematic marriage-proposal scene. The physical
+        proposal action must be obvious from the image. The pre-selected
+        proposal direction is mandatory. Avoid generic standing couple
+        portraits, generic kissing scenes or vague descriptions of romance.
+        Make every scene visually distinct from previous scenes.
+
+      # This is kept as a stable anchor for the recurring couple.
+      # If you already have a stronger couple descriptor, replace this value
+      # with it without changing the rest of the configuration.
+      prompt_anchor: >
+        the same recurring adult romantic couple, consistent facial identity
+        across scenes, photorealistic attractive adult man and adult woman,
+        natural realistic skin, expressive eyes, realistic hair and believable
+        human anatomy
+
       visual:
-        interaction_styles: ["walking hand-in-hand", "gazing into each other's eyes", "intimate embrace", "laughing while walking", "quiet contemplation side-by-side"]
-        moods_and_emotions: ["tender and romantic", "playful and joyful", "peaceful and serene", "nostalgic and reflective"]
-        photography_trends:
-          compositions: ["rule of thirds", "leading lines", "environmental storytelling", "layered foreground, middle ground and background"]
-          lighting_styles: ["golden hour warm backlighting", "soft overcast daylight", "dramatic side lighting", "cool blue hour"]
-          color_grading: ["warm earthy tones with muted saturation", "vintage film aesthetic", "moody dark romantic grading"]
-          depth_of_field: ["deep focus with the environment readable", "moderate depth of field", "selective focus"]
+
+        # These are additional descriptors used by brief.py when constructing
+        # the LLM prompt.
+        interaction_styles:
+          - >
+            deeply emotional marriage proposal with intimate eye contact
+          - >
+            heartfelt proposal with genuine surprise and romantic anticipation
+          - >
+            emotional kneeling proposal with expressive body language
+          - >
+            cinematic proposal moment with authentic human reactions
+          - >
+            dramatic romantic proposal with meaningful eye contact
+          - >
+            tender proposal with flowers and visible engagement ring
+
+        moods_and_emotions:
+          - >
+            deeply romantic and emotionally intense
+          - >
+            heartfelt anticipation and joyful surprise
+          - >
+            emotional vulnerability and sincere love
+          - >
+            dramatic romantic tension
+          - >
+            overwhelming happiness and emotional tears
+          - >
+            tender anticipation with cinematic emotion
+          - >
+            bittersweet romantic emotion
+
         locations:
-          nature:
-            - {name: "Alpine meadow with wildflowers", description: "Expansive alpine meadow with wildflowers, distant snow-capped peaks and mist", lighting: "Golden hour sunlight", mood: "serene, adventurous, intimate"}
-            - {name: "Tropical beach at golden hour", description: "White sand beach, turquoise ocean, palm trees and an expansive golden sky", lighting: "Warm golden hour sunlight", mood: "romantic, carefree, tropical"}
-            - {name: "Misty forest morning", description: "Long forest path fading into atmospheric mist beneath tall trees", lighting: "Soft diffused dawn light", mood: "dreamlike and intimate"}
-          city:
-            - {name: "Rain-soaked city street", description: "Wet urban street with neon reflections, storefronts and blurred city lights", lighting: "Cool neon mixed with warm city light", mood: "romantic, moody, cinematic"}
-            - {name: "Indian palace courtyard", description: "Ornate palace courtyard with tile work, marble arches and fountains", lighting: "Golden hour light", mood: "regal, elegant, heritage"}
-    ai_tools:
-      theme: "clear, useful editorial content about AI tools, workflows, and practical productivity"
-      system_prompt: "You are an editorial art director for an approachable AI-tools publication."
-      subject_instruction: "Create a concrete, useful visual story about a specific AI workflow, feature, comparison, or productivity moment; avoid hype and unreadable text in the image."
-      prompt_anchor: "clean modern editorial technology illustration, no logos, no readable interface text"
-      visual:
-        moods_and_emotions: ["clear and confident", "curious and optimistic", "focused and practical"]
-        photography_trends: {compositions: ["clean grid composition", "desktop workflow scene", "human-and-tool collaboration"], lighting_styles: ["soft studio light", "calm daylight"], color_grading: ["clean neutral palette with one electric accent", "modern blue and violet palette"], depth_of_field: ["crisp editorial detail", "moderate depth of field"]}
-        locations: {workflows: [{name: "Focused creator workspace", description: "A tidy desk with a laptop, notebook and abstract AI workflow visuals", lighting: "Soft window light", mood: "focused and practical"}, {name: "Collaborative product studio", description: "A modern creative studio discussing an abstract AI workflow board", lighting: "Balanced editorial lighting", mood: "curious and productive"}]}
-    psychology:
-      theme: "thoughtful, evidence-aware visual content about psychology, habits, emotions, and self-understanding"
-      system_prompt: "You are an editorial art director for a compassionate psychology publication."
-      subject_instruction: "Create a grounded, respectful visual story about an everyday psychological concept, habit, emotion, or reflection; never imply diagnosis or medical advice."
-      prompt_anchor: "warm human-centered editorial photograph, diverse adult subjects, respectful natural expressions"
-      visual:
-        moods_and_emotions: ["reflective and calm", "hopeful", "grounded and compassionate"]
-        photography_trends: {compositions: ["quiet observational scene", "symbolic everyday still life", "environmental portrait with negative space"], lighting_styles: ["soft morning light", "gentle overcast daylight", "warm reading-lamp light"], color_grading: ["muted calming earth tones", "soft natural documentary color"], depth_of_field: ["moderate depth of field", "deep focus with environmental context"]}
-        locations: {everyday: [{name: "Quiet reading nook", description: "A comfortable reading nook with journal, tea and soft natural light", lighting: "Soft morning light", mood: "reflective and calm"}, {name: "Peaceful park walk", description: "A leafy city park path with a person taking a thoughtful walk", lighting: "Gentle overcast daylight", mood: "grounded and hopeful"}]}
-# Deterministic-variation salt. Change it to reshuffle the axis-hint stream
-# without changing the theme.
-seed_salt: "autogram-v1"
+
+          romantic:
+            - name: "sunset beach"
+              description: >
+                quiet beach with soft waves, warm horizon and open romantic
+                space
+              lighting: >
+                warm golden-hour sunlight with soft rim light
+              mood: >
+                expansive, intimate and cinematic
+
+            - name: "flower garden"
+              description: >
+                lush romantic garden filled with flowers, pathways and
+                natural greenery
+              lighting: >
+                soft golden sunlight filtered through foliage
+              mood: >
+                dreamy, intimate and joyful
+
+            - name: "rooftop at sunset"
+              description: >
+                elegant rooftop overlooking a glowing city skyline
+              lighting: >
+                warm sunset backlight with subtle city lights
+              mood: >
+                grand, intimate and cinematic
+
+            - name: "mountain viewpoint"
+              description: >
+                scenic mountain overlook with dramatic landscape and distant
+                valleys
+              lighting: >
+                golden-hour sunlight with atmospheric haze
+              mood: >
+                grand, emotional and breathtaking
+
+            - name: "luxury hotel garden"
+              description: >
+                elegant landscaped hotel garden with fountains, flowers and
+                warm architectural lighting
+              lighting: >
+                warm evening illumination with soft practical lights
+              mood: >
+                luxurious, romantic and sophisticated
+
+            - name: "rainy city street"
+              description: >
+                romantic city street after rain with reflections on wet
+                pavement and glowing lights
+              lighting: >
+                warm street lights mixed with cool evening ambience
+              mood: >
+                cinematic, intimate and emotional
+
+            - name: "lakeside promenade"
+              description: >
+                peaceful lakeside walkway with trees, water reflections and
+                distant lights
+              lighting: >
+                soft sunset light transitioning into blue hour
+              mood: >
+                calm, intimate and deeply romantic
+
+            - name: "old palace courtyard"
+              description: >
+                ornate heritage courtyard with arches, stone architecture
+                and decorative gardens
+              lighting: >
+                warm evening architectural lighting
+              mood: >
+                grand, timeless and cinematic
+
+
+          indoor:
+            - name: "elegant candlelit restaurant"
+              description: >
+                intimate upscale restaurant table surrounded by candles,
+                flowers and warm architectural details
+              lighting: >
+                soft candlelight mixed with warm ambient illumination
+              mood: >
+                intimate, luxurious and emotional
+
+            - name: "romantic hotel suite"
+              description: >
+                elegant hotel interior with flowers, warm lamps and refined
+                romantic decor
+              lighting: >
+                soft warm practical lighting
+              mood: >
+                private, intimate and sophisticated
+
+            - name: "grand ballroom"
+              description: >
+                elegant ballroom with chandeliers, polished floors and
+                romantic floral arrangements
+              lighting: >
+                dramatic chandelier lighting with warm highlights
+              mood: >
+                grand, luxurious and cinematic
+
+
+        photography_trends:
+
+          compositions:
+            - >
+              cinematic rule-of-thirds composition with strong foreground
+              depth
+            - >
+              intimate layered composition with foreground flowers
+            - >
+              asymmetric composition with the proposal action as the focal
+              point
+            - >
+              dramatic environmental composition with cinematic depth
+            - >
+              shallow-depth romantic portrait composition
+            - >
+              strong leading lines directing attention toward the proposer
+
+          lighting_styles:
+            - >
+              warm golden-hour backlight
+            - >
+              soft cinematic sunset light
+            - >
+              dramatic warm practical lighting
+            - >
+              soft diffused romantic light
+            - >
+              golden rim light with gentle shadows
+            - >
+              cinematic blue-hour ambience with warm highlights
+
+          color_grading:
+            - >
+              warm cinematic gold and amber tones
+            - >
+              rich romantic reds with warm skin tones
+            - >
+              soft pastel romantic grading
+            - >
+              cinematic teal-and-warm contrast
+            - >
+              warm golden filmic tones
+            - >
+              natural filmic colors with subtle romantic warmth
+
+          depth_of_field:
+            - >
+              shallow depth of field with faces sharply focused
+            - >
+              cinematic background separation
+            - >
+              moderate depth of field keeping the proposal action readable
+            - >
+              soft bokeh behind the couple
+            - >
+              environmental depth with clear subjects
+
+
+# ---------------------------------------------------------------------------
+# Romance scene controls
+# ---------------------------------------------------------------------------
+
+romance:
+
+  enabled: true
+
+  # Both directions are deliberately enabled.
+  # The seeded RNG chooses one per generated scene.
+  proposal_directions:
+    - "boy_proposes_to_girl"
+    - "girl_proposes_to_boy"
+
+  # Approximately 45% of scenes include the third woman.
+  third_person_probability: 0.45
+
+  # Make the physical proposal action explicit.
+  require_kneeling: true
+  require_flowers: true
+  require_ring: true
+
+  # Specific ring style requested.
+  ring_style: >
+    a clearly visible elegant marquise-cut engagement ring
+
+  # Third woman is a genuine love-triangle character, not a random extra.
+  third_person_role: >
+    a heartbroken woman in unrequited love for the boy
+
+  third_person_emotion: >
+    crying, quietly sobbing, tears visibly running down her cheeks,
+    heartbroken but not hostile
+
+  cinematic_style: >
+    grand cinematic Indian romantic-film atmosphere, emotionally expressive
+    faces, dramatic romantic lighting, heartfelt Bollywood-style visual
+    storytelling, photorealistic, realistic human anatomy, natural skin
+
+
+# ---------------------------------------------------------------------------
+# Brief generation
+# ---------------------------------------------------------------------------
 
 brief:
-  history_depth: 30          # how many past briefs to feed the LLM for divergence
-  dedupe_threshold: 85       # rapidfuzz token_set_ratio above which a brief is a dup
-  max_retries: 3             # reject-and-retry attempts for near-duplicate subjects
-  # Axis hints pre-selected by a seeded RNG and injected into the LLM prompt.
+
+  history_depth: 30
+
+  dedupe_threshold: 85
+
+  max_retries: 3
+
   axes:
-    camera_angle: ["eye-level", "low angle", "high angle", "dutch angle", "overhead flat-lay", "worm's-eye"]
-    season: ["spring", "summer", "autumn", "winter"]
-    focal_length: ["16mm wide", "35mm", "50mm", "85mm portrait", "135mm telephoto", "macro"]
-    subject_scale: ["extreme close-up", "close-up", "medium shot", "wide establishing shot"]
+
+    camera_angle:
+      - "eye-level"
+      - "low angle"
+      - "high angle"
+      - "slight dutch angle"
+      - "side profile"
+      - "three-quarter angle"
+
+    season:
+      - "spring"
+      - "summer"
+      - "autumn"
+      - "winter"
+
+    focal_length:
+      - "35mm"
+      - "50mm"
+      - "85mm portrait"
+      - "105mm"
+      - "135mm telephoto"
+
+    subject_scale:
+      - "medium shot"
+      - "three-quarter shot"
+      - "full-body shot"
+      - "medium-wide shot"
+
+
+# ---------------------------------------------------------------------------
+# Ollama
+# ---------------------------------------------------------------------------
 
 llm:
-  # Ollama runtime. The daemon lifecycle is managed by autogram itself.
-  host_env: "OLLAMA_HOST"                  # env var to read; default in code
-  model: "qwen2.5:3b-instruct"             # ~2 GB, comfortable on a 4-core CPU runner
-  hq_model: "qwen2.5:7b-instruct"          # used only when a GPU is detected
-  ready_timeout_s: 120                      # health-poll budget after spawning serve
+
+  host_env: "OLLAMA_HOST"
+
+  model: "qwen2.5:3b-instruct"
+
+  hq_model: "qwen2.5:7b-instruct"
+
+  ready_timeout_s: 120
+
   request_timeout_s: 180
+
   temperature: 0.8
-  max_retries: 3                            # JSON-validation retries before template fallback
+
+  max_retries: 3
+
+
+# ---------------------------------------------------------------------------
+# Image generation
+# ---------------------------------------------------------------------------
 
 image:
-  # CPU default. See README runtime/disk table for alternatives.
-  # Photoreal SD1.5 checkpoint (diffusers format) — the realism ceiling on a
-  # free CPU runner. ~20-30 steps at 512 takes a few minutes on 4 vCPU but fits
-  # the 60-min job budget. For a fast (but plasticky) fallback set model to
-  # "stabilityai/sd-turbo" — the code auto-detects "turbo"/"lcm" and switches to
-  # the hq_steps/hq_guidance below. Other good CPU options: "Lykon/absolute-reality-1.81".
+
   model: "Lykon/dreamshaper-8"
-  hq_model: "black-forest-labs/FLUX.1-schnell"  # used automatically when CUDA is present
-  steps: 26                                 # photoreal SD1.5 wants ~20-30 steps
-  guidance_scale: 6.5                       # real CFG (turbo/FLUX use the hq_* values)
-  hq_steps: 4                               # FLUX schnell / turbo: distilled, 4 steps
-  hq_guidance_scale: 0.0                    # FLUX schnell / turbo want CFG 0.0
-  width: 512                                # native 4:5 (IG portrait) — no crop waste
-  height: 640                               # 640x800 is sharper but slower on CPU
-  # Quality levers for the SD1.5 CPU path (ignored on FLUX/GPU):
-  scheduler: "dpmpp_karras"                 # DPM++ 2M Karras: sharper, same steps ("" = default)
-  vae: "stabilityai/sd-vae-ft-mse"          # crisper detail + color ("" to disable)
-  # Hi-res fix = a 2nd img2img pass that adds real detail (biggest SD1.5 lever)
-  # but ~2x time per image. OFF by default so a 4-scene reel fits the 60-min job;
-  # turn it on and drop reel.num_scenes to ~2 for maximum quality.
-  hires_fix: false
-  hires_scale: 1.5
-  hires_denoise: 0.4
-  hires_steps: 16
-  # SD prompt templates. {framing} (shot distance/angle/alignment/candid) leads
-  # so distance & composition actually vary; {characters} is the fixed couple
-  # (kept identical every run); the brief supplies the rotating scene/place.
-  # No fixed focal length here — it biased every frame toward a portrait.
-  positive_template: "{framing}, candid photograph of {characters}, {interaction}, {subject}, in {setting}, {lighting}, {mood}, {color_palette}, {time_of_day}, {style_modifiers}, shot on DSLR, natural skin texture, realistic, highly detailed, sharp focus, professional photography, 8k"
-  negative_template: "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, deformed, disfigured, mutated hands, extra fingers, extra limbs, bad anatomy, lowres, blurry, text, watermark, signature, jpeg artifacts, oversaturated, ugly, deformed face, distorted face, asymmetric face, extra faces, extra heads, fused faces, malformed face, blurry face, disfigured eyes, nudity, nsfw, revealing clothing, cleavage, lingerie, bikini, swimwear"
+
+  hq_model: "black-forest-labs/FLUX.1-schnell"
+
+  # DreamShaper SD1.5 photorealistic path.
+  steps: 26
+
+  guidance_scale: 6.5
+
+  # FLUX/turbo path.
+  hq_steps: 4
+
+  hq_guidance_scale: 0.0
+
+  width: 512
+
+  height: 512
+
+  positive_template: >
+    {framing},
+    photorealistic cinematic romantic photograph of {characters},
+    {interaction},
+    {subject},
+    in {setting},
+    {lighting},
+    {mood},
+    {composition},
+    {color_palette},
+    {time_of_day},
+    {style_modifiers},
+    natural skin texture,
+    realistic human anatomy,
+    realistic facial features,
+    expressive eyes,
+    realistic hands,
+    realistic clothing,
+    highly detailed,
+    sharp focus,
+    professional DSLR photography,
+    cinematic depth,
+    natural lighting,
+    8k
+
+  negative_template: >
+    illustration,
+    painting,
+    drawing,
+    cartoon,
+    anime,
+    3d render,
+    cgi,
+    plastic skin,
+    deformed,
+    disfigured,
+    mutated hands,
+    extra fingers,
+    missing fingers,
+    extra limbs,
+    bad anatomy,
+    lowres,
+    blurry,
+    text,
+    watermark,
+    signature,
+    jpeg artifacts,
+    oversaturated,
+    ugly,
+    deformed face,
+    distorted face,
+    asymmetric face,
+    extra faces,
+    extra heads,
+    fused faces,
+    malformed face,
+    blurry face,
+    disfigured eyes,
+    duplicate person,
+    duplicate couple,
+    duplicate girl,
+    duplicate boy,
+    wrong proposal direction,
+    boy and girl both kneeling,
+    generic standing couple,
+    missing ring,
+    missing flowers,
+    malformed ring,
+    distorted ring,
+    extra ring,
+    nudity,
+    nsfw,
+    revealing clothing,
+    cleavage,
+    lingerie,
+    bikini,
+    swimwear
+
+
+# ---------------------------------------------------------------------------
+# Post-processing
+# ---------------------------------------------------------------------------
 
 postproc:
-  aspect: "4:5"                # one of: "1:1", "4:5", "1.91:1"
+
+  aspect: "4:5"
+
   jpeg_quality: 92
+
   unsharp_radius: 1.2
+
   unsharp_percent: 80
+
   unsharp_threshold: 3
-  max_bytes: 8388608           # 8 MB Instagram hard limit
+
+  max_bytes: 8388608
+
+
+# ---------------------------------------------------------------------------
+# Captions
+# ---------------------------------------------------------------------------
 
 caption:
-  tone: "calm, warm, understated; speaks to design lovers"
-  emoji_budget: 2              # max emoji in the caption (0 to disable)
-  max_length: 2200            # caption + hashtag block hard cap (Instagram)
-  hashtag_placement: "caption"  # "caption" or "comment"
+
+  tone: >
+    warm, romantic, cinematic, emotionally expressive, understated
+
+  emoji_budget: 2
+
+  max_length: 2200
+
+  hashtag_placement: "caption"
+
+
+# ---------------------------------------------------------------------------
+# Hashtags
+# ---------------------------------------------------------------------------
 
 hashtags:
+
   min_count: 12
-  max_count: 18               # hard-capped at 30 in code regardless
-  # Target tier mix (fractions, validated in code with tolerance).
-  tier_broad: 0.30            # >1M posts
+
+  max_count: 18
+
+  tier_broad: 0.30
+
   tier_mid: 0.50
+
   tier_niche: 0.20
-  brand_tags: ["autogram", "slowdesign"]   # always appended, normalized
+
+  brand_tags:
+    - "autogram"
+    - "romanticphotography"
+
+
+# ---------------------------------------------------------------------------
+# Safety / quality gates
+# ---------------------------------------------------------------------------
 
 gates:
+
   nsfw: true
+
   degenerate: true
+
   profanity: true
-  # Degenerate-image thresholds (on 0-255 grayscale).
-  degenerate_min_variance: 60.0   # reject near-uniform output
-  degenerate_dark_mean: 12.0      # reject near-black
-  degenerate_bright_mean: 243.0   # reject near-white
+
+  degenerate_min_variance: 60.0
+
+  degenerate_dark_mean: 12.0
+
+  degenerate_bright_mean: 243.0
+
+
+# ---------------------------------------------------------------------------
+# Reel generation
+# ---------------------------------------------------------------------------
 
 reel:
+
   enabled: true
-  # Generate 4 scenes. The first scene is already generated by the
-  # normal pipeline, so this means 4 total images per Reel.
+
   num_scenes: 4
-  # Average duration of each scene.
+
   seconds_per_image: 3.2
-  # Shorter transitions feel more modern for Instagram.
+
   crossfade_s: 0.35
+
   fps: 30
+
   width: 1080
+
   height: 1920
-  # Used by the FFmpeg fallback renderer.
+
   zoom: 1.12
-  # Put CC0 / royalty-free music here.
+
   audio_dir: "assets/audio"
 
-  # ------------------------------------------------------------------
-  # AI image-to-video
-  # ------------------------------------------------------------------
-
   ai_video:
+
     enabled: true
-    # "auto" = try AI video, then automatically fall back to FFmpeg.
-    # "off"  = never call an external AI video provider.
+
     mode: "auto"
-    # Provider: "pixverse" (paid API; needs PIXVERSE_API_KEY + a public image
-    # host) or "huggingface" (free serverless tier; needs HF_TOKEN, POSTs the
-    # image directly — no hosting; set HF_VIDEO_MODEL to a currently-served
-    # image-to-video model). Either way, failure falls back to the FFmpeg reel.
+
     provider: "huggingface"
-    # Only animate selected scenes.
-    # Example: [0, 2] means scene 1 and scene 3 become AI video.
-    # Other scenes use the free FFmpeg animation.
-    ai_scene_indexes: [0, 2]
-    # 3 seconds is enough for an AI motion shot and saves credits.
+
+    # Scene 1 and scene 3 receive AI image-to-video attempts.
+    # Remaining scenes use FFmpeg animation.
+    ai_scene_indexes:
+      - 0
+      - 2
+
     duration_s: 3
-    # Don't wait forever if an external service gets stuck.
+
     timeout_s: 180
-    # Number of polling attempts.
+
     poll_interval_s: 5
-    # If true, failure of AI video NEVER fails the Reel.
+
     fallback_to_ffmpeg: true
-    # Keep generated AI clips temporary.
+
     keep_intermediate: false
 
-youtube:
-  # Keep initial uploads private until you confirm your channel workflow.
-  privacy_status: "private"  # private, unlisted, or public
-  category_id: "22"          # People & Blogs
+
+# ---------------------------------------------------------------------------
+# Persistent state
+# ---------------------------------------------------------------------------
+
 state:
+
   history_path: "state/history.json"
-  session_path: "state/ig_session.json"   # instagrapi session settings (gitignored)
+
+  session_path: "state/ig_session.json"
+
   out_dir: "out"
