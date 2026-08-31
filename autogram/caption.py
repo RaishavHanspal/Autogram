@@ -24,7 +24,7 @@ from .config import Config
 from .logging_utils import get_logger
 
 if TYPE_CHECKING:
-    from .brief import Brief
+    from .scene import Brief
 
 log = get_logger("caption")
 

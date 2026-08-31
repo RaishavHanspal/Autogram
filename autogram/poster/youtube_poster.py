@@ -3,13 +3,12 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 from typing import Any
 
 import requests
 
 from ..logging_utils import register_secret
-from .base import Poster, PosterError, PostResult
+from .base import MediaArg, Poster, PosterError, PostResult, normalize_media
 
 _TOKEN_URL = "https://oauth2.googleapis.com/token"
 _UPLOAD_URL = "https://www.googleapis.com/upload/youtube/v3/videos"
@@ -57,15 +56,21 @@ class YouTubePoster(Poster):
             timeout=30,
         )
         if response.status_code != 200:
-            raise PosterError(f"YouTube OAuth refresh failed: {response.status_code} {response.text[:300]}")
+            raise PosterError(
+                f"YouTube OAuth refresh failed: {response.status_code} {response.text[:300]}"
+            )
         token = response.json().get("access_token")
         if not token:
             raise PosterError("YouTube OAuth refresh returned no access_token")
         return str(token)
 
     @staticmethod
-    def _metadata(caption: str, alt_text: str, privacy_status: str, category_id: str) -> dict[str, Any]:
-        title = next((line.strip() for line in caption.splitlines() if line.strip()), "Autogram Short")
+    def _metadata(
+        caption: str, alt_text: str, privacy_status: str, category_id: str
+    ) -> dict[str, Any]:
+        title = next(
+            (line.strip() for line in caption.splitlines() if line.strip()), "Autogram Short"
+        )
         title = title[:100]
         description = caption[:5000]
         if alt_text.strip():
@@ -75,14 +80,19 @@ class YouTubePoster(Poster):
             "status": {"privacyStatus": privacy_status, "selfDeclaredMadeForKids": False},
         }
 
-    def publish(self, image_path: str | Path, caption: str, alt_text: str) -> PostResult:
-        video_path = Path(image_path)
+    def publish(self, media: MediaArg, caption: str, alt_text: str) -> PostResult:
+        paths = normalize_media(media)
+        if len(paths) != 1:
+            raise PosterError("YouTube accepts exactly one video file per upload")
+        video_path = paths[0]
         if self.dry_run:
             return PostResult(post_id="dry-run", backend=self.name, dry_run=True)
         if not video_path.is_file():
             raise PosterError(f"YouTube upload file not found: {video_path}")
         if video_path.suffix.lower() not in {".mp4", ".mov", ".webm"}:
-            raise PosterError("YouTube Shorts requires a rendered video (MP4 recommended); enable reel.enabled")
+            raise PosterError(
+                "YouTube Shorts requires a rendered video (MP4 recommended); enable reel.enabled"
+            )
 
         token = self._access_token()
         metadata = self._metadata(caption, alt_text, self.privacy_status, self.category_id)
@@ -100,7 +110,9 @@ class YouTubePoster(Poster):
             timeout=30,
         )
         if session.status_code not in {200, 201}:
-            raise PosterError(f"YouTube upload session failed: {session.status_code} {session.text[:300]}")
+            raise PosterError(
+                f"YouTube upload session failed: {session.status_code} {session.text[:300]}"
+            )
         upload_url = session.headers.get("Location")
         if not upload_url:
             raise PosterError("YouTube upload session returned no Location header")
@@ -108,12 +120,17 @@ class YouTubePoster(Poster):
         with video_path.open("rb") as stream:
             uploaded = requests.put(
                 upload_url,
-                headers={"Content-Type": "video/mp4", "Content-Length": str(video_path.stat().st_size)},
+                headers={
+                    "Content-Type": "video/mp4",
+                    "Content-Length": str(video_path.stat().st_size),
+                },
                 data=stream,
                 timeout=900,
             )
         if uploaded.status_code not in {200, 201}:
-            raise PosterError(f"YouTube upload failed: {uploaded.status_code} {uploaded.text[:300]}")
+            raise PosterError(
+                f"YouTube upload failed: {uploaded.status_code} {uploaded.text[:300]}"
+            )
         video_id = uploaded.json().get("id")
         if not video_id:
             raise PosterError("YouTube upload returned no video id")

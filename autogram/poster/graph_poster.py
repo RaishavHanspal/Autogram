@@ -12,12 +12,11 @@ publish the container.
 from __future__ import annotations
 
 import time
-from pathlib import Path
 
 import requests
 
 from ..logging_utils import get_logger, register_secret
-from .base import Poster, PosterError, PostResult
+from .base import MediaArg, Poster, PosterError, PostResult, is_video_path, normalize_media
 from .image_host import ImageHost
 
 log = get_logger("graph")
@@ -55,12 +54,24 @@ class GraphApiPoster(Poster):
         if usage:
             log.info("graph x-app-usage: %s (daily publish quota: %d)", usage, DAILY_POST_QUOTA)
 
-    def _create_container(self, media_url: str, caption: str, is_reel: bool = False) -> str:
-        data = {"caption": caption, "access_token": self.access_token}
-        if is_reel:
+    def _create_container(
+        self,
+        media_url: str,
+        caption: str,
+        is_reel: bool = False,
+        is_carousel_item: bool = False,
+    ) -> str:
+        data = {"access_token": self.access_token}
+        if is_carousel_item:
+            # A carousel child: image only, no caption (the parent carries it).
+            data["image_url"] = media_url
+            data["is_carousel_item"] = "true"
+        elif is_reel:
+            data["caption"] = caption
             data["media_type"] = "REELS"
             data["video_url"] = media_url
         else:
+            data["caption"] = caption
             data["image_url"] = media_url
         resp = requests.post(
             f"{GRAPH_BASE}/{self.ig_user_id}/media",
@@ -75,6 +86,27 @@ class GraphApiPoster(Poster):
         cid = resp.json().get("id")
         if not cid:
             raise PosterError("media container create returned no id")
+        return str(cid)
+
+    def _create_carousel_container(self, children: list[str], caption: str) -> str:
+        resp = requests.post(
+            f"{GRAPH_BASE}/{self.ig_user_id}/media",
+            data={
+                "media_type": "CAROUSEL",
+                "children": ",".join(children),
+                "caption": caption,
+                "access_token": self.access_token,
+            },
+            timeout=60,
+        )
+        self._log_usage(resp)
+        if resp.status_code != 200:
+            raise PosterError(
+                f"carousel container create failed: {resp.status_code} {resp.text[:300]}"
+            )
+        cid = resp.json().get("id")
+        if not cid:
+            raise PosterError("carousel container create returned no id")
         return str(cid)
 
     def _poll_container(self, container_id: str, timeout_s: float | None = None) -> None:
@@ -128,35 +160,51 @@ class GraphApiPoster(Poster):
         return None
 
     # ------------------------------------------------------------------ #
-    def publish(self, image_path: str | Path, caption: str, alt_text: str) -> PostResult:
+    def publish(self, media: MediaArg, caption: str, alt_text: str) -> PostResult:
         # NOTE: alt_text is accepted for interface parity. The Graph publish
         # endpoint does not expose alt text; it is recorded in state but not
-        # sent. A .mp4/.mov is published as a Reel (media_type=REELS); video
-        # processing is slower so the container poll gets a longer budget.
-        is_reel = Path(str(image_path)).suffix.lower() in {".mp4", ".mov"}
+        # sent. One .mp4/.mov -> Reel (REELS, slower processing so a longer poll
+        # budget); one image -> photo; many images -> CAROUSEL.
+        paths = normalize_media(media)
+        if not paths:
+            raise PosterError("no media supplied to publish")
+        is_reel = len(paths) == 1 and is_video_path(paths[0])
+        is_carousel = len(paths) > 1
+        kind = "reel" if is_reel else "carousel" if is_carousel else "image"
+
         if self.dry_run:
             log.info(
-                "[dry-run] would host %s %s, then POST /%s/media (%s, caption <%d chars>) "
-                "-> poll -> POST /media_publish",
-                "reel" if is_reel else "image",
-                image_path,
-                self.ig_user_id or "<user>",
-                "video_url,media_type=REELS" if is_reel else "image_url",
+                "[dry-run] would host %d file(s) %s, then create a %s container -> poll -> "
+                "POST /media_publish (caption <%d chars>)",
+                len(paths),
+                [str(p) for p in paths],
+                kind,
                 len(caption),
             )
             return PostResult(post_id="dry-run", url=None, backend=self.name, dry_run=True)
 
-        media_url = self.image_host.upload(image_path)
-        container_id = self._create_container(media_url, caption, is_reel=is_reel)
-        self._poll_container(
-            container_id, timeout_s=self.container_timeout_s * 3 if is_reel else None
-        )
+        media_url: str | None = None
+        if is_carousel:
+            children: list[str] = []
+            for p in paths:
+                child_url = self.image_host.upload(str(p))
+                child_id = self._create_container(child_url, "", is_carousel_item=True)
+                self._poll_container(child_id)
+                children.append(child_id)
+            container_id = self._create_carousel_container(children, caption)
+            self._poll_container(container_id)
+        else:
+            media_url = self.image_host.upload(str(paths[0]))
+            container_id = self._create_container(media_url, caption, is_reel=is_reel)
+            self._poll_container(
+                container_id, timeout_s=self.container_timeout_s * 3 if is_reel else None
+            )
+
         media_id = self._publish_container(container_id)
         url = self._permalink(media_id)
-        log.info("published %s id=%s url=%s", "reel" if is_reel else "media", media_id, url)
-        return PostResult(
-            post_id=media_id, url=url, backend=self.name, extra={"media_url": media_url}
-        )
+        log.info("published %s id=%s url=%s", kind, media_id, url)
+        extra = {"media_url": media_url} if media_url else {"children": str(len(paths))}
+        return PostResult(post_id=media_id, url=url, backend=self.name, extra=extra)
 
     def comment(self, post_id: str, text: str) -> None:
         if self.dry_run:

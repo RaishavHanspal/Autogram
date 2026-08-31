@@ -46,7 +46,7 @@ dev = [
 autogram = "autogram.run:main"
 
 [tool.setuptools]
-packages = ["autogram", "autogram.poster"]
+packages = ["autogram", "autogram.poster", "autogram.render", "autogram.content"]
 
 [tool.setuptools.package-data]
 autogram = ["py.typed"]

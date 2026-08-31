@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from autogram.brief import (
+from autogram.scene import (
     Brief,
     compute_seed,
     generate_brief,

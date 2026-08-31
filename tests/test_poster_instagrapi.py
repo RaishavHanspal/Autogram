@@ -22,6 +22,15 @@ def test_instagrapi_dry_run_posts_nothing(tmp_path):
     assert result.post_id == "dry-run"
 
 
+def test_instagrapi_carousel_dry_run(tmp_path):
+    poster = InstagrapiPoster(
+        username="u", password="p", session_path=tmp_path / "s.json", dry_run=True
+    )
+    result = poster.publish(["a.jpg", "b.jpg", "c.jpg"], "caption", "alt")
+    assert result.dry_run is True
+    assert result.post_id == "dry-run"
+
+
 def test_instagrapi_challenge_surfaces_actionable_error(tmp_path, monkeypatch):
     class _FakeClient:
         def login(self, username, password):

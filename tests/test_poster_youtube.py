@@ -18,7 +18,9 @@ class _Response:
 
 
 def test_youtube_dry_run_needs_no_credentials():
-    result = YouTubePoster(None, None, None, dry_run=True).publish("out/short.mp4", "caption", "alt")
+    result = YouTubePoster(None, None, None, dry_run=True).publish(
+        "out/short.mp4", "caption", "alt"
+    )
     assert result.dry_run is True
     assert result.backend == "youtube"
 
@@ -42,8 +44,12 @@ def test_youtube_resumable_upload(monkeypatch, tmp_path):
         ]
     )
 
-    monkeypatch.setattr("autogram.poster.youtube_poster.requests.post", lambda *a, **k: next(responses))
-    monkeypatch.setattr("autogram.poster.youtube_poster.requests.put", lambda *a, **k: next(responses))
+    monkeypatch.setattr(
+        "autogram.poster.youtube_poster.requests.post", lambda *a, **k: next(responses)
+    )
+    monkeypatch.setattr(
+        "autogram.poster.youtube_poster.requests.put", lambda *a, **k: next(responses)
+    )
 
     result = YouTubePoster("id", "secret", "refresh", privacy_status="unlisted").publish(
         video, "Useful Short\n#ai", "An accessible description"

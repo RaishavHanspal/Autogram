@@ -106,7 +106,7 @@ def main() -> int:
                 mock.patch.object(run_mod, "OllamaClient", _FakeOllama),
                 mock.patch.object(run_mod, "ImageGenerator", _FakeImageGen),
             ):
-                code = run_mod.main(["--dry-run", "--seed", "4242"])
+                code = run_mod.main(["--dry-run", "--seed", "4242", "--content-type", "photo"])
 
             if code != run_mod.ExitCode.OK:
                 print(f"SMOKE FAIL: exit code {code}", file=sys.stderr)

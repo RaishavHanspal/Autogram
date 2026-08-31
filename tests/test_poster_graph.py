@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 
 from autogram.poster import graph_poster
@@ -66,7 +68,30 @@ def test_graph_full_publish_flow(monkeypatch):
     result = poster.publish("out/x.jpg", "caption", "alt")
     assert result.post_id == "media999"
     assert result.url == "https://instagram.com/p/abc/"
-    assert host.uploaded == "out/x.jpg"
+    assert Path(host.uploaded) == Path("out/x.jpg")
+
+
+def test_graph_carousel_flow(monkeypatch):
+    host = _StubHost()
+    _install_fake_requests(
+        monkeypatch,
+        [
+            _FakeResp(200, {"id": "c1"}),  # child 1 create
+            _FakeResp(200, {"status_code": "FINISHED"}),  # child 1 poll
+            _FakeResp(200, {"id": "c2"}),  # child 2 create
+            _FakeResp(200, {"status_code": "FINISHED"}),  # child 2 poll
+            _FakeResp(200, {"id": "c3"}),  # child 3 create
+            _FakeResp(200, {"status_code": "FINISHED"}),  # child 3 poll
+            _FakeResp(200, {"id": "car"}),  # carousel container create
+            _FakeResp(200, {"status_code": "FINISHED"}),  # carousel poll
+            _FakeResp(200, {"id": "media_car"}),  # publish
+            _FakeResp(200, {"permalink": "https://instagram.com/p/car/"}),  # permalink
+        ],
+    )
+    poster = GraphApiPoster("token", "1789", host)
+    result = poster.publish(["a.jpg", "b.jpg", "c.jpg"], "caption", "alt")
+    assert result.post_id == "media_car"
+    assert result.url == "https://instagram.com/p/car/"
 
 
 def test_graph_container_error_raises(monkeypatch):

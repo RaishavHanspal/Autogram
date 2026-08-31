@@ -24,10 +24,12 @@ Edit **`config/config.yaml`** and choose a `content.active_profile`; edit or add
 
 ```yaml
 content:
-  active_profile: "ai_tools"
+  active_profile: "romance"
 ```
 
-That's the only required config. Everything else has sane defaults.
+That's the only required config. Everything else has sane defaults. For the full
+walkthrough — content types, reel music, and linking **multiple accounts** to one
+repo — see **[CONFIGURE.md](CONFIGURE.md)**.
 
 ## 3. Dry run (nothing is posted)
 
@@ -101,7 +103,9 @@ python -m autogram.run
 python -m autogram.run --dry-run                 # generate, gate, save, no post
 python -m autogram.run --image-only              # image only, no caption/post
 python -m autogram.run --seed 1234               # reproducible
-python -m autogram.run --content-profile psychology # select a configured mode
+python -m autogram.run --content-type reel       # force photo | reel | carousel
+python -m autogram.run --account romance         # run only one configured account
+python -m autogram.run --content-profile romance # select a configured profile
 python -m autogram.run --description "new theme" # one-off active-profile theme
 ```
 

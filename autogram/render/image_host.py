@@ -12,7 +12,7 @@ import os
 import subprocess
 from pathlib import Path
 
-from .logging_utils import get_logger
+from ..logging_utils import get_logger
 
 log = get_logger("image_host")
 

@@ -27,8 +27,8 @@ import urllib.request
 from pathlib import Path
 from typing import Any
 
-from .config import Config
-from .logging_utils import get_logger
+from ..config import Config
+from ..logging_utils import get_logger
 
 log = get_logger("ai_video")
 

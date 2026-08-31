@@ -82,8 +82,10 @@ caption `.txt` in `out/`, with no GPU and no paid API.
 ## CLI
 
 ```bash
-python -m autogram.run                        # full pipeline from config
-python -m autogram.run --content-profile ai_tools # select a configured content mode
+python -m autogram.run                        # all enabled accounts, mixed content types
+python -m autogram.run --account romance      # run only one configured account
+python -m autogram.run --content-type reel    # force photo | reel | carousel
+python -m autogram.run --content-profile romance  # force a content profile for all accounts
 python -m autogram.run --description "..."    # one-off active-profile theme override
 python -m autogram.run --dry-run              # generate + gate + save, do NOT post
 python -m autogram.run --image-only           # skip caption and post
@@ -100,9 +102,49 @@ Exit codes (distinct per failure class): `0` ok, `1` config, `2` brief/LLM,
 
 All non-secret settings live in **`config/config.yaml`** (validated by pydantic).
 
-The `content` block is the single source of truth for editorial direction. Change `content.active_profile` (or pass `--content-profile`) to switch an entire channel. Each profile owns its theme, prompt anchor, creative direction, and location pool. The included profiles are `romance`, `ai_tools`, and `psychology`; add a new profile instead of changing pipeline logic.
+> **New here? See [CONFIGURE.md](CONFIGURE.md)** for a step-by-step setup guide:
+> content profiles, content types + mix, reel music, single- and multi-account
+> credentials, and the GitHub Actions secrets.
 
-Pipeline settings remain in the same YAML file. Instagram credentials remain environment-only. `--description` is a one-run override of the selected profile's theme.
+The `content` block is the single source of truth for editorial direction. Change `content.active_profile` (or pass `--content-profile`) to switch an entire channel. Each profile owns its theme, prompt anchor, creative direction, and location pool. The included profile is `romance`; add a new profile under `content.profiles` instead of changing pipeline logic.
+
+Pipeline settings remain in the same YAML file. Credentials remain environment-only. `--description` is a one-run override of the selected profile's theme.
+
+### Content types
+
+Each run produces one of three content types, as pluggable modules under `autogram/content/`:
+
+| Type | Media | Notes |
+|---|---|---|
+| `photo` | one image | classic single post |
+| `reel` | one MP4 | multi-scene vertical video, music (random track + random start offset), optional AI motion, FFmpeg Ken-Burns fallback |
+| `carousel` | 2–10 images | album of distinct scenes of the same characters |
+
+The type is chosen per run from the weighted `content_mix` (weight `0` disables a type), or forced with `--content-type`. `reel.num_scenes` / `carousel.num_slides` control how many scenes each generates.
+
+### Multiple accounts in one repo
+
+One repo can drive several Instagram/YouTube accounts, each with its own content profile and mix. Define them under `accounts:` in `config/config.yaml` (non-secret), and supply all their credentials through **one** `AUTOGRAM_ACCOUNTS` secret — a JSON array matched to the accounts by `id`. This is what lets a single repo replace several: the flat `IG_*` env-var names no longer collide.
+
+```yaml
+# config/config.yaml
+accounts:
+  - id: romance
+    platform: instagram
+    profile: romance
+    content_mix: { reel: 3, carousel: 1, photo: 1 }
+  - id: shorts
+    platform: youtube
+    profile: romance
+    content_mix: { reel: 1 }
+```
+
+```bash
+# one secret, all accounts (matched by id); single-line
+AUTOGRAM_ACCOUNTS=[{"id":"romance","ig_username":"u","ig_session_b64":"b64"},{"id":"shorts","youtube_client_id":"..","youtube_client_secret":"..","youtube_refresh_token":".."}]
+```
+
+Accounts run sequentially in one CI job (reusing the warmed LLM + image model). Each keeps its own history (`state/history.<id>.json`) and output dir (`out/<id>/`); a per-account failure never aborts the others. Leave `accounts:` empty to keep the classic single-account behaviour from the flat env vars.
 Env vars override any YAML value:
 
 ```bash

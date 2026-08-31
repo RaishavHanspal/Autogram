@@ -31,8 +31,7 @@ from .caption import OllamaClient, OllamaError
 from .config import Config
 from .logging_utils import get_logger
 
-
-log = get_logger("brief")
+log = get_logger("scene")
 
 
 class Brief(BaseModel):
@@ -60,9 +59,7 @@ class Brief(BaseModel):
 
 def compute_seed(run_date: str, salt: str) -> int:
     """Return a deterministic 31-bit seed."""
-    digest = hashlib.sha256(
-        f"{run_date}|{salt}".encode()
-    ).hexdigest()
+    digest = hashlib.sha256(f"{run_date}|{salt}".encode()).hexdigest()
 
     return int(digest[:8], 16)
 
@@ -72,11 +69,7 @@ def select_axis_hints(
     axes: dict[str, list[str]],
 ) -> dict[str, str]:
     """Select one value from every configured creative axis."""
-    return {
-        axis: rng.choice(values)
-        for axis, values in axes.items()
-        if values
-    }
+    return {axis: rng.choice(values) for axis, values in axes.items() if values}
 
 
 def _normalize_subject(subject: str) -> str:
@@ -96,10 +89,13 @@ def is_near_duplicate(
     norm = _normalize_subject(subject)
 
     for previous in history_subjects:
-        if fuzz.token_set_ratio(
-            norm,
-            _normalize_subject(previous),
-        ) > threshold:
+        if (
+            fuzz.token_set_ratio(
+                norm,
+                _normalize_subject(previous),
+            )
+            > threshold
+        ):
             return True
 
     return False
@@ -125,15 +121,11 @@ def select_unique_location(
 ) -> dict[str, str] | None:
     """Select a location not recently used."""
     available = [
-        location
-        for location in all_locations
-        if location.get("name", "") not in history_locations
+        location for location in all_locations if location.get("name", "") not in history_locations
     ]
 
     if not available:
-        log.warning(
-            "all locations used within history window; cycling through pool"
-        )
+        log.warning("all locations used within history window; cycling through pool")
         available = all_locations
 
     return rng.choice(available) if available else None
@@ -295,10 +287,7 @@ _THIRD_GIRL_ROLES = [
         "heartbroken woman experiencing unrequited love for the boy, "
         "standing apart from the couple"
     ),
-    (
-        "devastated third woman who loves the boy but realizes he has "
-        "chosen the other girl"
-    ),
+    ("devastated third woman who loves the boy but realizes he has " "chosen the other girl"),
     (
         "third woman emotionally attached to the boy, watching the "
         "proposal alone from the background"
@@ -324,10 +313,7 @@ _ROMANTIC_STYLES = [
         "sweeping cinematic Indian love-story atmosphere, "
         "heartfelt emotion, elegant romantic composition"
     ),
-    (
-        "iconic Indian romantic-film energy, "
-        "grand emotional storytelling and expressive faces"
-    ),
+    ("iconic Indian romantic-film energy, " "grand emotional storytelling and expressive faces"),
     (
         "lush cinematic romance, emotional performances, "
         "dreamlike Indian romantic-film atmosphere"
@@ -342,7 +328,8 @@ def _configured_proposal_directions(cfg: Config) -> list[str]:
     valid = [
         direction
         for direction in directions
-        if direction in {
+        if direction
+        in {
             "boy_proposes_to_girl",
             "girl_proposes_to_boy",
         }
@@ -362,15 +349,9 @@ def select_proposal_scene(
     direction = rng.choice(directions)
 
     if direction == "boy_proposes_to_girl":
-        proposal_action = (
-            f"{rng.choice(_BOY_PROPOSALS)}; "
-            f"{rng.choice(_FLOWERS)}"
-        )
+        proposal_action = f"{rng.choice(_BOY_PROPOSALS)}; " f"{rng.choice(_FLOWERS)}"
     else:
-        proposal_action = (
-            f"{rng.choice(_GIRL_PROPOSALS)}; "
-            f"{rng.choice(_FLOWERS)}"
-        )
+        proposal_action = f"{rng.choice(_GIRL_PROPOSALS)}; " f"{rng.choice(_FLOWERS)}"
 
     third_probability = max(
         0.0,
@@ -380,20 +361,14 @@ def select_proposal_scene(
         ),
     )
 
-    third_person_present = (
-        rng.random() < third_probability
-    )
+    third_person_present = rng.random() < third_probability
 
     third_role = ""
     third_emotion = ""
 
     if third_person_present:
-        third_role = rng.choice(
-            _THIRD_GIRL_ROLES
-        )
-        third_emotion = rng.choice(
-            _THIRD_GIRL_EMOTIONS
-        )
+        third_role = rng.choice(_THIRD_GIRL_ROLES)
+        third_emotion = rng.choice(_THIRD_GIRL_EMOTIONS)
 
     return {
         "proposal_direction": direction,
@@ -401,10 +376,7 @@ def select_proposal_scene(
         "third_person_present": third_person_present,
         "third_person_role": third_role,
         "third_person_emotion": third_emotion,
-        "romantic_details": (
-            cfg.romance.cinematic_style
-            or rng.choice(_ROMANTIC_STYLES)
-        ),
+        "romantic_details": (cfg.romance.cinematic_style or rng.choice(_ROMANTIC_STYLES)),
     }
 
 
@@ -460,10 +432,7 @@ def select_style(
             trends,
             "depth_of_field",
         ),
-        **{
-            key: str(value)
-            for key, value in proposal.items()
-        },
+        **{key: str(value) for key, value in proposal.items()},
     }
 
 
@@ -519,9 +488,7 @@ def _render_romantic_prompt(
         )
 
     if cfg.romance.require_kneeling:
-        parts.append(
-            "the proposer must visibly be kneeling on one knee"
-        )
+        parts.append("the proposer must visibly be kneeling on one knee")
 
     if cfg.romance.require_ring:
         parts.extend(
@@ -532,28 +499,20 @@ def _render_romantic_prompt(
         )
 
     if cfg.romance.require_flowers:
-        parts.append(
-            "romantic flowers or bouquet must be visible"
-        )
+        parts.append("romantic flowers or bouquet must be visible")
 
     if brief.third_person_present:
         parts.extend(
             [
                 "THREE-PERSON LOVE TRIANGLE",
                 "a third woman is present as a real person in the story",
-                (
-                    f"the third woman is "
-                    f"{cfg.romance.third_person_role}"
-                ),
+                (f"the third woman is " f"{cfg.romance.third_person_role}"),
                 "she is visually separate from the main couple",
                 "she watches the proposal from a respectful distance",
                 "she is visibly crying",
                 "tears are clearly visible on her cheeks",
                 "she is quietly sobbing and heartbroken",
-                (
-                    f"her emotion is "
-                    f"{cfg.romance.third_person_emotion}"
-                ),
+                (f"her emotion is " f"{cfg.romance.third_person_emotion}"),
                 "she is not a villain",
                 "she is not attacking anyone",
                 "the main couple remains the visual focus",
@@ -561,20 +520,12 @@ def _render_romantic_prompt(
         )
 
     if brief.proposal_action:
-        parts.append(
-            brief.proposal_action
-        )
+        parts.append(brief.proposal_action)
 
     if brief.romantic_details:
-        parts.append(
-            brief.romantic_details
-        )
+        parts.append(brief.romantic_details)
 
-    return ", ".join(
-        part.strip()
-        for part in parts
-        if part and part.strip()
-    )
+    return ", ".join(part.strip() for part in parts if part and part.strip())
 
 
 def render_prompts(
@@ -586,15 +537,11 @@ def render_prompts(
 
     fields: dict[str, Any] = brief.model_dump()
 
-    fields["style_modifiers"] = ", ".join(
-        brief.style_modifiers
-    )
+    fields["style_modifiers"] = ", ".join(brief.style_modifiers)
 
     fields["characters"] = characters_block
 
-    positive = cfg.image.positive_template.format(
-        **fields
-    )
+    positive = cfg.image.positive_template.format(**fields)
 
     romantic_prompt = _render_romantic_prompt(
         brief,
@@ -602,10 +549,7 @@ def render_prompts(
     )
 
     if romantic_prompt:
-        positive = (
-            f"{romantic_prompt}, "
-            f"{positive}"
-        )
+        positive = f"{romantic_prompt}, " f"{positive}"
 
     negative = cfg.image.negative_template
 
@@ -627,7 +571,6 @@ def _build_messages(
     selected_location: dict[str, str] | None,
     style: dict[str, str],
 ) -> list[dict[str, str]]:
-
     schema = (
         '{"subject": "string", "setting": "string", '
         '"lighting": "string", "mood": "string", '
@@ -761,15 +704,11 @@ The main couple remains the visual focus.
         "centered portrait.\n"
     )
 
-    hints = "\n".join(
-        f"- {key.replace('_', ' ')}: {value}"
-        for key, value in axis_hints.items()
-    )
+    hints = "\n".join(f"- {key.replace('_', ' ')}: {value}" for key, value in axis_hints.items())
 
     prev_lines = (
         "\n".join(
-            f"- {brief.get('subject', '?')} / "
-            f"{brief.get('mood', '?')}"
+            f"- {brief.get('subject', '?')} / " f"{brief.get('mood', '?')}"
             for brief in recent_briefs
         )
         or "(none yet)"
@@ -796,9 +735,7 @@ The main couple remains the visual focus.
 
     if error_feedback:
         user += (
-            f"\n\nPrevious response was invalid: "
-            f"{error_feedback}\n"
-            "Return valid JSON only."
+            f"\n\nPrevious response was invalid: " f"{error_feedback}\n" "Return valid JSON only."
         )
 
     return [
@@ -877,26 +814,17 @@ def _apply_scene(
 
     if brief.proposal_direction == "boy_proposes_to_girl":
         proposal_summary = (
-            "boy kneeling and proposing to girl with "
-            "marquise-cut engagement ring and flowers"
+            "boy kneeling and proposing to girl with " "marquise-cut engagement ring and flowers"
         )
     else:
-        proposal_summary = (
-            "girl kneeling and proposing to boy with "
-            "engagement ring and flowers"
-        )
+        proposal_summary = "girl kneeling and proposing to boy with " "engagement ring and flowers"
 
     if brief.third_person_present:
         proposal_summary += (
-            ", third woman crying and sobbing from "
-            "unrequited love in the love triangle"
+            ", third woman crying and sobbing from " "unrequited love in the love triangle"
         )
 
-    brief.interaction = (
-        f"{interaction}, {proposal_summary}"
-        if interaction
-        else proposal_summary
-    )
+    brief.interaction = f"{interaction}, {proposal_summary}" if interaction else proposal_summary
 
     return brief
 
@@ -910,9 +838,7 @@ def _fallback_brief(
 ) -> Brief:
     """Create a deterministic proposal brief when Ollama fails."""
 
-    log.warning(
-        "using deterministic romantic fallback brief"
-    )
+    log.warning("using deterministic romantic fallback brief")
 
     direction = style.get(
         "proposal_direction",
@@ -1003,9 +929,7 @@ def extract_location_from_history(
         )
 
         if name:
-            locations.append(
-                str(name)
-            )
+            locations.append(str(name))
 
     return locations
 
@@ -1043,9 +967,7 @@ def generate_brief(
         )
     )
 
-    history_locations = extract_location_from_history(
-        recent_briefs
-    )
+    history_locations = extract_location_from_history(recent_briefs)
 
     selected_location = select_unique_location(
         rng,
@@ -1111,9 +1033,7 @@ def generate_brief(
                 temperature=cfg.llm.temperature,
             )
 
-            brief = Brief.model_validate(
-                raw
-            )
+            brief = Brief.model_validate(raw)
 
         except (
             OllamaError,

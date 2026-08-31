@@ -26,7 +26,6 @@ import yaml
 from pydantic import BaseModel, Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-
 DEFAULT_CONFIG_PATH = Path("config/config.yaml")
 _ENV_PREFIX = "AUTOGRAM_"
 
@@ -54,9 +53,7 @@ class ContentProfile(BaseModel):
 
     prompt_anchor: str = ""
 
-    visual: dict[str, Any] = Field(
-        default_factory=dict
-    )
+    visual: dict[str, Any] = Field(default_factory=dict)
 
 
 class ContentConfig(BaseModel):
@@ -64,22 +61,16 @@ class ContentConfig(BaseModel):
 
     active_profile: str = "romance"
 
-    profiles: dict[str, ContentProfile] = Field(
-        default_factory=dict
-    )
+    profiles: dict[str, ContentProfile] = Field(default_factory=dict)
 
     @property
     def active(self) -> ContentProfile:
         """Return the currently active profile."""
-        profile = self.profiles.get(
-            self.active_profile
-        )
+        profile = self.profiles.get(self.active_profile)
 
         if profile is None:
             if self.profiles:
-                return next(
-                    iter(self.profiles.values())
-                )
+                return next(iter(self.profiles.values()))
 
             return ContentProfile()
 
@@ -109,17 +100,12 @@ class RomanceConfig(BaseModel):
     require_flowers: bool = True
     require_ring: bool = True
 
-    ring_style: str = (
-        "a clearly visible elegant marquise-cut engagement ring"
-    )
+    ring_style: str = "a clearly visible elegant marquise-cut engagement ring"
 
-    third_person_role: str = (
-        "a heartbroken woman in unrequited love for the boy"
-    )
+    third_person_role: str = "a heartbroken woman in unrequited love for the boy"
 
     third_person_emotion: str = (
-        "crying, quietly sobbing, tears visible on her cheeks, "
-        "heartbroken but not hostile"
+        "crying, quietly sobbing, tears visible on her cheeks, " "heartbroken but not hostile"
     )
 
     cinematic_style: str = (
@@ -139,11 +125,7 @@ class RomanceConfig(BaseModel):
             "girl_proposes_to_boy",
         }
 
-        filtered = [
-            value
-            for value in values
-            if value in allowed
-        ]
+        filtered = [value for value in values if value in allowed]
 
         if not filtered:
             return [
@@ -160,9 +142,7 @@ class RomanceConfig(BaseModel):
         value: float,
     ) -> float:
         if value < 0.0 or value > 1.0:
-            raise ValueError(
-                "romance.third_person_probability must be between 0 and 1"
-            )
+            raise ValueError("romance.third_person_probability must be between 0 and 1")
 
         return value
 
@@ -177,9 +157,7 @@ class BriefConfig(BaseModel):
     dedupe_threshold: float = 85.0
     max_retries: int = 3
 
-    axes: dict[str, list[str]] = Field(
-        default_factory=dict
-    )
+    axes: dict[str, list[str]] = Field(default_factory=dict)
 
 
 # --------------------------------------------------------------------------- #
@@ -211,9 +189,7 @@ class LlmConfig(BaseModel):
 class ImageConfig(BaseModel):
     model: str = "Lykon/dreamshaper-8"
 
-    hq_model: str = (
-        "black-forest-labs/FLUX.1-schnell"
-    )
+    hq_model: str = "black-forest-labs/FLUX.1-schnell"
 
     steps: int = 26
 
@@ -226,6 +202,19 @@ class ImageConfig(BaseModel):
     width: int = 512
 
     height: int = 512
+
+    # Quality levers for the SD1.5 CPU path (ignored on the FLUX/GPU path):
+    #   - DPM++ 2M Karras scheduler (sharper at the same step count; "" = default)
+    #   - a fine-tuned VAE (crisper detail + color; "" disables)
+    scheduler: str = "dpmpp_karras"
+    vae: str = "stabilityai/sd-vae-ft-mse"
+    # Optional hi-res fix: a second img2img pass at hires_scale that adds real
+    # detail at ~2x the time. OFF by default so a multi-scene reel fits the
+    # 60-min job budget; enable it and lower reel.num_scenes for max quality.
+    hires_fix: bool = False
+    hires_scale: float = 1.5
+    hires_denoise: float = 0.4
+    hires_steps: int = 16
 
     positive_template: str = (
         "{framing}, "
@@ -300,10 +289,7 @@ class PostprocConfig(BaseModel):
             "4:5",
             "1.91:1",
         }:
-            raise ValueError(
-                "aspect must be one of "
-                "1:1, 4:5, 1.91:1"
-            )
+            raise ValueError("aspect must be one of " "1:1, 4:5, 1.91:1")
 
         return value
 
@@ -314,9 +300,7 @@ class PostprocConfig(BaseModel):
 
 
 class CaptionConfig(BaseModel):
-    tone: str = (
-        "calm, warm, romantic, emotionally expressive"
-    )
+    tone: str = "calm, warm, romantic, emotionally expressive"
 
     emoji_budget: int = 2
 
@@ -334,10 +318,7 @@ class CaptionConfig(BaseModel):
             "caption",
             "comment",
         }:
-            raise ValueError(
-                "hashtag_placement must be "
-                "'caption' or 'comment'"
-            )
+            raise ValueError("hashtag_placement must be " "'caption' or 'comment'")
 
         return value
 
@@ -358,9 +339,7 @@ class HashtagsConfig(BaseModel):
 
     tier_niche: float = 0.20
 
-    brand_tags: list[str] = Field(
-        default_factory=list
-    )
+    brand_tags: list[str] = Field(default_factory=list)
 
 
 # --------------------------------------------------------------------------- #
@@ -394,9 +373,7 @@ class AiVideoConfig(BaseModel):
 
     provider: str = "huggingface"
 
-    ai_scene_indexes: list[int] = Field(
-        default_factory=lambda: [0, 2]
-    )
+    ai_scene_indexes: list[int] = Field(default_factory=lambda: [0, 2])
 
     duration_s: int = 3
 
@@ -418,9 +395,7 @@ class AiVideoConfig(BaseModel):
             "auto",
             "off",
         }:
-            raise ValueError(
-                "ai_video.mode must be 'auto' or 'off'"
-            )
+            raise ValueError("ai_video.mode must be 'auto' or 'off'")
 
         return value
 
@@ -431,9 +406,7 @@ class AiVideoConfig(BaseModel):
         value: int,
     ) -> int:
         if value < 1 or value > 10:
-            raise ValueError(
-                "ai_video.duration_s must be between 1 and 10"
-            )
+            raise ValueError("ai_video.duration_s must be between 1 and 10")
 
         return value
 
@@ -444,9 +417,7 @@ class AiVideoConfig(BaseModel):
         value: int,
     ) -> int:
         if value < 30:
-            raise ValueError(
-                "ai_video.timeout_s must be >= 30"
-            )
+            raise ValueError("ai_video.timeout_s must be >= 30")
 
         return value
 
@@ -475,14 +446,28 @@ class ReelConfig(BaseModel):
 
     audio_dir: str = "assets/audio"
 
-    ai_video: AiVideoConfig = Field(
-        default_factory=AiVideoConfig
-    )
+    ai_video: AiVideoConfig = Field(default_factory=AiVideoConfig)
 
 
 # --------------------------------------------------------------------------- #
 # State
 # --------------------------------------------------------------------------- #
+
+
+class CarouselConfig(BaseModel):
+    """Multi-image (album) post controls."""
+
+    enabled: bool = True
+    # Instagram carousels allow 2-10 slides. Each slide is a distinct scene of
+    # the same characters.
+    num_slides: int = 4
+
+    @field_validator("num_slides")
+    @classmethod
+    def _valid_slides(cls, value: int) -> int:
+        if value < 2 or value > 10:
+            raise ValueError("carousel.num_slides must be between 2 and 10")
+        return value
 
 
 class StateConfig(BaseModel):
@@ -498,59 +483,95 @@ class StateConfig(BaseModel):
 # --------------------------------------------------------------------------- #
 
 
+class YoutubeConfig(BaseModel):
+    """YouTube Shorts upload controls (used when POST_BACKEND=youtube)."""
+
+    privacy_status: str = "private"
+    category_id: str = "22"
+
+    @field_validator("privacy_status")
+    @classmethod
+    def _valid_privacy(cls, value: str) -> str:
+        if value not in {"private", "unlisted", "public"}:
+            raise ValueError("youtube.privacy_status must be private, unlisted, or public")
+        return value
+
+
+class AccountConfig(BaseModel):
+    """One linked social account driven from this repo.
+
+    Non-secret only. Credentials are matched by ``id`` from the AUTOGRAM_ACCOUNTS
+    JSON env secret (falling back to the flat IG_*/YOUTUBE_* env for a single
+    implicit account). Different accounts can run different content profiles and
+    content mixes, which is why one repo can now replace several.
+    """
+
+    id: str = "default"
+    platform: str = "instagram"  # instagram | youtube
+    backend: str = ""  # instagrapi | graph | youtube; "" -> derived from platform
+    profile: str = ""  # content profile name; "" -> content.active_profile
+    enabled: bool = True
+    content_mix: dict[str, int] = Field(default_factory=dict)  # "" -> Config.content_mix
+    audio_dir: str = ""  # override reel.audio_dir for this account
+
+    def resolved_backend(self) -> str:
+        if self.backend:
+            return self.backend
+        return "youtube" if self.platform == "youtube" else "instagrapi"
+
+
 class Config(BaseModel):
     theme: str = ""
 
     seed_salt: str = "autogram-v1"
 
-    content: ContentConfig = Field(
-        default_factory=ContentConfig
+    # Linked accounts. Empty -> one implicit account from the flat env secrets
+    # (back-compatible single-account behaviour).
+    accounts: list[AccountConfig] = Field(default_factory=list)
+
+    content: ContentConfig = Field(default_factory=ContentConfig)
+
+    romance: RomanceConfig = Field(default_factory=RomanceConfig)
+
+    brief: BriefConfig = Field(default_factory=BriefConfig)
+
+    llm: LlmConfig = Field(default_factory=LlmConfig)
+
+    image: ImageConfig = Field(default_factory=ImageConfig)
+
+    postproc: PostprocConfig = Field(default_factory=PostprocConfig)
+
+    caption: CaptionConfig = Field(default_factory=CaptionConfig)
+
+    hashtags: HashtagsConfig = Field(default_factory=HashtagsConfig)
+
+    gates: GatesConfig = Field(default_factory=GatesConfig)
+
+    reel: ReelConfig = Field(default_factory=ReelConfig)
+
+    carousel: CarouselConfig = Field(default_factory=CarouselConfig)
+
+    # Weighted mix used to pick a content type per run when one isn't forced.
+    # Weight 0 disables a type. Overridable per account.
+    content_mix: dict[str, int] = Field(
+        default_factory=lambda: {"photo": 1, "reel": 2, "carousel": 1}
     )
 
-    romance: RomanceConfig = Field(
-        default_factory=RomanceConfig
-    )
+    state: StateConfig = Field(default_factory=StateConfig)
 
-    brief: BriefConfig = Field(
-        default_factory=BriefConfig
-    )
-
-    llm: LlmConfig = Field(
-        default_factory=LlmConfig
-    )
-
-    image: ImageConfig = Field(
-        default_factory=ImageConfig
-    )
-
-    postproc: PostprocConfig = Field(
-        default_factory=PostprocConfig
-    )
-
-    caption: CaptionConfig = Field(
-        default_factory=CaptionConfig
-    )
-
-    hashtags: HashtagsConfig = Field(
-        default_factory=HashtagsConfig
-    )
-
-    gates: GatesConfig = Field(
-        default_factory=GatesConfig
-    )
-
-    reel: ReelConfig = Field(
-        default_factory=ReelConfig
-    )
-
-    state: StateConfig = Field(
-        default_factory=StateConfig
-    )
+    youtube: YoutubeConfig = Field(default_factory=YoutubeConfig)
 
     @property
     def active_content(self) -> ContentProfile:
-        """Compatibility accessor used throughout the pipeline."""
-        return self.content.active
+        """Active content profile, with its theme defaulted to the top-level theme.
+
+        Lets a bare top-level ``theme:`` (or ``--description`` / ``AUTOGRAM_THEME``)
+        drive a profile that does not set its own theme.
+        """
+        profile = self.content.active
+        if not profile.theme:
+            profile.theme = self.theme
+        return profile
 
 
 # --------------------------------------------------------------------------- #
@@ -569,6 +590,12 @@ class Secrets(BaseSettings):
 
     POST_BACKEND: str = "instagrapi"
 
+    # JSON array of per-account credentials, matched to config accounts by id:
+    #   [{"id":"romance","ig_username":"..","ig_password":"..",...}, ...]
+    # Lets multiple accounts (whose flat env-var names would otherwise collide)
+    # live in one repo. Unset -> the flat IG_*/YOUTUBE_* vars below are used.
+    AUTOGRAM_ACCOUNTS: str | None = None
+
     IG_USERNAME: str | None = None
 
     IG_PASSWORD: str | None = None
@@ -585,9 +612,13 @@ class Secrets(BaseSettings):
 
     GITHUB_REPOSITORY: str | None = None
 
-    OLLAMA_HOST: str = (
-        "http://127.0.0.1:11434"
-    )
+    YOUTUBE_CLIENT_ID: str | None = None
+
+    YOUTUBE_CLIENT_SECRET: str | None = None
+
+    YOUTUBE_REFRESH_TOKEN: str | None = None
+
+    OLLAMA_HOST: str = "http://127.0.0.1:11434"
 
 
 # --------------------------------------------------------------------------- #
@@ -622,18 +653,10 @@ def _apply_env_overrides(
     """Overlay AUTOGRAM_* variables onto YAML."""
 
     for env_key, env_value in os.environ.items():
-        if not env_key.startswith(
-            _ENV_PREFIX
-        ):
+        if not env_key.startswith(_ENV_PREFIX):
             continue
 
-        path = (
-            env_key[
-                len(_ENV_PREFIX):
-            ]
-            .lower()
-            .split("__")
-        )
+        path = env_key[len(_ENV_PREFIX) :].lower().split("__")
 
         cursor: dict[str, Any] = data
 
@@ -649,9 +672,7 @@ def _apply_env_overrides(
 
             cursor = next_value
 
-        cursor[path[-1]] = _coerce(
-            env_value
-        )
+        cursor[path[-1]] = _coerce(env_value)
 
     return data
 
@@ -661,31 +682,19 @@ def load_config(
 ) -> Config:
     """Load YAML, apply environment overrides, validate."""
 
-    cfg_path = (
-        Path(path)
-        if path
-        else DEFAULT_CONFIG_PATH
-    )
+    cfg_path = Path(path) if path else DEFAULT_CONFIG_PATH
 
     data: dict[str, Any] = {}
 
     if cfg_path.exists():
-        loaded = yaml.safe_load(
-            cfg_path.read_text(
-                encoding="utf-8"
-            )
-        )
+        loaded = yaml.safe_load(cfg_path.read_text(encoding="utf-8"))
 
         if loaded:
             data = loaded
 
-    data = _apply_env_overrides(
-        data
-    )
+    data = _apply_env_overrides(data)
 
-    return Config.model_validate(
-        data
-    )
+    return Config.model_validate(data)
 
 
 def load_secrets() -> Secrets:

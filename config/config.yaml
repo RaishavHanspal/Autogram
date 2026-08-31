@@ -392,6 +392,14 @@ image:
 
   height: 512
 
+  # Quality levers for the SD1.5 CPU path (ignored on the FLUX/GPU path).
+  scheduler: "dpmpp_karras"          # DPM++ 2M Karras: sharper ("" = model default)
+  vae: "stabilityai/sd-vae-ft-mse"   # crisper detail + colour ("" to disable)
+  hires_fix: false                   # 2nd img2img pass; ~2x time — turn on for max quality
+  hires_scale: 1.5
+  hires_denoise: 0.4
+  hires_steps: 16
+
   positive_template: >
     {framing},
     photorealistic cinematic romantic photograph of {characters},
@@ -606,3 +614,67 @@ state:
   session_path: "state/ig_session.json"
 
   out_dir: "out"
+
+
+# ---------------------------------------------------------------------------
+# Carousel (multi-image album) generation
+# ---------------------------------------------------------------------------
+
+carousel:
+
+  enabled: true
+
+  # Instagram allows 2-10 slides; each slide is a distinct scene of the couple.
+  num_slides: 4
+
+
+# ---------------------------------------------------------------------------
+# Content mix
+#
+# When a run does not force a content type (--content-type), one is picked at
+# random per run using these weights. Weight 0 disables a type. Override per
+# account under `accounts:` below.
+# ---------------------------------------------------------------------------
+
+content_mix:
+  reel: 3
+  carousel: 1
+  photo: 1
+
+
+# ---------------------------------------------------------------------------
+# YouTube Shorts (only used when an account's backend is "youtube")
+# ---------------------------------------------------------------------------
+
+youtube:
+  privacy_status: "private"     # private | unlisted | public
+  category_id: "22"             # 22 = People & Blogs
+
+
+# ---------------------------------------------------------------------------
+# Linked accounts
+#
+# One repo can now drive several Instagram/YouTube accounts. Each account picks
+# a content profile and a content mix; its CREDENTIALS are supplied by the single
+# `AUTOGRAM_ACCOUNTS` secret (a JSON array matched to these entries by `id`) so
+# the flat IG_*/YOUTUBE_* env-var names never collide. Example secret:
+#
+#   AUTOGRAM_ACCOUNTS='[{"id":"romance","ig_username":"..","ig_session_b64":".."},
+#                       {"id":"shorts","youtube_client_id":"..","youtube_client_secret":"..","youtube_refresh_token":".."}]'
+#
+# Leave this list empty to keep the classic single-account behaviour (creds come
+# from the flat IG_*/YOUTUBE_* env vars, history in state/history.json).
+# ---------------------------------------------------------------------------
+
+accounts: []
+  # - id: romance
+  #   platform: instagram        # instagram | youtube
+  #   backend: instagrapi        # instagrapi | graph | youtube ("" -> derived)
+  #   profile: romance           # a key under content.profiles
+  #   enabled: true
+  #   content_mix: { reel: 3, carousel: 1, photo: 1 }
+  #   audio_dir: "assets/audio"
+  # - id: shorts
+  #   platform: youtube
+  #   profile: romance
+  #   content_mix: { reel: 1 }   # YouTube needs a video
