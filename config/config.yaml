@@ -305,6 +305,313 @@ romance:
     faces, dramatic romantic lighting, heartfelt Bollywood-style visual
     storytelling, photorealistic, realistic human anatomy, natural skin
 
+    ai_tools:
+
+      theme: >
+        high-quality educational infographic-style visual explanations of
+        artificial intelligence concepts, machine learning algorithms, and
+        cutting-edge AI research, with clear readable titles, data flow
+        diagrams, conceptual visualizations, technical accuracy, modern
+        design aesthetics, and professional visual communication.
+
+      system_prompt: >
+        You are a technical educator and visual communication specialist
+        creating educational infographic content about AI and machine
+        learning concepts. Generate clear, visually informative scenes that
+        explain complex AI topics in an accessible way. Each image must
+        feature readable text elements, visual hierarchy, data flow
+        representations, and conceptual diagrams. Prioritize clarity over
+        complexity, with professional design aesthetics and precise technical
+        accuracy. Make abstract concepts visually concrete through
+        metaphorical representations, flowcharts, and layered composition.
+
+      subject_instruction: >
+        Create one specific educational visual explanation of an AI or
+        machine learning concept. The scene must communicate the core idea
+        clearly through visual elements. Include readable title text and
+        supporting visual metaphors or diagrams. Avoid generic AI imagery;
+        make the specific technical concept visually obvious and
+        understandable. Use modern design principles with clear visual
+        hierarchy and color-coded information flow.
+
+      prompt_anchor: >
+        professional educational infographic, technical diagram, clean modern
+        design, readable sans-serif typography, scientific accuracy
+
+      visual:
+
+        interaction_styles:
+          - >
+            clear visual explanation with data flowing from left to right
+          - >
+            technical diagram showing algorithmic process step-by-step
+          - >
+            conceptual visualization with labeled components and relationships
+          - >
+            infographic with visual hierarchy highlighting key concepts
+          - >
+            flowchart showing information transformation and processing
+          - >
+            before-and-after comparison demonstrating concept application
+          - >
+            layered visual representation of nested concepts and structures
+          - >
+            color-coded system showing different component interactions
+
+        moods_and_emotions:
+          - >
+            clear, educational, and intellectually stimulating
+          - >
+            professional, authoritative, and trustworthy
+          - >
+            modern, sleek, and technologically sophisticated
+          - >
+            approachable, educational, and welcoming to learners
+          - >
+            precise, systematic, and methodical
+          - >
+            innovative, forward-thinking, and cutting-edge
+          - >
+            organized, logical, and easy to follow
+          - >
+            engaging and visually compelling while remaining accurate
+
+        locations:
+
+          ai_concepts:
+
+            - name: "RAG Architecture"
+              description: >
+                visual diagram showing Retrieval-Augmented Generation system
+                with vector databases, query processing, and response generation
+                components connected by data flow arrows
+              lighting: >
+                bright, clean, professional technical visualization lighting
+              mood: >
+                systematic, organized, and technically sophisticated
+
+            - name: "In-Context Learning"
+              description: >
+                infographic depicting how language models learn from examples
+                within context window, showing prompt, context examples, and
+                output generation with visual emphasis on attention mechanisms
+              lighting: >
+                modern, clean, with highlighted focus areas and clear visual
+                hierarchy
+              mood: >
+                educational, illuminating, and intellectually engaging
+
+            - name: "Transformer Architecture"
+              description: >
+                technical diagram of transformer blocks showing multi-head
+                attention, feed-forward networks, and token processing flows
+                with color-coded components and layer descriptions
+              lighting: >
+                technical, precise, with distinct lighting on different layers
+              mood: >
+                complex yet organized, sophisticated and systematic
+
+            - name: "Token Embedding Space"
+              description: >
+                3D-style visualization of high-dimensional embedding space
+                with token clusters, semantic relationships shown as proximity,
+                and conceptual groupings highlighted
+              lighting: >
+                modern technical lighting with gradient emphasis
+              mood: >
+                scientific, precise, and cognitively engaging
+
+            - name: "Fine-tuning Process"
+              description: >
+                infographic showing base model refinement through supervised
+                learning, with dataset preparation, training loop, and model
+                adaptation stages clearly labeled
+              lighting: >
+                clean educational lighting with progressive stages highlighted
+              mood: >
+                methodical, systematic, and professionally instructional
+
+            - name: "Prompt Engineering Flow"
+              description: >
+                visual workflow showing prompt iteration, from basic queries
+                through structured templates to optimized prompts, with
+                quality metrics displayed
+              lighting: >
+                bright, clear, with emphasis on transformation stages
+              mood: >
+                practical, educational, and results-oriented
+
+            - name: "Multimodal AI System"
+              description: >
+                architecture diagram showing how text, images, and audio
+                inputs are processed through unified embedding space with
+                visual representation of cross-modal connections
+              lighting: >
+                modern, multi-layered lighting showing integrated processing
+              mood: >
+                innovative, interconnected, and sophisticated
+
+            - name: "Knowledge Graph Integration"
+              description: >
+                network diagram showing entities and relationships, connected
+                to language model components for enhanced knowledge retrieval
+                and reasoning
+              lighting: >
+                clean, precise technical visualization with clear nodes
+              mood: >
+                organized, systematic, and knowledge-centric
+
+            - name: "Chain-of-Thought Reasoning"
+              description: >
+                step-by-step visual representation of multi-hop reasoning,
+                with intermediate conclusions and reasoning paths clearly
+                annotated and color-coded
+              lighting: >
+                progressive lighting showing thinking stages
+              mood: >
+                analytical, methodical, and intellectually rigorous
+
+            - name: "Loss Landscape Visualization"
+              description: >
+                3D-style terrain showing model training trajectory through
+                optimization landscape, with convergence points and local
+                minima visualized
+              lighting: >
+                technical gradient lighting showing elevation changes
+              mood: >
+                scientific, precise, and showing dynamic progress
+
+            - name: "Attention Mechanism"
+              description: >
+                detailed visualization of attention weights flowing between
+                tokens, with heatmaps showing focus patterns and relationship
+                strengths
+              lighting: >
+                bright, precise technical lighting with heatmap gradients
+              mood: >
+                precise, analytical, and technically sophisticated
+
+            - name: "Model Scaling Laws"
+              description: >
+                graph-based infographic showing relationships between model
+                size, training compute, and performance with trend lines and
+                predictive trajectories
+              lighting: >
+                clean, professional data visualization lighting
+              mood: >
+                data-driven, forward-looking, and strategic
+
+        photography_trends:
+
+          compositions:
+            - >
+              centered, symmetrical composition emphasizing core concept in
+              middle
+            - >
+              rule-of-thirds with key technical elements at intersection
+              points
+            - >
+              layered composition showing system components at different
+              depths
+            - >
+              flow-based composition with data pathways directing visual
+              attention
+            - >
+              gridded composition with organized technical information blocks
+            - >
+              diagonal composition showing progression or transformation
+            - >
+              concentric composition with central concept surrounded by
+              related elements
+            - >
+              split-screen comparison composition
+
+          lighting_styles:
+            - >
+              bright, clean technical lighting with minimal shadows
+            - >
+              modern flat design lighting with solid color areas
+            - >
+              gradient lighting emphasizing data flow and transformation
+            - >
+              layered lighting separating foreground, midground, and background
+              components
+            - >
+              accent lighting highlighting key technical elements
+            - >
+              scientific precision lighting with color-coded information areas
+            - >
+              modern professional lighting with high clarity and saturation
+            - >
+              neon-inspired accent lighting for technical elements
+
+          color_grading:
+            - >
+              professional tech palette: blues, teals, and purples with
+              white backgrounds
+            - >
+              clean grading with primary colors for component differentiation
+            - >
+              minimalist palette: monochromatic with strategic accent colors
+            - >
+              data visualization palette: complementary colors showing
+              contrasts
+            - >
+              modern gradient: smooth color transitions showing relationships
+            - >
+              high contrast grading for clarity and readability
+            - >
+              scientific grading: cool tones for technical authority
+            - >
+              vibrant tech palette: bright complementary colors for
+              engagement
+
+          depth_of_field:
+            - >
+              sharp focus throughout for maximum technical clarity
+            - >
+              moderate depth of field keeping text and diagrams sharp
+            - >
+              layered focus with foreground elements sharper than background
+            - >
+              focus layers emphasizing different system components
+            - >
+              consistent sharpness across technical diagram elements
+
+        visual_elements:
+          - >
+            readable sans-serif typography with clear hierarchy
+          - >
+            color-coded arrows showing data flow and connections
+          - >
+            geometric shapes representing algorithms and processes
+          - >
+            node-and-link diagrams for system architecture
+          - >
+            heatmaps and gradients showing intensity or relationships
+          - >
+            grid systems for organized information presentation
+          - >
+            icons and symbols for technical concepts
+          - >
+            flowchart connectors and decision nodes
+          - >
+            measurement scales and numerical annotations
+          - >
+            legend and key information boxes
+
+        technical_accuracy_elements:
+          - >
+            mathematically correct visualizations of concepts
+          - >
+            accurate representation of algorithms and processes
+          - >
+            precise labeling of technical terminology
+          - >
+            correct data relationship and flow representation
+          - >
+            scientifically grounded visual metaphors
+
 
 # ---------------------------------------------------------------------------
 # Brief generation
@@ -682,15 +989,18 @@ youtube:
 # from the flat IG_*/YOUTUBE_* env vars, history in state/history.json).
 # ---------------------------------------------------------------------------
 
-accounts: []
-  # - id: romance
-  #   platform: instagram        # instagram | youtube
-  #   backend: instagrapi        # instagrapi | graph | youtube ("" -> derived)
-  #   profile: romance           # a key under content.profiles
-  #   enabled: true
-  #   content_mix: { reel: 3, carousel: 1, photo: 1 }
-  #   audio_dir: "assets/audio"
-  # - id: shorts
-  #   platform: youtube
-  #   profile: romance
-  #   content_mix: { reel: 1 }   # YouTube needs a video
+accounts:
+  - id: romance_account
+    platform: instagram        # instagram | youtube
+    backend: instagrapi        # instagrapi | graph | youtube ("" -> derived)
+    profile: romance           # a key under content.profiles
+    enabled: true
+    content_mix: { reel: 3, carousel: 1, photo: 1 }
+    audio_dir: "assets/audio/romantic"
+  - id: aitools_account
+    platform: instagram
+    backend: instagrapi
+    profile: ai_tools          # a key under content.profiles
+    enabled: true
+    content_mix: { reel: 1, carousel: 2, photo: 2 }
+    audio_dir: "assets/audio/tech_music"
