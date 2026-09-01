@@ -74,10 +74,40 @@ def _llm_model(cfg: Config) -> str:
 # --------------------------------------------------------------------------- #
 
 
-def _effective_accounts(cfg: Config, secrets: Secrets, only_id: str | None) -> list[AccountConfig]:
-    """Enabled accounts (optionally filtered to one id), or a single implicit one."""
-    accounts = [a for a in cfg.accounts if a.enabled]
-    if not accounts:
+def _account_from_entry(cfg: Config, entry: dict[str, Any]) -> AccountConfig:
+    """Build an account from an AUTOGRAM_ACCOUNTS JSON entry (secret-only setup)."""
+    raw_mix = entry.get("content_mix")
+    mix = {str(k): int(v) for k, v in raw_mix.items()} if isinstance(raw_mix, dict) else {}
+    return AccountConfig(
+        id=str(entry["id"]),
+        platform=str(entry.get("platform", "instagram")),
+        backend=str(entry.get("backend", "")),
+        profile=str(entry.get("profile", "")),
+        enabled=bool(entry.get("enabled", True)),
+        content_mix=mix,
+        audio_dir=str(entry.get("audio_dir", "")),
+    )
+
+
+def _effective_accounts(
+    cfg: Config,
+    secrets: Secrets,
+    only_id: str | None,
+    accounts_json: dict[str, dict[str, Any]],
+) -> list[AccountConfig]:
+    """Resolve the accounts to run.
+
+    Precedence: accounts declared in config.yaml win; otherwise each
+    AUTOGRAM_ACCOUNTS entry BECOMES an account (so a secret alone is enough to
+    configure accounts); otherwise a single implicit account from the flat env.
+    """
+    declared = [a for a in cfg.accounts if a.enabled]
+    if declared:
+        accounts = declared
+    elif accounts_json:
+        accounts = [_account_from_entry(cfg, e) for e in accounts_json.values()]
+        accounts = [a for a in accounts if a.enabled]
+    else:
         accounts = [
             AccountConfig(
                 id="default",
@@ -88,6 +118,26 @@ def _effective_accounts(cfg: Config, secrets: Secrets, only_id: str | None) -> l
     if only_id:
         accounts = [a for a in accounts if a.id == only_id]
     return accounts
+
+
+def _infer_backend(creds: dict[str, str | None], platform: str) -> str:
+    """Pick a backend from whichever credentials are present.
+
+    ig_access_token/ig_user_id -> graph (official API); ig_username ->
+    instagrapi; youtube_* -> youtube. Lets a credentials-only account (no
+    explicit backend) route itself correctly.
+    """
+    if (
+        platform == "youtube"
+        or creds.get("youtube_refresh_token")
+        or creds.get("youtube_client_id")
+    ):
+        return "youtube"
+    if creds.get("ig_access_token") or creds.get("ig_user_id"):
+        return "graph"
+    if creds.get("ig_username"):
+        return "instagrapi"
+    return "instagrapi"
 
 
 def _load_accounts_json(secrets: Secrets) -> dict[str, dict[str, Any]]:
@@ -243,11 +293,14 @@ def _run_account(
         if args.content_type
         else select_content_type(mix, random.Random(seed))
     )
+
+    creds = _creds_for(account, accounts_json, secrets)
+    backend = account.backend or _infer_backend(creds, account.platform)
     log.info(
         "account=%s profile=%s backend=%s content=%s seed=%d",
         account.id,
         profile,
-        account.resolved_backend(),
+        backend,
         ctype.name,
         seed,
     )
@@ -272,18 +325,15 @@ def _run_account(
 
     if args.image_only:
         _write_artifacts(out_dir, stamp, deliverable)
-        _record(
-            state, stamp, now, account, deliverable, account.resolved_backend(), None, "image-only"
-        )
+        _record(state, stamp, now, account, deliverable, backend, None, "image-only")
         log.info("image-only complete: %s", deliverable.media[0])
         return ExitCode.OK
 
     _write_artifacts(out_dir, stamp, deliverable)
 
-    creds = _creds_for(account, accounts_json, secrets)
     try:
         with stage_timer(log, "post"):
-            poster = build_poster(account.resolved_backend(), creds, cfg, dry_run=args.dry_run)
+            poster = build_poster(backend, creds, cfg, dry_run=args.dry_run)
             result = poster.publish(
                 deliverable.media, deliverable.caption or "", deliverable.alt_text or ""
             )
@@ -327,11 +377,11 @@ def run_pipeline(args: argparse.Namespace, cfg: Config, secrets: Secrets) -> int
     run_date = now.strftime("%Y-%m-%d")
     base_stamp = now.strftime("%Y%m%dT%H%M%SZ")
 
-    accounts = _effective_accounts(cfg, secrets, args.account)
+    accounts_json = _load_accounts_json(secrets)
+    accounts = _effective_accounts(cfg, secrets, args.account, accounts_json)
     if not accounts:
         log.error("no matching account to run (check --account / config accounts)")
         return ExitCode.CONFIG
-    accounts_json = _load_accounts_json(secrets)
     log.info(
         "run stamp=%s accounts=%s dry_run=%s image_only=%s",
         base_stamp,

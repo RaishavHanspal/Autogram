@@ -28,6 +28,10 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 DEFAULT_CONFIG_PATH = Path("config/config.yaml")
 _ENV_PREFIX = "AUTOGRAM_"
+# AUTOGRAM_-prefixed vars that are secrets, NOT config overrides — they must not
+# be folded into the config dict by _apply_env_overrides (e.g. AUTOGRAM_ACCOUNTS
+# is a JSON credentials blob, not the config.accounts list).
+_ENV_OVERRIDE_EXCLUDE = {"AUTOGRAM_ACCOUNTS"}
 
 
 # --------------------------------------------------------------------------- #
@@ -36,18 +40,23 @@ _ENV_PREFIX = "AUTOGRAM_"
 
 
 class ContentProfile(BaseModel):
-    """Editorial/content definition for one active profile."""
+    """Editorial/content definition for one active profile.
+
+    All editorial content (theme, anchor, instructions, scene vocabulary) is
+    supplied per profile in config/config.yaml. The defaults here are neutral,
+    topic-agnostic scaffolding only — never bake a specific subject into code.
+    """
 
     theme: str = ""
 
     system_prompt: str = (
-        "Create a fresh, photorealistic romantic image scene. "
-        "Prioritize clear faces, realistic anatomy, natural emotions, "
-        "specific physical actions, and cinematic storytelling."
+        "You are a creative director generating one specific, photorealistic "
+        "image scene. Prioritize clear faces, realistic anatomy, natural "
+        "emotion, a clear physical action, and cinematic composition."
     )
 
     subject_instruction: str = (
-        "Create one specific, visually obvious romantic scene. "
+        "Create one specific, visually concrete scene. "
         "The physical action must be clear from the image."
     )
 
@@ -83,7 +92,12 @@ class ContentConfig(BaseModel):
 
 
 class RomanceConfig(BaseModel):
-    """Deterministic romantic-scene controls."""
+    """Structure + toggles for the proposal-scene brain.
+
+    The descriptive text (ring style, third-person role/emotion, cinematic
+    style) is content and lives in config/config.yaml's ``romance:`` block — the
+    defaults here are intentionally empty so no specific subject is baked in.
+    """
 
     enabled: bool = True
 
@@ -100,19 +114,13 @@ class RomanceConfig(BaseModel):
     require_flowers: bool = True
     require_ring: bool = True
 
-    ring_style: str = "a clearly visible elegant marquise-cut engagement ring"
+    ring_style: str = ""
 
-    third_person_role: str = "a heartbroken woman in unrequited love for the boy"
+    third_person_role: str = ""
 
-    third_person_emotion: str = (
-        "crying, quietly sobbing, tears visible on her cheeks, " "heartbroken but not hostile"
-    )
+    third_person_emotion: str = ""
 
-    cinematic_style: str = (
-        "grand cinematic Indian romantic-film atmosphere, "
-        "emotionally expressive faces, dramatic romantic lighting, "
-        "heartfelt Bollywood-style visual storytelling, photorealistic"
-    )
+    cinematic_style: str = ""
 
     @field_validator("proposal_directions")
     @classmethod
@@ -216,9 +224,11 @@ class ImageConfig(BaseModel):
     hires_denoise: float = 0.4
     hires_steps: int = 16
 
+    # Neutral, topic-agnostic scaffolding. The real, subject-specific templates
+    # live per profile in config/config.yaml; keep placeholders in sync there.
     positive_template: str = (
         "{framing}, "
-        "candid cinematic photograph of {characters}, "
+        "photograph of {characters}, "
         "{interaction}, "
         "{subject}, "
         "in {setting}, "
@@ -228,14 +238,11 @@ class ImageConfig(BaseModel):
         "{color_palette}, "
         "{time_of_day}, "
         "{style_modifiers}, "
-        "shot on DSLR, "
         "natural skin texture, "
-        "realistic human anatomy, "
-        "realistic, "
+        "realistic anatomy, "
         "highly detailed, "
         "sharp focus, "
         "professional photography, "
-        "cinematic depth, "
         "8k"
     )
 
@@ -249,12 +256,6 @@ class ImageConfig(BaseModel):
         "deformed face, distorted face, asymmetric face, "
         "extra faces, extra heads, fused faces, "
         "malformed face, blurry face, disfigured eyes, "
-        "duplicate person, duplicate couple, duplicate girl, "
-        "duplicate boy, "
-        "wrong proposal direction, "
-        "boy and girl both kneeling, "
-        "standing generic couple, "
-        "missing ring, missing flowers, "
         "nudity, nsfw, revealing clothing, "
         "cleavage, lingerie, bikini, swimwear"
     )
@@ -300,7 +301,7 @@ class PostprocConfig(BaseModel):
 
 
 class CaptionConfig(BaseModel):
-    tone: str = "calm, warm, romantic, emotionally expressive"
+    tone: str = "warm, authentic, understated"
 
     emoji_budget: int = 2
 
@@ -654,6 +655,8 @@ def _apply_env_overrides(
 
     for env_key, env_value in os.environ.items():
         if not env_key.startswith(_ENV_PREFIX):
+            continue
+        if env_key in _ENV_OVERRIDE_EXCLUDE:
             continue
 
         path = env_key[len(_ENV_PREFIX) :].lower().split("__")

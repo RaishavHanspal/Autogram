@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import random
 from pathlib import Path
 from unittest import mock
@@ -201,3 +202,44 @@ def test_image_only_skips_publish(tmp_path, ctype):
     assert code == run_mod.ExitCode.OK
     # image-only writes no caption .txt
     assert not sorted((tmp_path / "out").glob("*.txt"))
+
+
+# --------------------------------------------------------------------------- #
+# Secret-only accounts + backend inference
+# --------------------------------------------------------------------------- #
+
+
+def test_infer_backend_from_creds():
+    graph = {"ig_access_token": "t", "ig_user_id": "1"}
+    insta = {"ig_username": "u", "ig_password": "p"}
+    yt = {"youtube_refresh_token": "r"}
+    assert run_mod._infer_backend(graph, "instagram") == "graph"
+    assert run_mod._infer_backend(insta, "instagram") == "instagrapi"
+    assert run_mod._infer_backend(yt, "instagram") == "youtube"
+    assert run_mod._infer_backend({}, "youtube") == "youtube"
+    assert run_mod._infer_backend({}, "instagram") == "instagrapi"
+
+
+def test_secret_only_accounts_are_synthesized(tmp_path, monkeypatch):
+    # No accounts declared in YAML — AUTOGRAM_ACCOUNTS alone must configure them,
+    # each routed to the right backend by its credentials (graph vs instagrapi).
+    _write_config(tmp_path)
+    monkeypatch.setenv(
+        "AUTOGRAM_ACCOUNTS",
+        json.dumps(
+            [
+                {"name": "A", "id": "acct_a", "ig_access_token": "tok", "ig_user_id": "123"},
+                {"name": "B", "id": "acct_b", "ig_username": "u", "ig_password": "p"},
+            ]
+        ),
+    )
+    code = _run(tmp_path, ["--dry-run", "--seed", "4", "--content-type", "photo"])
+    assert code == run_mod.ExitCode.OK
+    assert (tmp_path / "out" / "acct_a").is_dir()
+    assert (tmp_path / "out" / "acct_b").is_dir()
+
+    hist_a = json.loads((tmp_path / "state" / "history.acct_a.json").read_text())
+    hist_b = json.loads((tmp_path / "state" / "history.acct_b.json").read_text())
+    # Backend routed from the creds present: graph (access token) vs instagrapi.
+    assert hist_a[-1]["backend"] == "graph"
+    assert hist_b[-1]["backend"] == "instagrapi"

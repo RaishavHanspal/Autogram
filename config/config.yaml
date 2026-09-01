@@ -3,13 +3,6 @@
 #
 # Non-secret configuration only.
 # Environment variables override values here.
-#
-# Examples:
-#   AUTOGRAM_CONTENT__ACTIVE_PROFILE=romance
-#   AUTOGRAM_ROMANCE__THIRD_PERSON_PROBABILITY=0.60
-#   AUTOGRAM_IMAGE__STEPS=26
-#
-# Credentials live in .env / GitHub Actions secrets.
 # ---------------------------------------------------------------------------
 
 
@@ -18,13 +11,10 @@
 # ---------------------------------------------------------------------------
 
 theme: >
-  high-quality photorealistic cinematic Indian romance centered on dramatic
-  marriage proposals between the same recurring couple, with crystal-clear
-  expressive faces, natural emotions, realistic skin, realistic anatomy,
-  engagement rings, flowers, emotional reactions, beautiful locations,
-  cinematic lighting and professional photography aesthetics.
+  photorealistic cinematic Indian romance, AI tool visual guides, and
+  clean infographics on human psychology with clear faces, sharp text, and high-contrast visuals.
 
-seed_salt: "autogram-romance-v2"
+seed_salt: "autogram-v3"
 
 
 content:
@@ -34,235 +24,299 @@ content:
 
   profiles:
 
+    # -----------------------------------------------------------------------
+    # Profile 1: Romance
+    # -----------------------------------------------------------------------
     romance:
 
       theme: >
         photorealistic cinematic Indian romance centered on dramatic marriage
         proposals between the same recurring couple, emotional love stories,
-        meaningful gestures, beautiful locations, expressive faces, realistic
-        skin, cinematic lighting, flowers, engagement rings and heartfelt
+        meaningful gestures, beautiful locations, crystal-clear facial features,
+        realistic skin, cinematic lighting, flowers, engagement rings and heartfelt
         romantic storytelling.
 
       system_prompt: >
         You are the creative director for a photorealistic romantic
         photography account. Create specific, visually obvious scenes featuring
         the same recurring couple. The scene must communicate a clear physical
-        action rather than a generic description of love. Follow the supplied
-        proposal direction exactly. Prioritize realistic human anatomy,
-        natural facial expressions, clear faces, believable body language,
+        action rather than a generic description of love. Ensure the subjects' faces
+        are in sharp focus, extremely clear, and emotionally expressive. Follow the
+        supplied proposal direction exactly. Prioritize realistic human anatomy,
+        natural facial expressions, clear eyes, believable body language,
         cinematic composition and emotionally powerful storytelling.
 
       subject_instruction: >
         Create one specific cinematic marriage-proposal scene. The physical
-        proposal action must be obvious from the image. The pre-selected
-        proposal direction is mandatory. Avoid generic standing couple
+        proposal action must be obvious from the image. Ensure the couple's faces
+        are front-and-center, ultra-sharp, crystal-clear, and perfectly detailed.
+        The pre-selected proposal direction is mandatory. Avoid generic standing couple
         portraits, generic kissing scenes or vague descriptions of romance.
         Make every scene visually distinct from previous scenes.
 
-      # This is kept as a stable anchor for the recurring couple.
-      # If you already have a stronger couple descriptor, replace this value
-      # with it without changing the rest of the configuration.
       prompt_anchor: >
-        the same recurring adult romantic couple, consistent facial identity
-        across scenes, photorealistic attractive adult man and adult woman,
-        natural realistic skin, expressive eyes, realistic hair and believable
+        the same recurring adult romantic couple, sharp in-focus crystal-clear facial features,
+        consistent facial identity across scenes, photorealistic attractive adult man and adult woman,
+        natural realistic detailed skin texture, expressive bright eyes, realistic hair and believable
         human anatomy
 
       visual:
 
-        # These are additional descriptors used by brief.py when constructing
-        # the LLM prompt.
         interaction_styles:
-          - >
-            deeply emotional marriage proposal with intimate eye contact
-          - >
-            heartfelt proposal with genuine surprise and romantic anticipation
-          - >
-            emotional kneeling proposal with expressive body language
-          - >
-            cinematic proposal moment with authentic human reactions
-          - >
-            dramatic romantic proposal with meaningful eye contact
-          - >
-            tender proposal with flowers and visible engagement ring
+          - "deeply emotional marriage proposal with intimate eye contact and sharp clear facial expressions"
+          - "heartfelt proposal with genuine surprise, clear crying eyes, and romantic anticipation"
+          - "emotional kneeling proposal with expressive body language and perfectly focused clear face"
+          - "cinematic proposal moment with authentic human reactions and detailed facial features"
+          - "dramatic romantic proposal with meaningful eye contact and sharp portrait focus"
+          - "tender proposal with flowers and visible engagement ring with crystal-clear skin detail"
 
         moods_and_emotions:
-          - >
-            deeply romantic and emotionally intense
-          - >
-            heartfelt anticipation and joyful surprise
-          - >
-            emotional vulnerability and sincere love
-          - >
-            dramatic romantic tension
-          - >
-            overwhelming happiness and emotional tears
-          - >
-            tender anticipation with cinematic emotion
-          - >
-            bittersweet romantic emotion
+          - "deeply romantic and emotionally intense"
+          - "heartfelt anticipation and joyful surprise"
+          - "emotional vulnerability and sincere love"
+          - "dramatic romantic tension"
+          - "overwhelming happiness and emotional tears"
+          - "tender anticipation with cinematic emotion"
+          - "bittersweet romantic emotion"
 
         locations:
 
           romantic:
             - name: "sunset beach"
-              description: >
-                quiet beach with soft waves, warm horizon and open romantic
-                space
-              lighting: >
-                warm golden-hour sunlight with soft rim light
-              mood: >
-                expansive, intimate and cinematic
+              description: "quiet beach with soft waves, warm horizon and open romantic space"
+              lighting: "warm golden-hour sunlight with soft rim light"
+              mood: "expansive, intimate and cinematic"
 
             - name: "flower garden"
-              description: >
-                lush romantic garden filled with flowers, pathways and
-                natural greenery
-              lighting: >
-                soft golden sunlight filtered through foliage
-              mood: >
-                dreamy, intimate and joyful
+              description: "lush romantic garden filled with flowers, pathways and natural greenery"
+              lighting: "soft golden sunlight filtered through foliage"
+              mood: "dreamy, intimate and joyful"
 
             - name: "rooftop at sunset"
-              description: >
-                elegant rooftop overlooking a glowing city skyline
-              lighting: >
-                warm sunset backlight with subtle city lights
-              mood: >
-                grand, intimate and cinematic
+              description: "elegant rooftop overlooking a glowing city skyline"
+              lighting: "warm sunset backlight with subtle city lights"
+              mood: "grand, intimate and cinematic"
 
             - name: "mountain viewpoint"
-              description: >
-                scenic mountain overlook with dramatic landscape and distant
-                valleys
-              lighting: >
-                golden-hour sunlight with atmospheric haze
-              mood: >
-                grand, emotional and breathtaking
+              description: "scenic mountain overlook with dramatic landscape and distant valleys"
+              lighting: "golden-hour sunlight with atmospheric haze"
+              mood: "grand, emotional and breathtaking"
 
             - name: "luxury hotel garden"
-              description: >
-                elegant landscaped hotel garden with fountains, flowers and
-                warm architectural lighting
-              lighting: >
-                warm evening illumination with soft practical lights
-              mood: >
-                luxurious, romantic and sophisticated
+              description: "elegant landscaped hotel garden with fountains, flowers and warm architectural lighting"
+              lighting: "warm evening illumination with soft practical lights"
+              mood: "luxurious, romantic and sophisticated"
 
             - name: "rainy city street"
-              description: >
-                romantic city street after rain with reflections on wet
-                pavement and glowing lights
-              lighting: >
-                warm street lights mixed with cool evening ambience
-              mood: >
-                cinematic, intimate and emotional
+              description: "romantic city street after rain with reflections on wet pavement and glowing lights"
+              lighting: "warm street lights mixed with cool evening ambience"
+              mood: "cinematic, intimate and emotional"
 
             - name: "lakeside promenade"
-              description: >
-                peaceful lakeside walkway with trees, water reflections and
-                distant lights
-              lighting: >
-                soft sunset light transitioning into blue hour
-              mood: >
-                calm, intimate and deeply romantic
+              description: "peaceful lakeside walkway with trees, water reflections and distant lights"
+              lighting: "soft sunset light transitioning into blue hour"
+              mood: "calm, intimate and deeply romantic"
 
             - name: "old palace courtyard"
-              description: >
-                ornate heritage courtyard with arches, stone architecture
-                and decorative gardens
-              lighting: >
-                warm evening architectural lighting
-              mood: >
-                grand, timeless and cinematic
-
+              description: "ornate heritage courtyard with arches, stone architecture and decorative gardens"
+              lighting: "warm evening architectural lighting"
+              mood: "grand, timeless and cinematic"
 
           indoor:
             - name: "elegant candlelit restaurant"
-              description: >
-                intimate upscale restaurant table surrounded by candles,
-                flowers and warm architectural details
-              lighting: >
-                soft candlelight mixed with warm ambient illumination
-              mood: >
-                intimate, luxurious and emotional
+              description: "intimate upscale restaurant table surrounded by candles, flowers and warm architectural details"
+              lighting: "soft candlelight mixed with warm ambient illumination"
+              mood: "intimate, luxurious and emotional"
 
             - name: "romantic hotel suite"
-              description: >
-                elegant hotel interior with flowers, warm lamps and refined
-                romantic decor
-              lighting: >
-                soft warm practical lighting
-              mood: >
-                private, intimate and sophisticated
+              description: "elegant hotel interior with flowers, warm lamps and refined romantic decor"
+              lighting: "soft warm practical lighting"
+              mood: "private, intimate and sophisticated"
 
             - name: "grand ballroom"
-              description: >
-                elegant ballroom with chandeliers, polished floors and
-                romantic floral arrangements
-              lighting: >
-                dramatic chandelier lighting with warm highlights
-              mood: >
-                grand, luxurious and cinematic
-
+              description: "elegant ballroom with chandeliers, polished floors and romantic floral arrangements"
+              lighting: "dramatic chandelier lighting with warm highlights"
+              mood: "grand, luxurious and cinematic"
 
         photography_trends:
 
           compositions:
-            - >
-              cinematic rule-of-thirds composition with strong foreground
-              depth
-            - >
-              intimate layered composition with foreground flowers
-            - >
-              asymmetric composition with the proposal action as the focal
-              point
-            - >
-              dramatic environmental composition with cinematic depth
-            - >
-              shallow-depth romantic portrait composition
-            - >
-              strong leading lines directing attention toward the proposer
+            - "cinematic portrait shot with razor-sharp facial focus"
+            - "cinematic rule-of-thirds composition with strong foreground depth"
+            - "intimate layered composition with foreground flowers"
+            - "asymmetric composition with the proposal action as the focal point"
+            - "dramatic environmental composition with cinematic depth"
+            - "shallow-depth romantic portrait composition"
 
           lighting_styles:
-            - >
-              warm golden-hour backlight
-            - >
-              soft cinematic sunset light
-            - >
-              dramatic warm practical lighting
-            - >
-              soft diffused romantic light
-            - >
-              golden rim light with gentle shadows
-            - >
-              cinematic blue-hour ambience with warm highlights
+            - "warm golden-hour backlight highlighting facial contours"
+            - "soft cinematic sunset light"
+            - "dramatic warm practical lighting"
+            - "soft diffused romantic light"
+            - "golden rim light with gentle shadows"
+            - "cinematic blue-hour ambience with warm highlights"
 
           color_grading:
-            - >
-              warm cinematic gold and amber tones
-            - >
-              rich romantic reds with warm skin tones
-            - >
-              soft pastel romantic grading
-            - >
-              cinematic teal-and-warm contrast
-            - >
-              warm golden filmic tones
-            - >
-              natural filmic colors with subtle romantic warmth
+            - "warm cinematic gold and amber tones"
+            - "rich romantic reds with warm skin tones"
+            - "soft pastel romantic grading"
+            - "cinematic teal-and-warm contrast"
+            - "warm golden filmic tones"
+            - "natural filmic colors with subtle romantic warmth"
 
           depth_of_field:
-            - >
-              shallow depth of field with faces sharply focused
-            - >
-              cinematic background separation
-            - >
-              moderate depth of field keeping the proposal action readable
-            - >
-              soft bokeh behind the couple
-            - >
-              environmental depth with clear subjects
+            - "shallow depth of field with faces sharply focused and clear"
+            - "cinematic background separation"
+            - "moderate depth of field keeping the proposal action readable"
+            - "soft bokeh behind the couple"
+            - "environmental depth with clear subjects"
+
+
+    # -----------------------------------------------------------------------
+    # Profile 2: AI Tools & Tech Workflows (Sharp Text & Clean Diagrams)
+    # -----------------------------------------------------------------------
+    aitools:
+
+      theme: >
+        modern ultra-clean tech infographics, AI tool workflows, high-contrast visual breakdowns,
+        crisp modern vector diagrams, perfectly bold readable typography, razor-sharp vector boxes,
+        and pristine UI mockups for AI tools and digital productivity.
+
+      system_prompt: >
+        You are a senior UI/UX visual designer and AI tech educator. Create high-impact, clean,
+        minimalist infographics and AI tool workflow diagrams. Prioritize ultra-sharp lines, perfectly
+        aligned high-contrast boxes, crystal-clear bold readable English text headers, clean icons,
+        and high contrast contrast gradients. Avoid any blurry shapes, hazy borders, unreadable text, or cluttered diagrams.
+
+      subject_instruction: >
+        Design an educational AI Tool visual breakdown or workflow graphic. Focus on a single clear concept
+        (e.g., 'Top 3 AI Prompting Tricks', 'ChatGPT vs Claude Workflow', 'AI Automation Stack'). Use clear, large,
+        bold typography, solid color cards, distinct vector outline boxes, sharp arrows, and clean UI elements.
+
+      prompt_anchor: >
+        modern minimalist tech infographic layout, ultra-sharp vector UI design, high-contrast crisp text typography,
+        bold readable English headings, clean sharp-edged card containers, sleek rounded rectangular boxes, sharp vector arrows
+
+      visual:
+
+        interaction_styles:
+          - "step-by-step visual workflow with clearly numbered crisp boxes and sharp arrows"
+          - "side-by-side comparison matrix with ultra-sharp high-contrast columns and readable bold headers"
+          - "central AI tool showcase card with clean feature callout boxes and distinct vector lines"
+          - "minimalist visual cheat-sheet grid with high-legibility bold text and clean iconography"
+
+        moods_and_emotions:
+          - "sleek, modern, and high-tech"
+          - "educational, authoritative, and clean"
+          - "high-contrast, vivid, and hyper-legible"
+          - "minimalist, structured, and sophisticated"
+
+        locations:
+          indoor:
+            - name: "dark mode tech canvas"
+              description: "deep obsidian dark charcoal background with sharp glowing neon cyan and electric violet card accents"
+              lighting: "vivid edge glow with high-contrast UI backlight"
+              mood: "futuristic, sleek, dark-mode technical graphic"
+
+            - name: "clean light studio slate"
+              description: "pure crisp white and light silver background with sharp dark slate typography and vibrant blue boxes"
+              lighting: "bright clean flat studio lighting"
+              mood: "ultra-clean, modern, minimalist educational guide"
+
+            - name: "gradient Glassmorphism layout"
+              description: "frosted glass card containers with sharp vector outlines over a subtle indigo blue gradient"
+              lighting: "soft background gradient with high-contrast sharp foreground elements"
+              mood: "premium aesthetic, high-tech, modern SaaS visual"
+
+        photography_trends:
+
+          compositions:
+            - "centered vertical layout with bold top headline and structured grid cards"
+            - "2x2 grid format with crisp borders and clean spacing"
+            - "linear step-by-step flowchart with prominent sharp arrows"
+
+          lighting_styles:
+            - "flat high-contrast digital graphics lighting"
+            - "vivid cybernetic accent glows on sharp vector edges"
+
+          color_grading:
+            - "obsidian black, electric cyan, violet, and crisp white"
+            - "clean white, royal cobalt blue, deep slate gray, and emerald green accents"
+
+          depth_of_field:
+            - "flat orthographic 2D digital graphic focus, 100% sharp from corner to corner"
+
+
+    # -----------------------------------------------------------------------
+    # Profile 3: Psychology Facts & Mindsets (Clean Mind Maps & Infographics)
+    # -----------------------------------------------------------------------
+    psychology:
+
+      theme: >
+        minimalist high-impact psychology infographics, mental framework diagrams,
+        behavioral science breakdowns, mind maps, clean typography, high-contrast readable text,
+        bold quotes, and sharp elegant visual containers.
+
+      system_prompt: >
+        You are a visual psychologist and educational infographic author. Create clean, thought-provoking,
+        and high-contrast educational diagrams on human behavior, mental models, and psychology facts.
+        Ensure all diagrams have sharp, well-defined rectangular boxes, crisp connecting lines, and big bold
+        ultra-readable typography. Avoid low-resolution details, blurry text, hazy boxes, or visual noise.
+
+      subject_instruction: >
+        Create a high-engagement psychology infographic or mental framework diagram (e.g., '5 Cognitive Biases That Control You',
+        'Dopamine Loop Explained', 'The Psychology of Focus'). Use clean typography, stark background contrast,
+        sharp vector boxes, clear bullet points, and minimalist iconography.
+
+      prompt_anchor: >
+        minimalist mental model graphic, bold high-contrast English typography, sharp clean rectangular text cards,
+        crisp vector diagram lines, sleek minimal infographic aesthetics, high-legibility layout
+
+      visual:
+
+        interaction_styles:
+          - "central mind map with sharp connecting nodes and bold readable branch headers"
+          - "numbered behavioral rule-list with high-contrast card backgrounds and crisp typography"
+          - "before-and-after mindset comparison in two sharp distinct vertical panels"
+          - "dichotomy framework diagram with bold visual separation and razor-sharp box borders"
+
+        moods_and_emotions:
+          - "deep, analytical, and insight-driven"
+          - "clean, calm, and intellectually stimulating"
+          - "high-contrast, striking, and immediate impact"
+
+        locations:
+          indoor:
+            - name: "minimalist dark academic canvas"
+              description: "rich matte dark charcoal background with warm amber and cream typography cards"
+              lighting: "focused spotlight contrast on central mind map nodes"
+              mood: "intellectual, deep, sophisticated"
+
+            - name: "stark high-contrast paper layout"
+              description: "clean off-white warm textured canvas with bold pitch-black text and crisp terracotta orange highlight boxes"
+              lighting: "flat high-contrast studio graphic lighting"
+              mood: "minimalist editorial book style, clean psychology chart"
+
+            - name: "modern pastel neuroscience card grid"
+              description: "soft muted sage green and slate blue background with ultra-sharp white cards and dark charcoal typography"
+              lighting: "even soft flat graphic illumination"
+              mood: "calming, educational, modern mental wellness diagram"
+
+        photography_trends:
+
+          compositions:
+            - "balanced central node hierarchy with sharp radiating connecting lines"
+            - "clean stacked list format with bold numbers and high-contrast text containers"
+
+          lighting_styles:
+            - "flat high-contrast graphic layout lighting"
+
+          color_grading:
+            - "matte black, warm beige, amber gold, and crisp white"
+            - "deep navy blue, sage green, clean white, and soft coral highlights"
+
+          depth_of_field:
+            - "entirely flat 2D vector graphic focus, completely sharp and crisp text"
 
 
 # ---------------------------------------------------------------------------
@@ -273,25 +327,19 @@ romance:
 
   enabled: true
 
-  # Both directions are deliberately enabled.
-  # The seeded RNG chooses one per generated scene.
   proposal_directions:
     - "boy_proposes_to_girl"
     - "girl_proposes_to_boy"
 
-  # Approximately 45% of scenes include the third woman.
   third_person_probability: 0.45
 
-  # Make the physical proposal action explicit.
   require_kneeling: true
   require_flowers: true
   require_ring: true
 
-  # Specific ring style requested.
   ring_style: >
     a clearly visible elegant marquise-cut engagement ring
 
-  # Third woman is a genuine love-triangle character, not a random extra.
   third_person_role: >
     a heartbroken woman in unrequited love for the boy
 
@@ -301,7 +349,7 @@ romance:
 
   cinematic_style: >
     grand cinematic Indian romantic-film atmosphere, emotionally expressive
-    faces, dramatic romantic lighting, heartfelt Bollywood-style visual
+    crystal-clear faces, dramatic romantic lighting, heartfelt Bollywood-style visual
     storytelling, photorealistic, realistic human anatomy, natural skin
 
 
@@ -312,13 +360,10 @@ romance:
 brief:
 
   history_depth: 30
-
   dedupe_threshold: 85
-
   max_retries: 3
 
   axes:
-
     camera_angle:
       - "eye-level"
       - "low angle"
@@ -348,63 +393,49 @@ brief:
 
 
 # ---------------------------------------------------------------------------
-# Ollama
+# LLM Configuration
 # ---------------------------------------------------------------------------
 
 llm:
 
   host_env: "OLLAMA_HOST"
-
   model: "qwen2.5:3b-instruct"
-
   hq_model: "qwen2.5:7b-instruct"
-
   ready_timeout_s: 120
-
   request_timeout_s: 180
-
   temperature: 0.8
-
   max_retries: 3
 
 
 # ---------------------------------------------------------------------------
-# Image generation
+# Image generation & Quality Prompts (Includes Text & Face Sharpness Gates)
 # ---------------------------------------------------------------------------
 
 image:
 
   model: "Lykon/dreamshaper-8"
-
   hq_model: "black-forest-labs/FLUX.1-schnell"
 
-  # DreamShaper SD1.5 photorealistic path.
   steps: 26
-
   guidance_scale: 6.5
 
-  # FLUX/turbo path.
   hq_steps: 4
-
   hq_guidance_scale: 0.0
 
   width: 512
-
   height: 512
 
-  # Quality levers for the SD1.5 CPU path (ignored on the FLUX/GPU path).
-  scheduler: "dpmpp_karras"          # DPM++ 2M Karras: sharper ("" = model default)
-  vae: "stabilityai/sd-vae-ft-mse"   # crisper detail + colour ("" to disable)
-  hires_fix: false                   # 2nd img2img pass; ~2x time — turn on for max quality
+  scheduler: "dpmpp_karras"
+  vae: "stabilityai/sd-vae-ft-mse"
+  hires_fix: true                      # Set to true to ensure max sharpness for text and facial features
   hires_scale: 1.5
   hires_denoise: 0.4
   hires_steps: 16
 
   positive_template: >
     {framing},
-    photorealistic cinematic romantic photograph of {characters},
-    {interaction},
     {subject},
+    {interaction},
     in {setting},
     {lighting},
     {mood},
@@ -412,71 +443,56 @@ image:
     {color_palette},
     {time_of_day},
     {style_modifiers},
-    natural skin texture,
-    realistic human anatomy,
-    realistic facial features,
-    expressive eyes,
-    realistic hands,
-    realistic clothing,
-    highly detailed,
+    crystal-clear faces,
+    sharp crisp detailed facial features,
     sharp focus,
+    high contrast typography,
+    perfectly legible clean text,
+    razor-sharp vector borders,
+    sharp box containers,
     professional DSLR photography,
-    cinematic depth,
-    natural lighting,
-    8k
+    highly detailed,
+    8k resolution
 
   negative_template: >
+    blurry text,
+    unreadable text,
+    gibberish text,
+    misspelled words,
+    hazy lines,
+    blurry boxes,
+    fuzzy borders,
+    smudged diagrams,
+    out of focus face,
+    blurry face,
+    deformed face,
+    distorted face,
+    plastic skin,
     illustration,
-    painting,
     drawing,
     cartoon,
-    anime,
     3d render,
     cgi,
-    plastic skin,
     deformed,
     disfigured,
     mutated hands,
     extra fingers,
     missing fingers,
-    extra limbs,
     bad anatomy,
     lowres,
     blurry,
-    text,
     watermark,
     signature,
     jpeg artifacts,
     oversaturated,
     ugly,
-    deformed face,
-    distorted face,
     asymmetric face,
-    extra faces,
-    extra heads,
     fused faces,
-    malformed face,
-    blurry face,
-    disfigured eyes,
-    duplicate person,
-    duplicate couple,
-    duplicate girl,
-    duplicate boy,
     wrong proposal direction,
-    boy and girl both kneeling,
-    generic standing couple,
     missing ring,
     missing flowers,
-    malformed ring,
-    distorted ring,
-    extra ring,
     nudity,
-    nsfw,
-    revealing clothing,
-    cleavage,
-    lingerie,
-    bikini,
-    swimwear
+    nsfw
 
 
 # ---------------------------------------------------------------------------
@@ -486,52 +502,32 @@ image:
 postproc:
 
   aspect: "4:5"
-
-  jpeg_quality: 92
-
+  jpeg_quality: 95
   unsharp_radius: 1.2
-
-  unsharp_percent: 80
-
+  unsharp_percent: 90                  # Increased slightly to make diagram lines and text crisp
   unsharp_threshold: 3
-
   max_bytes: 8388608
 
 
 # ---------------------------------------------------------------------------
-# Captions
+# Captions & Hashtags
 # ---------------------------------------------------------------------------
 
 caption:
-
-  tone: >
-    warm, romantic, cinematic, emotionally expressive, understated
-
+  tone: "warm, romantic, cinematic, educational, highly clear, understated"
   emoji_budget: 2
-
   max_length: 2200
-
   hashtag_placement: "caption"
 
-
-# ---------------------------------------------------------------------------
-# Hashtags
-# ---------------------------------------------------------------------------
-
 hashtags:
-
   min_count: 12
-
   max_count: 18
-
   tier_broad: 0.30
-
   tier_mid: 0.50
-
   tier_niche: 0.20
-
   brand_tags:
     - "autogram"
+    - "infographics"
     - "romanticphotography"
 
 
@@ -540,67 +536,81 @@ hashtags:
 # ---------------------------------------------------------------------------
 
 gates:
-
   nsfw: true
-
   degenerate: true
-
   profanity: true
-
   degenerate_min_variance: 60.0
-
   degenerate_dark_mean: 12.0
-
   degenerate_bright_mean: 243.0
 
 
 # ---------------------------------------------------------------------------
-# Reel generation
+# Reel, Carousel & Content Mix
 # ---------------------------------------------------------------------------
 
 reel:
-
   enabled: true
-
   num_scenes: 4
-
   seconds_per_image: 3.2
-
   crossfade_s: 0.35
-
   fps: 30
-
   width: 1080
-
   height: 1920
-
   zoom: 1.12
-
   audio_dir: "assets/audio"
-
   ai_video:
-
     enabled: true
-
     mode: "auto"
-
     provider: "huggingface"
-
-    # Scene 1 and scene 3 receive AI image-to-video attempts.
-    # Remaining scenes use FFmpeg animation.
-    ai_scene_indexes:
-      - 0
-      - 2
-
+    ai_scene_indexes: [0, 2]
     duration_s: 3
-
     timeout_s: 180
-
     poll_interval_s: 5
-
     fallback_to_ffmpeg: true
-
     keep_intermediate: false
+
+carousel:
+  enabled: true
+  num_slides: 4
+
+content_mix:
+  reel: 2
+  carousel: 2
+  photo: 1
+
+youtube:
+  privacy_status: "private"
+  category_id: "22"
+
+
+# ---------------------------------------------------------------------------
+# Linked Accounts Configuration (Configuring Multiple IG Accounts via Graph API)
+# ---------------------------------------------------------------------------
+
+accounts:
+  - id: romance_account
+    platform: instagram
+    backend: graph
+    profile: romance
+    enabled: true
+    content_mix: { reel: 3, carousel: 1, photo: 1 }
+    audio_dir: "assets/audio/romance"
+
+  - id: aitools_account
+    platform: instagram
+    backend: graph
+    profile: aitools
+    enabled: true
+    content_mix: { photo: 2, carousel: 3, reel: 1 }
+    audio_dir: "assets/audio/tech_music"
+
+  - id: psychology_account
+    platform: instagram
+    backend: graph
+    profile: psychology
+    enabled: true
+    content_mix: { photo: 2, carousel: 3, reel: 0 }
+    audio_dir: "assets/audio/tech_music"
 
 
 # ---------------------------------------------------------------------------
@@ -608,73 +618,6 @@ reel:
 # ---------------------------------------------------------------------------
 
 state:
-
   history_path: "state/history.json"
-
   session_path: "state/ig_session.json"
-
   out_dir: "out"
-
-
-# ---------------------------------------------------------------------------
-# Carousel (multi-image album) generation
-# ---------------------------------------------------------------------------
-
-carousel:
-
-  enabled: true
-
-  # Instagram allows 2-10 slides; each slide is a distinct scene of the couple.
-  num_slides: 4
-
-
-# ---------------------------------------------------------------------------
-# Content mix
-#
-# When a run does not force a content type (--content-type), one is picked at
-# random per run using these weights. Weight 0 disables a type. Override per
-# account under `accounts:` below.
-# ---------------------------------------------------------------------------
-
-content_mix:
-  reel: 3
-  carousel: 1
-  photo: 1
-
-
-# ---------------------------------------------------------------------------
-# YouTube Shorts (only used when an account's backend is "youtube")
-# ---------------------------------------------------------------------------
-
-youtube:
-  privacy_status: "private"     # private | unlisted | public
-  category_id: "22"             # 22 = People & Blogs
-
-
-# ---------------------------------------------------------------------------
-# Linked accounts
-#
-# One repo can now drive several Instagram/YouTube accounts. Each account picks
-# a content profile and a content mix; its CREDENTIALS are supplied by the single
-# `AUTOGRAM_ACCOUNTS` secret (a JSON array matched to these entries by `id`) so
-# the flat IG_*/YOUTUBE_* env-var names never collide. Example secret:
-#
-#   AUTOGRAM_ACCOUNTS='[{"id":"romance","ig_username":"..","ig_session_b64":".."},
-#                       {"id":"shorts","youtube_client_id":"..","youtube_client_secret":"..","youtube_refresh_token":".."}]'
-#
-# Leave this list empty to keep the classic single-account behaviour (creds come
-# from the flat IG_*/YOUTUBE_* env vars, history in state/history.json).
-# ---------------------------------------------------------------------------
-
-accounts: []
-  # - id: romance
-  #   platform: instagram        # instagram | youtube
-  #   backend: instagrapi        # instagrapi | graph | youtube ("" -> derived)
-  #   profile: romance           # a key under content.profiles
-  #   enabled: true
-  #   content_mix: { reel: 3, carousel: 1, photo: 1 }
-  #   audio_dir: "assets/audio"
-  # - id: shorts
-  #   platform: youtube
-  #   profile: romance
-  #   content_mix: { reel: 1 }   # YouTube needs a video
