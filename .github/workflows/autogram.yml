@@ -70,6 +70,7 @@ jobs:
       PIXVERSE_MODEL: ${{ secrets.PIXVERSE_MODEL }}
       HF_TOKEN: ${{ secrets.HF_TOKEN }}
       HF_VIDEO_MODEL: ${{ secrets.HF_VIDEO_MODEL }}
+      AUTOGRAM_ACCOUNTS: ${{ secrets.AUTOGRAM_ACCOUNTS }}
 
     steps:
       - uses: actions/checkout@v4
