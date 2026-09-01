@@ -992,14 +992,14 @@ youtube:
 accounts:
   - id: romance_account
     platform: instagram        # instagram | youtube
-    backend: instagrapi        # instagrapi | graph | youtube ("" -> derived)
+    backend: graph        # instagrapi | graph | youtube ("" -> derived)
     profile: romance           # a key under content.profiles
     enabled: true
     content_mix: { reel: 3, carousel: 1, photo: 1 }
     audio_dir: "assets/audio/romantic"
   - id: aitools_account
     platform: instagram
-    backend: instagrapi
+    backend: graph
     profile: ai_tools          # a key under content.profiles
     enabled: true
     content_mix: { reel: 1, carousel: 2, photo: 2 }
