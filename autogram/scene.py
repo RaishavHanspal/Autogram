@@ -528,38 +528,109 @@ def _render_romantic_prompt(
     return ", ".join(part.strip() for part in parts if part and part.strip())
 
 
+def _compact_action(brief: Brief, cfg: Config) -> str:
+    """A short, identity-safe description of the core action (~15 tokens).
+
+    The full romance directive is far longer than CLIP's 77-token window, which
+    truncated the identity anchor. This keeps only the essentials so the couple's
+    identity always survives.
+    """
+    direction = brief.proposal_direction
+    if direction == "boy_proposes_to_girl":
+        core = "the man kneeling on one knee proposing to the woman"
+    elif direction == "girl_proposes_to_boy":
+        core = "the woman kneeling on one knee proposing to the man"
+    else:
+        core = brief.interaction or ""
+    extras: list[str] = []
+    if cfg.romance.require_ring:
+        extras.append("holding an engagement ring")
+    if cfg.romance.require_flowers:
+        extras.append("with a bouquet of flowers")
+    if brief.third_person_present:
+        extras.append("a heartbroken third woman crying in the background")
+    return ", ".join(p for p in [core, *extras] if p)
+
+
+def _budget_join(parts: list[str], max_words: int) -> str:
+    """Join parts in priority order, dropping later parts once the word budget
+    (a proxy for CLIP's 77-token limit) is spent. Earlier parts win."""
+    out: list[str] = []
+    used = 0
+    for raw in parts:
+        p = raw.strip().strip(",").strip()
+        if not p:
+            continue
+        words = len(p.split())
+        if out and used + words > max_words:
+            continue
+        out.append(p)
+        used += words
+    return ", ".join(out)
+
+
+def _render_compact_positive(brief: Brief, cfg: Config, characters_block: str) -> str:
+    """Compact, identity-FIRST positive prompt that fits CLIP's 77-token window.
+
+    Core = identity + action + location, always included and ordered so the
+    couple anchor leads (a blind 77-token truncation can only ever drop the tail,
+    never the identity). Shot/lighting/mood fill whatever budget remains; a short
+    quality tail is always appended.
+    """
+    quality = cfg.image.quality_suffix.strip()
+    core_parts = [characters_block, _compact_action(brief, cfg)]
+    if brief.setting:
+        core_parts.append(f"in {brief.setting}")
+    core = ", ".join(p.strip() for p in core_parts if p and p.strip())
+
+    remaining = cfg.image.max_prompt_words - len(core.split()) - len(quality.split())
+    shot = brief.framing.split(",")[0] if brief.framing else ""
+    extras = _budget_join([shot, brief.lighting, brief.mood], max(0, remaining))
+    return ", ".join(p for p in [core, extras, quality] if p and p.strip())
+
+
+def _render_template_positive(brief: Brief, cfg: Config, characters_block: str) -> str:
+    """Legacy full-template prompt (can exceed 77 tokens; compact_prompt=false)."""
+    fields: dict[str, Any] = brief.model_dump()
+    fields["style_modifiers"] = ", ".join(brief.style_modifiers)
+    fields["characters"] = characters_block
+    positive = cfg.image.positive_template.format(**fields)
+    romantic_prompt = _render_romantic_prompt(brief, cfg)
+    if romantic_prompt:
+        positive = f"{romantic_prompt}, {positive}"
+    return positive
+
+
 def render_prompts(
     brief: Brief,
     cfg: Config,
     characters_block: str = "",
 ) -> tuple[str, str]:
-    """Render final positive and negative SD prompts."""
+    """Render (positive, negative) SD prompts.
 
-    fields: dict[str, Any] = brief.model_dump()
-
-    fields["style_modifiers"] = ", ".join(brief.style_modifiers)
-
-    fields["characters"] = characters_block
-
-    positive = cfg.image.positive_template.format(**fields)
-
-    romantic_prompt = _render_romantic_prompt(
-        brief,
-        cfg,
-    )
-
-    if romantic_prompt:
-        positive = f"{romantic_prompt}, " f"{positive}"
-
+    Default: a compact, identity-first prompt that fits CLIP's 77-token limit so
+    the couple's identity is never truncated away (the biggest image-quality
+    lever). Set image.compact_prompt=false for the legacy full-template prompt.
+    """
+    if cfg.image.compact_prompt:
+        positive = _render_compact_positive(brief, cfg, characters_block)
+    else:
+        positive = _render_template_positive(brief, cfg, characters_block)
     negative = cfg.image.negative_template
-
-    positive = re.sub(
-        r"(,\s*){2,}",
-        ", ",
-        positive,
-    ).strip(" ,")
-
+    positive = re.sub(r"(,\s*){2,}", ", ", positive).strip(" ,")
     return positive, negative
+
+
+def vary_framing(brief: Brief, seed: int) -> Brief:
+    """A copy of ``brief`` with re-rolled framing (same scene, different shot).
+
+    Lets a reel/carousel derive extra scenes from ONE LLM brief without more slow
+    LLM calls — the couple, location and action stay coherent while the shot /
+    composition varies.
+    """
+    variant = brief.model_copy()
+    variant.framing = select_framing(random.Random(seed))
+    return variant
 
 
 def _build_messages(

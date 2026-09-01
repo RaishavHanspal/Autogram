@@ -122,6 +122,31 @@ class ImageGenerator:
         os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
         self._pipe = pipe
 
+    def _encode_with_compel(self, positive: str, negative: str) -> Any:
+        """Chunk-encode prompts with compel so >77-token prompts aren't truncated.
+
+        Returns ``(prompt_embeds, negative_prompt_embeds)`` or ``None`` when compel
+        is not installed or errors — the caller then uses the plain string prompt.
+        Encoding is a cheap text-encoder pass (milliseconds), so this never
+        materially affects the run time.
+        """
+        try:
+            from compel import Compel
+
+            compel = Compel(
+                tokenizer=self._pipe.tokenizer,
+                text_encoder=self._pipe.text_encoder,
+                truncate_long_prompts=False,
+            )
+            pos = compel(positive)
+            neg = compel(negative)
+            pos, neg = compel.pad_conditioning_tensors_to_same_length([pos, neg])
+            log.info("compel: long-prompt conditioning active (no 77-token truncation)")
+            return pos, neg
+        except Exception as exc:  # noqa: BLE001
+            log.warning("compel unavailable/failed (%s); using plain 77-token prompt", exc)
+            return None
+
     def generate(self, positive: str, negative: str, seed: int) -> GeneratedImage:
         self._load()
         import torch
@@ -139,16 +164,25 @@ class ImageGenerator:
             guidance = self.cfg.image.guidance_scale
 
         kwargs: dict[str, Any] = {
-            "prompt": positive,
             "num_inference_steps": steps,
             "guidance_scale": guidance,
             "width": self.cfg.image.width,
             "height": self.cfg.image.height,
             "generator": generator,
         }
-        # FLUX schnell does not accept a negative prompt; SD/SDXL do.
-        if "flux" not in model_lc:
-            kwargs["negative_prompt"] = negative
+        # Prompt conditioning. compel (optional, free) chunk-encodes the prompt so
+        # nothing is lost to CLIP's 77-token limit; fully guarded, so a missing or
+        # broken compel silently falls back to the plain string prompt (current
+        # behaviour). FLUX uses its own T5 encoder and no negative prompt.
+        embeds = None
+        if self.cfg.image.use_compel and "flux" not in model_lc:
+            embeds = self._encode_with_compel(positive, negative)
+        if embeds is not None:
+            kwargs["prompt_embeds"], kwargs["negative_prompt_embeds"] = embeds
+        else:
+            kwargs["prompt"] = positive
+            if "flux" not in model_lc:
+                kwargs["negative_prompt"] = negative
 
         log.info(
             "generating %dx%d, %d steps, guidance %.1f, seed %d (model=%s)",

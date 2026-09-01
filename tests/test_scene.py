@@ -7,6 +7,7 @@ from autogram.scene import (
     is_near_duplicate,
     render_prompts,
     select_axis_hints,
+    vary_framing,
 )
 
 
@@ -38,8 +39,47 @@ def test_select_axis_hints_reproducible():
 def test_render_prompts_no_double_commas(cfg, brief):
     pos, neg = render_prompts(brief, cfg)
     assert ", ," not in pos
-    assert "35mm, photographic" in pos
+    assert "in a Scandinavian living room" in pos  # setting survives
     assert neg == cfg.image.negative_template
+
+
+def test_compact_prompt_is_identity_first_and_bounded(cfg):
+    # A long, rich brief must still put the identity anchor first (so CLIP's
+    # 77-token window never truncates it) and stay near the word budget.
+    anchor = "the same recurring couple, consistent faces, warm skin"
+    b = Brief(
+        subject="an elaborate marriage proposal " * 6,
+        setting="a luxury hotel garden",
+        lighting="warm golden light",
+        mood="deeply romantic",
+        composition="rule of thirds",
+        color_palette="warm gold",
+        time_of_day="sunset",
+        framing="full-body cinematic shot, low angle, rule of thirds, genuine emotion",
+        proposal_direction="boy_proposes_to_girl",
+        third_person_present=True,
+    )
+    pos, _ = render_prompts(b, cfg, characters_block=anchor)
+    assert pos.startswith(anchor)
+    assert len(pos.split()) <= cfg.image.max_prompt_words + 12  # budget + short quality tail
+
+
+def test_vary_framing_keeps_scene_changes_shot(cfg):
+    b = Brief(
+        subject="a proposal",
+        setting="a rooftop",
+        lighting="warm",
+        mood="romantic",
+        composition="c",
+        color_palette="p",
+        time_of_day="sunset",
+        framing="close-up portrait, eye-level, centered, genuine emotion",
+    )
+    v = vary_framing(b, seed=123)
+    assert v.subject == b.subject and v.setting == b.setting  # same moment
+    assert v.framing  # a framing was chosen
+    # Deterministic for a fixed seed.
+    assert vary_framing(b, seed=123).framing == v.framing
 
 
 class _FakeOllama:

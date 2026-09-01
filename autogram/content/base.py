@@ -26,7 +26,7 @@ from ..config import Config, Secrets
 from ..imagegen import GeneratedImage, ImageGenerator
 from ..postproc import ProcessedImage, process_image
 from ..safety import SafetyError, load_profanity, run_caption_gates, run_image_gates
-from ..scene import Brief, build_character_block, generate_brief, render_prompts
+from ..scene import Brief, build_character_block, generate_brief, render_prompts, vary_framing
 from ..state import State
 
 if TYPE_CHECKING:
@@ -179,41 +179,43 @@ def generate_scene(
     except Exception as exc:  # noqa: BLE001
         raise ContentError(ExitCode.BRIEF, f"brief generation failed: {exc}") from exc
 
+    scene = _render_scene(ctx, brief, seed, out_path)
+    if check_dupe and ctx.state.has_image_hash(scene.processed.sha256):
+        raise ContentError(
+            ExitCode.DUPLICATE,
+            f"image hash {scene.processed.sha256[:12]} already posted; refusing to repeat",
+        )
+    return scene
+
+
+def _render_scene(ctx: ProductionContext, brief: Brief, seed: int, out_path: Path) -> SceneResult:
+    """Render one image from an already-built brief: prompt -> image -> gates ->
+    post-process. No LLM call — used for extra reel/carousel scenes so a
+    multi-scene deliverable needs only ONE brief (a big CPU-time saving)."""
     positive, negative = render_prompts(brief, ctx.cfg, characters_block=ctx.characters_block)
     ctx.log.info("positive prompt: %s", positive)
-
     try:
         generated = ctx.gen.generate(positive, negative, seed)
     except Exception as exc:  # noqa: BLE001
         raise ContentError(ExitCode.IMAGE, f"image generation failed: {exc}") from exc
-
     run_image_gates(generated.image, ctx.cfg)  # SafetyError propagates
-
     try:
         processed = process_image(generated.image, ctx.cfg, out_path)
     except Exception as exc:  # noqa: BLE001
         raise ContentError(ExitCode.POSTPROC, f"post-processing failed: {exc}") from exc
-
-    if check_dupe and ctx.state.has_image_hash(processed.sha256):
-        raise ContentError(
-            ExitCode.DUPLICATE,
-            f"image hash {processed.sha256[:12]} already posted; refusing to repeat",
-        )
-
     return SceneResult(
         brief=brief, positive=positive, negative=negative, generated=generated, processed=processed
     )
 
 
-def generate_scenes(
-    ctx: ProductionContext,
-    num_scenes: int,
-) -> list[SceneResult]:
-    """Generate ``num_scenes`` diverging scenes of the same characters.
+def generate_scenes(ctx: ProductionContext, num_scenes: int) -> list[SceneResult]:
+    """Generate ``num_scenes`` coherent scenes of the same moment.
 
-    The first scene is deduped against history; a later scene that fails is
-    skipped (never fatal) so the deliverable uses whatever succeeded (>=1).
-    Shared by the reel and carousel content types.
+    ONE LLM brief is generated (deduped against history); extra scenes reuse it
+    with a re-rolled framing/shot and a fresh image seed, so the couple, location
+    and action stay coherent while the composition varies — and we pay for only
+    one (slow) LLM brief per reel/carousel. A scene that fails is skipped (never
+    fatal); the deliverable uses whatever succeeded (>=1).
     """
     recent_subjects = ctx.state.recent_subjects(ctx.cfg.brief.history_depth)
     recent_briefs = ctx.state.recent_briefs(ctx.cfg.brief.history_depth)
@@ -228,24 +230,15 @@ def generate_scenes(
     )
     scenes = [primary]
 
-    acc_briefs = recent_briefs + [primary.brief.model_dump()]
-    acc_subjects = recent_subjects + [primary.brief.subject]
     for i in range(1, max(1, num_scenes)):
         scene_seed = ctx.seed + i * 7919
+        variant = vary_framing(primary.brief, scene_seed)
         try:
-            scene = generate_scene(
-                ctx,
-                scene_seed,
-                ctx.out_dir / f"{ctx.stamp}_{i}.jpg",
-                recent_subjects=acc_subjects,
-                recent_briefs=acc_briefs,
+            scenes.append(
+                _render_scene(ctx, variant, scene_seed, ctx.out_dir / f"{ctx.stamp}_{i}.jpg")
             )
         except (ContentError, SafetyError) as exc:
             ctx.log.warning("scene %d skipped (%s); continuing", i, exc)
-            continue
-        scenes.append(scene)
-        acc_briefs.append(scene.brief.model_dump())
-        acc_subjects.append(scene.brief.subject)
     return scenes
 
 

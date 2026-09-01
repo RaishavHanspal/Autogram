@@ -163,7 +163,7 @@ class RomanceConfig(BaseModel):
 class BriefConfig(BaseModel):
     history_depth: int = 30
     dedupe_threshold: float = 85.0
-    max_retries: int = 3
+    max_retries: int = 2
 
     axes: dict[str, list[str]] = Field(default_factory=dict)
 
@@ -182,7 +182,7 @@ class LlmConfig(BaseModel):
 
     ready_timeout_s: int = 120
 
-    request_timeout_s: int = 180
+    request_timeout_s: int = 120
 
     temperature: float = 0.8
 
@@ -199,7 +199,7 @@ class ImageConfig(BaseModel):
 
     hq_model: str = "black-forest-labs/FLUX.1-schnell"
 
-    steps: int = 26
+    steps: int = 20
 
     guidance_scale: float = 6.5
 
@@ -223,6 +223,18 @@ class ImageConfig(BaseModel):
     hires_scale: float = 1.5
     hires_denoise: float = 0.4
     hires_steps: int = 16
+
+    # Prompt assembly. CLIP only reads the first 77 tokens, so by default we
+    # build a COMPACT, identity-first prompt (couple anchor first) that fits —
+    # otherwise the identity anchor gets truncated away and faces drift. Set
+    # compact_prompt=false to use the full positive_template instead.
+    compact_prompt: bool = True
+    max_prompt_words: int = 60  # ~77 CLIP tokens
+    quality_suffix: str = "photorealistic, cinematic, natural skin, sharp focus, 8k"
+    # Use compel (if installed) to chunk-encode prompts past CLIP's 77-token
+    # limit with no truncation. Free + negligible time; guarded so a missing or
+    # broken compel just falls back to the plain (truncated) prompt.
+    use_compel: bool = True
 
     # Neutral, topic-agnostic scaffolding. The real, subject-specific templates
     # live per profile in config/config.yaml; keep placeholders in sync there.
@@ -378,7 +390,7 @@ class AiVideoConfig(BaseModel):
 
     duration_s: int = 3
 
-    timeout_s: int = 180
+    timeout_s: int = 60
 
     poll_interval_s: int = 5
 
@@ -431,7 +443,7 @@ class AiVideoConfig(BaseModel):
 class ReelConfig(BaseModel):
     enabled: bool = False
 
-    num_scenes: int = 4
+    num_scenes: int = 3
 
     seconds_per_image: float = 3.2
 
@@ -461,7 +473,7 @@ class CarouselConfig(BaseModel):
     enabled: bool = True
     # Instagram carousels allow 2-10 slides. Each slide is a distinct scene of
     # the same characters.
-    num_slides: int = 4
+    num_slides: int = 3
 
     @field_validator("num_slides")
     @classmethod

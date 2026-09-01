@@ -114,6 +114,40 @@ the files.
 
 ---
 
+### Performance — staying within the CI timeout
+
+Image generation on a free CPU runner is the dominant cost (~4 min per 512²
+image at 20 steps). The run time is roughly:
+
+    accounts × scenes_per_item × (~4 min/image) + one LLM brief per item
+
+Only **one** LLM brief is generated per reel/carousel (extra scenes reuse it with
+a new shot), so images dominate. Levers, cheapest first:
+
+| Lever | Where | Effect |
+|---|---|---|
+| `reel.num_scenes` / `carousel.num_slides` | config.yaml | fewer images per item |
+| `content_mix` weight on `photo` | config.yaml | photos are 1 image (fast) |
+| `image.steps` (e.g. 20 → 16) | config.yaml | fewer diffusion steps |
+| fewer accounts per run | `--account`, `enabled`, or stagger schedules | time is linear in accounts |
+| `reel.ai_video.mode: off` | config.yaml | skip AI-video attempts entirely |
+
+Two accounts each posting a 3-scene reel is ≈ 6 images ≈ **~30 min** — well under
+a 60-min job.
+
+### Image quality (free)
+
+- `image.compact_prompt: true` (default) builds an identity-first prompt that
+  fits CLIP's 77-token window, so the couple anchor is never truncated.
+- `image.use_compel: true` (default) uses [compel](https://github.com/damian0815/compel)
+  when installed to encode prompts **past** 77 tokens with no truncation — free,
+  negligible time, and safely optional (falls back automatically if absent). The
+  posting workflow installs it best-effort.
+- `image.hires_fix: true` adds real detail via a second pass but ~doubles image
+  time — enable only with a low `reel.num_scenes`.
+
+---
+
 ## 4. Credentials (single account)
 
 Credentials are environment-only. Copy `.env.example` to `.env` and fill in the
