@@ -537,18 +537,20 @@ def _compact_action(brief: Brief, cfg: Config) -> str:
     """
     direction = brief.proposal_direction
     if direction == "boy_proposes_to_girl":
-        core = "the man kneeling on one knee proposing to the woman"
+        core = "the man kneeling proposing to the woman"
     elif direction == "girl_proposes_to_boy":
-        core = "the woman kneeling on one knee proposing to the man"
+        core = "the woman kneeling proposing to the man"
     else:
         core = brief.interaction or ""
     extras: list[str] = []
-    if cfg.romance.require_ring:
-        extras.append("holding an engagement ring")
-    if cfg.romance.require_flowers:
-        extras.append("with a bouquet of flowers")
+    if cfg.romance.require_ring and cfg.romance.require_flowers:
+        extras.append("with a ring and flowers")
+    elif cfg.romance.require_ring:
+        extras.append("with an engagement ring")
+    elif cfg.romance.require_flowers:
+        extras.append("with flowers")
     if brief.third_person_present:
-        extras.append("a heartbroken third woman crying in the background")
+        extras.append("a crying woman watching in the background")
     return ", ".join(p for p in [core, *extras] if p)
 
 

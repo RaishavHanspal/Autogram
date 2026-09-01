@@ -120,6 +120,34 @@ def _effective_accounts(
     return accounts
 
 
+def _precheck_credentials(backend: str, creds: dict[str, str | None], account_id: str) -> None:
+    """Raise early (before minutes of image gen) if an account can't possibly post."""
+    if backend == "graph" and not (creds.get("ig_access_token") and creds.get("ig_user_id")):
+        raise ContentError(
+            ExitCode.POST,
+            f"account {account_id!r}: graph backend needs BOTH ig_access_token and "
+            "ig_user_id in its AUTOGRAM_ACCOUNTS entry",
+        )
+    if backend == "instagrapi" and not (
+        creds.get("ig_session_b64") or (creds.get("ig_username") and creds.get("ig_password"))
+    ):
+        raise ContentError(
+            ExitCode.POST,
+            f"account {account_id!r}: instagrapi backend needs ig_session_b64 or "
+            "ig_username+ig_password (none found — is AUTOGRAM_ACCOUNTS reaching the job?)",
+        )
+    if backend == "youtube" and not (
+        creds.get("youtube_client_id")
+        and creds.get("youtube_client_secret")
+        and creds.get("youtube_refresh_token")
+    ):
+        raise ContentError(
+            ExitCode.POST,
+            f"account {account_id!r}: youtube backend needs youtube_client_id, "
+            "youtube_client_secret and youtube_refresh_token",
+        )
+
+
 def _infer_backend(creds: dict[str, str | None], platform: str) -> str:
     """Pick a backend from whichever credentials are present.
 
@@ -305,6 +333,11 @@ def _run_account(
         seed,
     )
 
+    # Fail fast on obviously-missing credentials BEFORE minutes of image gen.
+    # (image-only and dry-run never publish, so they need no credentials.)
+    if not args.dry_run and not args.image_only:
+        _precheck_credentials(backend, creds, account.id)
+
     ctx = ProductionContext(
         cfg=cfg,
         secrets=secrets,
@@ -378,6 +411,23 @@ def run_pipeline(args: argparse.Namespace, cfg: Config, secrets: Secrets) -> int
     base_stamp = now.strftime("%Y%m%dT%H%M%SZ")
 
     accounts_json = _load_accounts_json(secrets)
+    raw_accounts = secrets.AUTOGRAM_ACCOUNTS or os.getenv("AUTOGRAM_ACCOUNTS")
+    if raw_accounts and not accounts_json:
+        log.error(
+            "AUTOGRAM_ACCOUNTS is set but produced no valid entries. It must be a "
+            'JSON array of objects each with an "id", e.g. '
+            '[{"id":"acct","ig_access_token":"..","ig_user_id":".."}]. '
+            "Check for smart quotes, trailing commas, or a truncated/placeholder value."
+        )
+        return ExitCode.CONFIG
+    if not cfg.accounts and not accounts_json:
+        log.warning(
+            "No AUTOGRAM_ACCOUNTS secret reached the job and no accounts in config.yaml; "
+            "running ONE implicit 'default' account from the flat IG_*/YOUTUBE_* env vars. "
+            "If you set AUTOGRAM_ACCOUNTS, confirm the workflow passes it "
+            "(env: AUTOGRAM_ACCOUNTS: ${{ secrets.AUTOGRAM_ACCOUNTS }})."
+        )
+
     accounts = _effective_accounts(cfg, secrets, args.account, accounts_json)
     if not accounts:
         log.error("no matching account to run (check --account / config accounts)")

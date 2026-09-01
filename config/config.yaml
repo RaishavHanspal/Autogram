@@ -66,8 +66,8 @@ content:
       # anchor leads the compact prompt, so keeping it tight leaves room for the
       # scene while still locking the couple's look.
       prompt_anchor: >
-        the same recurring couple, a South Asian man and woman with consistent
-        faces, warm skin, expressive eyes and realistic anatomy
+        the same South Asian couple, consistent faces, warm skin, realistic
+        anatomy
 
       visual:
 
@@ -408,7 +408,7 @@ image:
   # identity-first prompt that fits (the couple anchor is never truncated);
   # positive_template below is only used when compact_prompt is false.
   compact_prompt: true
-  max_prompt_words: 60
+  max_prompt_words: 45
   quality_suffix: "photorealistic, cinematic, natural skin, sharp focus, 8k"
   # compel (if installed) encodes prompts past CLIP's 77 tokens with no
   # truncation — free, negligible time, and safely optional.

@@ -220,6 +220,29 @@ def test_infer_backend_from_creds():
     assert run_mod._infer_backend({}, "instagram") == "instagrapi"
 
 
+def test_precheck_credentials_fails_fast():
+    from autogram.content.base import ContentError
+
+    # graph needs both token + user id
+    with pytest.raises(ContentError):
+        run_mod._precheck_credentials("graph", {"ig_access_token": "t"}, "a")
+    run_mod._precheck_credentials("graph", {"ig_access_token": "t", "ig_user_id": "1"}, "a")
+    # instagrapi needs session or user+pass
+    with pytest.raises(ContentError):
+        run_mod._precheck_credentials("instagrapi", {}, "a")
+    run_mod._precheck_credentials("instagrapi", {"ig_session_b64": "s"}, "a")
+    # youtube needs all three
+    with pytest.raises(ContentError):
+        run_mod._precheck_credentials("youtube", {"youtube_client_id": "c"}, "a")
+
+
+def test_bad_autogram_accounts_json_fails_fast(tmp_path, monkeypatch):
+    _write_config(tmp_path)
+    monkeypatch.setenv("AUTOGRAM_ACCOUNTS", "this is not json {")
+    code = _run(tmp_path, ["--dry-run", "--seed", "1", "--content-type", "photo"])
+    assert code == run_mod.ExitCode.CONFIG  # clear early failure, not a 30-min run
+
+
 def test_secret_only_accounts_are_synthesized(tmp_path, monkeypatch):
     # No accounts declared in YAML — AUTOGRAM_ACCOUNTS alone must configure them,
     # each routed to the right backend by its credentials (graph vs instagrapi).

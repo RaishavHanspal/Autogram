@@ -229,7 +229,7 @@ class ImageConfig(BaseModel):
     # otherwise the identity anchor gets truncated away and faces drift. Set
     # compact_prompt=false to use the full positive_template instead.
     compact_prompt: bool = True
-    max_prompt_words: int = 60  # ~77 CLIP tokens
+    max_prompt_words: int = 45  # conservatively under CLIP's 77-token limit
     quality_suffix: str = "photorealistic, cinematic, natural skin, sharp focus, 8k"
     # Use compel (if installed) to chunk-encode prompts past CLIP's 77-token
     # limit with no truncation. Free + negligible time; guarded so a missing or
