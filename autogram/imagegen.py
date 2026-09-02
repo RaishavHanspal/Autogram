@@ -60,6 +60,8 @@ class ImageGenerator:
         self.cfg = cfg
         self._pipe: Any = None
         self._img2img: Any = None
+        self._gfpgan: Any = None
+        self._gfpgan_failed: bool = False
         self._device: str = "cpu"
         self._dtype_name: str = "float32"
         self._model_id: str = cfg.image.model
@@ -147,6 +149,47 @@ class ImageGenerator:
             log.warning("compel unavailable/failed (%s); using plain 77-token prompt", exc)
             return None
 
+    def _restore_faces(self, image: Image) -> Image:
+        """Optionally restore faces with GFPGAN (guarded/best-effort).
+
+        GFPGAN detects and reconstructs faces — the strongest fix for SD1.5's
+        distorted faces. Fully optional: returns the input unchanged if disabled,
+        not installed, or on any error (and won't retry once it has failed).
+        """
+        if not self.cfg.image.face_restore or self._gfpgan_failed:
+            return image
+        try:
+            import numpy as np
+            from PIL import Image as PILImage
+
+            if self._gfpgan is None:
+                from gfpgan import GFPGANer
+
+                self._gfpgan = GFPGANer(
+                    model_path=os.environ.get(
+                        "GFPGAN_MODEL",
+                        "https://github.com/TencentARC/GFPGAN/releases/download/"
+                        "v1.3.0/GFPGANv1.4.pth",
+                    ),
+                    upscale=1,
+                    arch="clean",
+                    channel_multiplier=2,
+                    bg_upsampler=None,
+                    device=self._device,
+                )
+                log.info("GFPGAN face restoration enabled")
+            rgb = np.array(image.convert("RGB"))
+            _, _, restored = self._gfpgan.enhance(
+                rgb[:, :, ::-1], has_aligned=False, only_center_face=False, paste_back=True
+            )
+            if restored is None:
+                return image
+            return PILImage.fromarray(restored[:, :, ::-1])
+        except Exception as exc:  # noqa: BLE001
+            log.warning("face restoration unavailable/failed (%s); using base image", exc)
+            self._gfpgan_failed = True  # don't retry on every image
+            return image
+
     def generate(self, positive: str, negative: str, seed: int) -> GeneratedImage:
         self._load()
         import torch
@@ -200,6 +243,9 @@ class ImageGenerator:
         # real detail. Falls back to the base image on any failure.
         if not is_distilled and "flux" not in model_lc and self.cfg.image.hires_fix:
             image = self._apply_hires(image, positive, negative, generator)
+
+        # Optional GFPGAN face restoration (guarded; no-op if unavailable).
+        image = self._restore_faces(image)
 
         meta = ImageMeta(
             model_id=self._model_id,

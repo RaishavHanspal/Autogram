@@ -163,15 +163,18 @@ def _pick_trend(
 # Framing
 # ---------------------------------------------------------------------------
 
+# Shot distances are kept CLOSE on purpose: SD1.5 mangles small faces, so every
+# option keeps the faces large in the frame (the single biggest fix for distorted
+# faces). No full-body / wide shots where faces would be tiny.
 _SHOT_DISTANCES = [
-    "medium shot from the waist up with both faces clearly visible",
-    "three-quarter shot from head to knees with the proposal action visible",
-    "full-body cinematic shot showing the kneeling proposal clearly",
-    "medium-wide cinematic shot with the couple dominant in the frame",
-    "three-quarter view emphasizing the kneeling proposer and recipient",
-    "over-the-shoulder view from behind the recipient toward the proposer",
-    "side-profile cinematic view showing both emotional reactions",
-    "wide cinematic romantic scene with the proposal couple prominent",
+    "close-up portrait, both faces large and sharply in focus",
+    "tight head-and-shoulders portrait of the couple, faces prominent and detailed",
+    "medium close-up from the chest up, faces large and clearly detailed",
+    "medium shot from the waist up, couple close to camera, faces sharp",
+    "medium shot, couple filling much of the frame, faces well lit and detailed",
+    "three-quarter shot from the knees up, couple close, faces clearly detailed",
+    "over-the-shoulder shot focused on one large clear detailed face",
+    "medium shot with the couple dominant in frame and both faces prominent",
 ]
 
 
@@ -395,8 +398,10 @@ def select_style(
     if not isinstance(trends, dict):
         trends = {}
 
-    # The proposal scene brain applies only to romance-kind profiles.
-    proposal = select_proposal_scene(rng, cfg) if cfg.romance.enabled else {}
+    proposal = select_proposal_scene(
+        rng,
+        cfg,
+    )
 
     return {
         "framing": select_framing(rng),
@@ -578,12 +583,7 @@ def _render_compact_positive(brief: Brief, cfg: Config, characters_block: str) -
     quality tail is always appended.
     """
     quality = cfg.image.quality_suffix.strip()
-    if cfg.romance.enabled:
-        core_parts = [characters_block, _compact_action(brief, cfg)]
-    else:
-        # Topic/poster (non-romance) profiles: lead with the style anchor, then
-        # the subject/topic itself (there is no couple/action to feature).
-        core_parts = [characters_block, brief.subject or brief.interaction]
+    core_parts = [characters_block, _compact_action(brief, cfg)]
     if brief.setting:
         core_parts.append(f"in {brief.setting}")
     core = ", ".join(p.strip() for p in core_parts if p and p.strip())
@@ -697,17 +697,13 @@ def _build_messages(
             f"Mood: {selected_location.get('mood', '')}\n"
         )
 
-    proposal_section = ""
-    triangle_section = ""
+    proposal_direction = style.get(
+        "proposal_direction",
+        "boy_proposes_to_girl",
+    )
 
-    if cfg.romance.enabled:
-        proposal_direction = style.get(
-            "proposal_direction",
-            "boy_proposes_to_girl",
-        )
-
-        if proposal_direction == "boy_proposes_to_girl":
-            proposal_section = """
+    if proposal_direction == "boy_proposes_to_girl":
+        proposal_section = """
 PROPOSAL DIRECTION — BOY PROPOSES TO GIRL.
 
 This direction is mandatory.
@@ -723,8 +719,8 @@ The girl should have a sincere emotional reaction.
 Do NOT reverse the proposal roles.
 Do NOT turn this into a generic standing couple scene.
 """
-        else:
-            proposal_section = """
+    else:
+        proposal_section = """
 PROPOSAL DIRECTION — GIRL PROPOSES TO BOY.
 
 This direction is mandatory.
@@ -741,7 +737,9 @@ Do NOT reverse the proposal roles.
 Do NOT turn this into a generic standing couple scene.
 """
 
-    if cfg.romance.enabled and style.get("third_person_present") == "True":
+    triangle_section = ""
+
+    if style.get("third_person_present") == "True":
         triangle_section = f"""
 LOVE TRIANGLE — THIRD WOMAN PRESENT.
 
@@ -792,20 +790,6 @@ The main couple remains the visual focus.
         or "(none yet)"
     )
 
-    if cfg.romance.enabled:
-        closing = (
-            "The subject must describe a specific marriage-proposal event. "
-            "The pre-selected proposal direction is authoritative and must not "
-            "be changed.\n"
-            "Make the image feel like a dramatic, emotionally rich, "
-            "photorealistic Indian romantic film while remaining tasteful."
-        )
-    else:
-        closing = (
-            "The subject must be one specific, visually concrete scene that is "
-            "clearly on-topic for the profile above. Keep it clean and legible."
-        )
-
     user = (
         f"Active content profile: {cfg.content.active_profile}\n"
         f"Standing theme: {cfg.active_content.theme}\n"
@@ -818,7 +802,11 @@ The main couple remains the visual focus.
         "Recent briefs already used. The new scene must be substantially "
         f"different from them:\n{prev_lines}\n\n"
         f"{cfg.active_content.subject_instruction}\n\n"
-        f"{closing}"
+        "The subject must describe a specific marriage-proposal event. "
+        "The pre-selected proposal direction is authoritative and must not "
+        "be changed.\n"
+        "Make the image feel like a dramatic, emotionally rich, "
+        "photorealistic Indian romantic film while remaining tasteful."
     )
 
     if error_feedback:
@@ -900,28 +888,19 @@ def _apply_scene(
         "",
     )
 
-    # Only romance-kind profiles carry a proposal; for others keep the plain
-    # interaction (topic/poster profiles have no couple to stamp).
     if brief.proposal_direction == "boy_proposes_to_girl":
         proposal_summary = (
-            "boy kneeling and proposing to girl with marquise-cut engagement ring and flowers"
+            "boy kneeling and proposing to girl with " "marquise-cut engagement ring and flowers"
         )
-    elif brief.proposal_direction == "girl_proposes_to_boy":
-        proposal_summary = "girl kneeling and proposing to boy with engagement ring and flowers"
     else:
-        proposal_summary = ""
+        proposal_summary = "girl kneeling and proposing to boy with " "engagement ring and flowers"
 
-    if proposal_summary and brief.third_person_present:
+    if brief.third_person_present:
         proposal_summary += (
-            ", third woman crying and sobbing from unrequited love in the love triangle"
+            ", third woman crying and sobbing from " "unrequited love in the love triangle"
         )
 
-    if proposal_summary:
-        brief.interaction = (
-            f"{interaction}, {proposal_summary}" if interaction else proposal_summary
-        )
-    else:
-        brief.interaction = interaction
+    brief.interaction = f"{interaction}, {proposal_summary}" if interaction else proposal_summary
 
     return brief
 
@@ -935,32 +914,29 @@ def _fallback_brief(
 ) -> Brief:
     """Create a deterministic proposal brief when Ollama fails."""
 
-    log.warning("using deterministic fallback brief")
+    log.warning("using deterministic romantic fallback brief")
 
-    if not cfg.romance.enabled:
-        subject = f"{cfg.active_content.theme} (variation {seed % 1000})"
+    direction = style.get(
+        "proposal_direction",
+        "boy_proposes_to_girl",
+    )
+
+    if direction == "boy_proposes_to_girl":
+        subject = (
+            "boy kneeling on one knee proposing marriage to the girl, "
+            "presenting her with a marquise-cut engagement ring and flowers"
+        )
     else:
-        direction = style.get(
-            "proposal_direction",
-            "boy_proposes_to_girl",
+        subject = (
+            "girl kneeling on one knee proposing marriage to the boy, "
+            "presenting him with an engagement ring and flowers"
         )
 
-        if direction == "boy_proposes_to_girl":
-            subject = (
-                "boy kneeling on one knee proposing marriage to the girl, "
-                "presenting her with a marquise-cut engagement ring and flowers"
-            )
-        else:
-            subject = (
-                "girl kneeling on one knee proposing marriage to the boy, "
-                "presenting him with an engagement ring and flowers"
-            )
-
-        if style.get("third_person_present") == "True":
-            subject += (
-                ", while a heartbroken third woman watches from a distance, "
-                "crying and quietly sobbing"
-            )
+    if style.get("third_person_present") == "True":
+        subject += (
+            ", while a heartbroken third woman watches from a distance, "
+            "crying and quietly sobbing"
+        )
 
     brief = Brief(
         subject=subject,

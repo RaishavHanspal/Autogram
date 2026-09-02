@@ -36,9 +36,6 @@ content:
 
     romance:
 
-      # Enables the couple/proposal scene brain (kneeling, ring, flowers, etc.).
-      kind: "romance"
-
       theme: >
         photorealistic cinematic Indian romance centered on dramatic marriage
         proposals between the same recurring couple, emotional love stories,
@@ -49,24 +46,18 @@ content:
       system_prompt: >
         You are the creative director for a photorealistic romantic
         photography account. Create specific, visually obvious scenes featuring
-        the same recurring couple. Keep the composition CLEAN and UNCLUTTERED
-        with the couple large and prominent and BOTH faces clearly visible and
-        sharply in focus. Avoid busy backgrounds, crowds and extra people.
-        Follow the supplied proposal direction exactly. Prioritize realistic
-        human anatomy, natural expressions, clear symmetric faces and
-        emotionally powerful storytelling.
+        the same recurring couple. The scene must communicate a clear physical
+        action rather than a generic description of love. Follow the supplied
+        proposal direction exactly. Prioritize realistic human anatomy,
+        natural facial expressions, clear faces, believable body language,
+        cinematic composition and emotionally powerful storytelling.
 
       subject_instruction: >
-        Create one specific cinematic marriage-proposal scene with the couple
-        close to the camera so their faces read clearly. The physical proposal
-        action must be obvious. Keep it to just the couple (plus, only when
-        specified, one background figure) against a clean, non-distracting
-        setting. Avoid tiny distant figures, crowds and cluttered scenes. Make
-        every scene visually distinct from previous ones.
-
-      caption_instruction: >
-        Write a warm, heartfelt Instagram caption for this romantic proposal
-        moment. Speak to the feeling, not the image. Open with an emotional hook.
+        Create one specific cinematic marriage-proposal scene. The physical
+        proposal action must be obvious from the image. The pre-selected
+        proposal direction is mandatory. Avoid generic standing couple
+        portraits, generic kissing scenes or vague descriptions of romance.
+        Make every scene visually distinct from previous scenes.
 
       # This is kept as a stable anchor for the recurring couple.
       # If you already have a stronger couple descriptor, replace this value
@@ -75,8 +66,8 @@ content:
       # anchor leads the compact prompt, so keeping it tight leaves room for the
       # scene while still locking the couple's look.
       prompt_anchor: >
-        the same South Asian couple, one man and one woman, sharp detailed
-        symmetric faces, clear eyes, natural skin, realistic anatomy
+        the same South Asian couple, consistent faces, warm skin, realistic
+        anatomy
 
       visual:
 
@@ -275,70 +266,6 @@ content:
               environmental depth with clear subjects
 
 
-    # -----------------------------------------------------------------------
-    # AI-tools / topic account: text-forward, informative posts (NOT couples).
-    # kind: "text" disables the couple/proposal brain; the image is a clean
-    # modern graphic and the readable, useful copy lives in the caption.
-    # NOTE: Stable Diffusion cannot reliably render paragraphs of text, so the
-    # graphic carries at most a short stylized headline; the real "read text"
-    # is the caption (see caption_instruction).
-    # -----------------------------------------------------------------------
-    aitools:
-
-      kind: "text"
-
-      theme: >
-        clean, modern, informative visuals about practical AI tools and AI
-        productivity tips for creators, students and professionals.
-
-      system_prompt: >
-        You are the art director + writer for a modern AI-tools education
-        account. Choose ONE specific, currently-relevant AI tool or concrete
-        AI productivity tip, and design a clean, minimalist poster-style graphic
-        for it: flat modern design, bold simple shapes, high contrast, generous
-        negative space, a clear focal element, no clutter and no gibberish text.
-
-      subject_instruction: >
-        Pick one specific AI tool or AI workflow tip (e.g. drafting emails,
-        summarizing PDFs, generating images, coding help, meeting notes).
-        Describe a clean minimalist poster scene that visually represents it
-        with a single clear icon/metaphor and a very short 3-6 word headline.
-        Keep it simple, legible and uncluttered.
-
-      caption_instruction: >
-        Write a clear, genuinely useful Instagram caption that teaches ONE
-        concrete thing about this AI tool or tip. Open with a punchy hook, then
-        give a short, practical, easy-to-read explanation or step. Plain,
-        confident, non-hype language. This caption is where the real readable
-        value lives.
-
-      # Leads the image prompt: the poster STYLE (there is no couple here).
-      prompt_anchor: >
-        a clean modern minimalist tech poster, flat vector design, bold simple
-        icon, soft gradient background, high contrast, lots of negative space
-
-      visual:
-        # Background styles rotated as "locations" for variety.
-        locations:
-          backgrounds:
-            - name: "soft blue gradient"
-              description: "smooth soft blue-to-teal gradient background"
-              lighting: "even soft studio light"
-              mood: "clean, modern, trustworthy"
-            - name: "dark tech gradient"
-              description: "deep navy-to-purple gradient with subtle glow"
-              lighting: "soft rim glow"
-              mood: "sleek, premium, futuristic"
-            - name: "warm minimal cream"
-              description: "warm off-white background with subtle grain"
-              lighting: "flat even light"
-              mood: "friendly, approachable, editorial"
-        moods_and_emotions:
-          - "clean and modern"
-          - "sleek and premium"
-          - "friendly and approachable"
-
-
 # ---------------------------------------------------------------------------
 # Romance scene controls
 # ---------------------------------------------------------------------------
@@ -353,8 +280,8 @@ romance:
     - "boy_proposes_to_girl"
     - "girl_proposes_to_boy"
 
-  # Lower share of three-person scenes -> fewer competing faces, clearer images.
-  third_person_probability: 0.25
+  # Approximately 45% of scenes include the third woman.
+  third_person_probability: 0.45
 
   # Make the physical proposal action explicit.
   require_kneeling: true
@@ -779,10 +706,15 @@ image:
   # Quality levers for the SD1.5 CPU path (ignored on the FLUX/GPU path).
   scheduler: "dpmpp_karras"          # DPM++ 2M Karras: sharper ("" = model default)
   vae: "stabilityai/sd-vae-ft-mse"   # crisper detail + colour ("" to disable)
-  hires_fix: false                   # 2nd img2img pass; ~2x time — turn on for max quality
+  # Hi-res fix ON: a second img2img pass that upsizes and refines faces/detail
+  # (a reliable, dependency-free fix for distorted faces). Adds ~50-70% per
+  # image; drop reel.num_scenes to 2 if you hit the CI time budget.
+  hires_fix: true
   hires_scale: 1.5
-  hires_denoise: 0.4
+  hires_denoise: 0.35                 # lower -> refines without changing identity
   hires_steps: 16
+  # GFPGAN face restoration (if installed) — strongest fix for distorted faces.
+  face_restore: true
 
   # CLIP reads only the first 77 tokens. compact_prompt builds a short,
   # identity-first prompt that fits (the couple anchor is never truncated);

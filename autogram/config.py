@@ -49,10 +49,6 @@ class ContentProfile(BaseModel):
 
     theme: str = ""
 
-    # "romance" enables the couple/proposal scene brain; "text" is a topic/poster
-    # profile (no couple, no proposal); "generic" is a plain photo profile.
-    kind: str = "generic"
-
     system_prompt: str = (
         "You are a creative director generating one specific, photorealistic "
         "image scene. Prioritize clear faces, realistic anatomy, natural "
@@ -63,10 +59,6 @@ class ContentProfile(BaseModel):
         "Create one specific, visually concrete scene. "
         "The physical action must be clear from the image."
     )
-
-    # Optional override of the caption LLM's instruction for this profile.
-    # Empty -> the default warm/authentic caption behaviour.
-    caption_instruction: str = ""
 
     prompt_anchor: str = ""
 
@@ -243,6 +235,9 @@ class ImageConfig(BaseModel):
     # limit with no truncation. Free + negligible time; guarded so a missing or
     # broken compel just falls back to the plain (truncated) prompt.
     use_compel: bool = True
+    # Restore faces with GFPGAN (if installed) — the strongest fix for SD1.5's
+    # distorted faces. Guarded/best-effort; no-op if the package is unavailable.
+    face_restore: bool = True
 
     # Neutral, topic-agnostic scaffolding. The real, subject-specific templates
     # live per profile in config/config.yaml; keep placeholders in sync there.

@@ -50,7 +50,9 @@ def _assemble_reel(
             desc = scene_descs[idx] if idx < len(scene_descs) else cfg.active_content.theme
             try:
                 url = (
-                    publish_image_to_github_release(still, tag=f"autogram-reel-{stamp}")
+                    publish_image_to_github_release(
+                        still, tag=f"autogram-reel-{ctx.out_dir.name}-{stamp}"
+                    )
                     if needs_url
                     else None
                 )

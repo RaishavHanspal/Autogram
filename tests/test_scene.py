@@ -64,31 +64,6 @@ def test_compact_prompt_is_identity_first_and_bounded(cfg):
     assert len(pos.split()) <= cfg.image.max_prompt_words + 12  # budget + short quality tail
 
 
-def test_non_romance_profile_has_no_proposal_injection():
-    from autogram.config import Config, ContentConfig, ContentProfile
-
-    cfg = Config(
-        content=ContentConfig(
-            active_profile="t",
-            profiles={"t": ContentProfile(kind="text", prompt_anchor="a clean modern poster")},
-        )
-    )
-    cfg.romance.enabled = cfg.active_content.kind == "romance"  # -> False for text
-    b = Brief(
-        subject="use AI to summarize PDFs",
-        setting="blue gradient",
-        lighting="soft",
-        mood="clean",
-        composition="c",
-        color_palette="p",
-        time_of_day="",
-    )
-    pos, _ = render_prompts(b, cfg, characters_block="a clean modern poster")
-    assert "use AI to summarize PDFs" in pos  # topic drives the image
-    assert "kneel" not in pos.lower() and "proposing" not in pos.lower()
-    assert "couple" not in pos.lower()
-
-
 def test_vary_framing_keeps_scene_changes_shot(cfg):
     b = Brief(
         subject="a proposal",

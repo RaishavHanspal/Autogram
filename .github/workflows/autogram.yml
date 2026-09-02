@@ -148,6 +148,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements-cpu.txt
           pip install -e .
+          # Optional quality extras — best-effort so a resolver hiccup never
+          # fails the job; the code falls back gracefully when they're absent.
+          pip install "compel==2.0.3" || echo "compel unavailable; using 77-token prompts"
+          pip install gfpgan || echo "gfpgan unavailable; skipping face restoration"
 
       - name: Run autogram
         id: run

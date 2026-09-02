@@ -74,24 +74,38 @@ class GitHubReleaseHost(ImageHost):
         return r.json()
 
     def upload(self, image_path: str | Path) -> str:
+        import mimetypes
+
         path = Path(image_path)
-        # Dated tag so assets group by day and stay under release asset limits.
-        # The date is taken from the file name if present, else a stable prefix.
         tag = f"{self.tag_prefix}-{path.stem}"
+        # Prefix the asset with the parent directory (the account id) so two
+        # accounts posting in the same run never collide on an identical asset
+        # name in the shared per-stamp release (which 422'd the second account).
+        asset_name = f"{path.parent.name}-{path.name}"
+        content_type = mimetypes.guess_type(path.name)[0] or "application/octet-stream"
+
         release = self._get_or_create_release(tag)
         upload_url = release["upload_url"].split("{")[0]
 
-        data = path.read_bytes()
         r = requests.post(
-            f"{upload_url}?name={path.name}",
-            headers={**self._headers(), "Content-Type": "image/jpeg"},
-            data=data,
-            timeout=120,
+            f"{upload_url}?name={asset_name}",
+            headers={**self._headers(), "Content-Type": content_type},
+            data=path.read_bytes(),
+            timeout=300,
         )
-        if r.status_code not in (200, 201):
-            raise ImageHostError(f"asset upload failed: {r.status_code} {r.text[:200]}")
-        url = r.json().get("browser_download_url")
-        if not url:
-            raise ImageHostError("upload succeeded but no browser_download_url returned")
-        log.info("hosted image at %s", url)
-        return url
+        if r.status_code in (200, 201):
+            url = r.json().get("browser_download_url")
+            if not url:
+                raise ImageHostError("upload succeeded but no browser_download_url returned")
+            log.info("hosted media at %s", url)
+            return url
+
+        # 422 = an asset with this name already exists (e.g. a retry). Reuse it
+        # instead of failing the post.
+        if r.status_code == 422:
+            fresh = self._get_or_create_release(tag)
+            for asset in fresh.get("assets", []):
+                if asset.get("name") == asset_name and asset.get("browser_download_url"):
+                    log.info("reusing existing asset %s", asset_name)
+                    return str(asset["browser_download_url"])
+        raise ImageHostError(f"asset upload failed: {r.status_code} {r.text[:200]}")

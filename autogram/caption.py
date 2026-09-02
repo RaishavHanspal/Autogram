@@ -355,23 +355,22 @@ def _build_messages(brief: Brief, cfg: Config, error_feedback: str | None) -> li
         "No prose, no code fences."
     )
     n = cfg.hashtags.max_count
-    instruction = (
-        cfg.active_content.caption_instruction.strip()
-        or "Write a warm, authentic Instagram caption for this moment."
-    )
     user = (
-        f"{instruction}\n"
+        f"Write a warm, authentic Instagram caption for this romantic moment:\n"
         f"{brief.model_dump_json(indent=2)}\n\n"
         f"Requirements:\n"
-        f"- Tone/voice: {cfg.caption.tone}.\n"
-        f"- The FIRST line must work as a compelling hook that draws people in.\n"
-        f"- Use natural, conversational language; no generic clichés.\n"
+        f"- Tone/voice: {cfg.caption.tone}. Be personal and genuine, like sharing with close friends.\n"
+        f"- The FIRST line must work as a compelling hook that draws people in emotionally.\n"
+        f"- Write about the FEELING and MOMENT, not a technical description of the image.\n"
+        f"- Use conversational language: contractions, natural phrasing, authentic emotion.\n"
+        f"- NO generic clichés. Make it specific to what's happening in this moment.\n"
         f"- At most {cfg.caption.emoji_budget} emoji total (use sparingly for emphasis).\n"
         f"- Do NOT invent @mentions of accounts.\n"
         f"- Keep the whole caption well under {cfg.caption.max_length} characters.\n"
         f"- Provide {cfg.hashtags.min_count}-{n} relevant hashtags, each labelled with a tier: "
         f"~30% 'broad' (>1M posts), ~50% 'mid', ~20% 'niche'.\n"
-        f"- alt_text: one factual sentence describing the image for accessibility.\n"
+        f"- alt_text: one factual sentence describing the image for accessibility (not poetic, just descriptive).\n"
+        f"\nMake this feel like a real moment shared authentically, not a staged product description."
     )
     if error_feedback:
         user += f"\nYour previous reply was invalid: {error_feedback}\nFix it and reply with valid JSON only."
