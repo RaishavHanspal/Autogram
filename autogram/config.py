@@ -49,6 +49,10 @@ class ContentProfile(BaseModel):
 
     theme: str = ""
 
+    # "romance" enables the couple/proposal scene brain; "text" is a topic/poster
+    # profile (no couple, no proposal); "generic" is a plain photo profile.
+    kind: str = "generic"
+
     system_prompt: str = (
         "You are a creative director generating one specific, photorealistic "
         "image scene. Prioritize clear faces, realistic anatomy, natural "
@@ -59,6 +63,10 @@ class ContentProfile(BaseModel):
         "Create one specific, visually concrete scene. "
         "The physical action must be clear from the image."
     )
+
+    # Optional override of the caption LLM's instruction for this profile.
+    # Empty -> the default warm/authentic caption behaviour.
+    caption_instruction: str = ""
 
     prompt_anchor: str = ""
 

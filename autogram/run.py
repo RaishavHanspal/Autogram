@@ -301,6 +301,8 @@ def _run_account(
     cfg.content.active_profile = profile
     if profile not in cfg.content.profiles and cfg.content.profiles:
         log.warning("profile %r not defined; using fallback profile", profile)
+    # The couple/proposal scene brain applies only to romance-kind profiles.
+    cfg.romance.enabled = cfg.active_content.kind == "romance"
     if args.description:
         cfg.active_content.theme = args.description
     if account.audio_dir:
