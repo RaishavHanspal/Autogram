@@ -18,13 +18,11 @@
 # ---------------------------------------------------------------------------
 
 theme: >
-  high-quality photorealistic cinematic Indian romance centered on dramatic
-  marriage proposals between the same recurring couple, with crystal-clear
-  expressive faces, natural emotions, realistic skin, realistic anatomy,
-  engagement rings, flowers, emotional reactions, beautiful locations,
+  high-quality photorealistic cinematic Indian content with emotional storytelling,
+  crystal-clear expressive faces, natural emotions, realistic skin, realistic anatomy,
   cinematic lighting and professional photography aesthetics.
 
-seed_salt: "autogram-romance-v2"
+seed_salt: "autogram-multi-profile-v1"
 
 
 content:
@@ -37,37 +35,35 @@ content:
     romance:
 
       theme: >
-        photorealistic cinematic Indian romance centered on dramatic marriage
-        proposals between the same recurring couple, emotional love stories,
-        meaningful gestures, beautiful locations, expressive faces, realistic
-        skin, cinematic lighting, flowers, engagement rings and heartfelt
-        romantic storytelling.
+        photorealistic cinematic Indian wedding and marriage ceremonies between the
+        same recurring couple, emotional love stories after the proposal, wedding day
+        moments, intimate marriage celebrations, meaningful gestures, beautiful locations,
+        crystal-clear expressive faces, realistic skin, cinematic lighting, and heartfelt
+        romantic storytelling focused on married life and union.
 
       system_prompt: >
-        You are the creative director for a photorealistic romantic
-        photography account. Create specific, visually obvious scenes featuring
-        the same recurring couple. The scene must communicate a clear physical
-        action rather than a generic description of love. Follow the supplied
-        proposal direction exactly. Prioritize realistic human anatomy,
-        natural facial expressions, clear faces, believable body language,
-        cinematic composition and emotionally powerful storytelling.
+        You are the creative director for a photorealistic romantic marriage and wedding
+        photography account. Create specific, visually obvious scenes featuring the same
+        recurring couple in their married life and wedding day moments. The scene must
+        communicate a clear physical action or wedding moment rather than a generic
+        description of love. Prioritize realistic human anatomy, natural facial expressions,
+        crystal-clear faces, believable body language, cinematic composition and emotionally
+        powerful storytelling. Focus on marriage celebration, not proposals.
 
       subject_instruction: >
-        Create one specific cinematic marriage-proposal scene. The physical
-        proposal action must be obvious from the image. The pre-selected
-        proposal direction is mandatory. Avoid generic standing couple
-        portraits, generic kissing scenes or vague descriptions of romance.
-        Make every scene visually distinct from previous scenes.
+        Create one specific cinematic marriage or wedding celebration scene. The scene must
+        show the couple together in married life moments or wedding day activities - not a
+        proposal. Avoid generic standing couple portraits or vague descriptions. Make
+        every scene visually distinct with crystal-clear faces and expressive emotions.
+        Show wedding ceremonies, first dances, intimate married moments, or meaningful
+        marriage celebrations.
 
       # This is kept as a stable anchor for the recurring couple.
       # If you already have a stronger couple descriptor, replace this value
       # with it without changing the rest of the configuration.
-      # Kept SHORT on purpose: CLIP only reads ~77 tokens and this identity
-      # anchor leads the compact prompt, so keeping it tight leaves room for the
-      # scene while still locking the couple's look.
       prompt_anchor: >
-        the same South Asian couple, consistent faces, warm skin, realistic
-        anatomy
+        the same South Asian couple, consistent faces, warm skin, realistic anatomy,
+        crystal-clear expressive faces
 
       visual:
 
@@ -75,33 +71,39 @@ content:
         # the LLM prompt.
         interaction_styles:
           - >
-            deeply emotional marriage proposal with intimate eye contact
+            intimate married couple moment with genuine eye contact and affection
           - >
-            heartfelt proposal with genuine surprise and romantic anticipation
+            wedding day celebration with joyful expressions and togetherness
           - >
-            emotional kneeling proposal with expressive body language
+            tender married moment with authentic emotional connection
           - >
-            cinematic proposal moment with authentic human reactions
+            cinematic first dance or wedding reception moment
           - >
-            dramatic romantic proposal with meaningful eye contact
+            dramatic married couple moment with meaningful eye contact
           - >
-            tender proposal with flowers and visible engagement ring
+            intimate wedding day scene with natural, authentic expressions
+          - >
+            romantic married life moment with genuine happiness
+          - >
+            wedding ceremony or celebration with visible joy and clear faces
 
         moods_and_emotions:
           - >
-            deeply romantic and emotionally intense
+            deeply romantic and emotionally intimate
           - >
-            heartfelt anticipation and joyful surprise
+            joyful wedding celebration with genuine happiness
           - >
-            emotional vulnerability and sincere love
+            emotional fulfillment and sincere married love
           - >
-            dramatic romantic tension
+            dramatic romantic connection and togetherness
           - >
-            overwhelming happiness and emotional tears
+            overwhelming happiness and emotional joy
           - >
-            tender anticipation with cinematic emotion
+            tender married intimacy with authentic emotion
           - >
-            bittersweet romantic emotion
+            celebratory and joyfully romantic
+          - >
+            peaceful married contentment and deep connection
 
         locations:
 
@@ -109,7 +111,7 @@ content:
             - name: "sunset beach"
               description: >
                 quiet beach with soft waves, warm horizon and open romantic
-                space
+                space, perfect for married couple moments
               lighting: >
                 warm golden-hour sunlight with soft rim light
               mood: >
@@ -118,7 +120,7 @@ content:
             - name: "flower garden"
               description: >
                 lush romantic garden filled with flowers, pathways and
-                natural greenery
+                natural greenery, ideal for wedding ceremonies
               lighting: >
                 soft golden sunlight filtered through foliage
               mood: >
@@ -126,7 +128,8 @@ content:
 
             - name: "rooftop at sunset"
               description: >
-                elegant rooftop overlooking a glowing city skyline
+                elegant rooftop overlooking a glowing city skyline, perfect for
+                married couple celebration
               lighting: >
                 warm sunset backlight with subtle city lights
               mood: >
@@ -135,15 +138,15 @@ content:
             - name: "mountain viewpoint"
               description: >
                 scenic mountain overlook with dramatic landscape and distant
-                valleys
+                valleys, ideal for wedding photography
               lighting: >
                 golden-hour sunlight with atmospheric haze
               mood: >
                 grand, emotional and breathtaking
 
-            - name: "luxury hotel garden"
+            - name: "luxury wedding venue"
               description: >
-                elegant landscaped hotel garden with fountains, flowers and
+                elegant landscaped wedding venue with flowers, decorations and
                 warm architectural lighting
               lighting: >
                 warm evening illumination with soft practical lights
@@ -153,7 +156,7 @@ content:
             - name: "rainy city street"
               description: >
                 romantic city street after rain with reflections on wet
-                pavement and glowing lights
+                pavement and glowing lights, perfect for married moments
               lighting: >
                 warm street lights mixed with cool evening ambience
               mood: >
@@ -162,27 +165,27 @@ content:
             - name: "lakeside promenade"
               description: >
                 peaceful lakeside walkway with trees, water reflections and
-                distant lights
+                distant lights, ideal for wedding photography
               lighting: >
                 soft sunset light transitioning into blue hour
               mood: >
                 calm, intimate and deeply romantic
 
-            - name: "old palace courtyard"
+            - name: "wedding hall ballroom"
               description: >
-                ornate heritage courtyard with arches, stone architecture
-                and decorative gardens
+                ornate wedding hall with chandeliers, decorations and
+                elegant architectural details
               lighting: >
                 warm evening architectural lighting
               mood: >
-                grand, timeless and cinematic
+                grand, celebratory and cinematic
 
 
           indoor:
             - name: "elegant candlelit restaurant"
               description: >
                 intimate upscale restaurant table surrounded by candles,
-                flowers and warm architectural details
+                flowers and warm architectural details, perfect for married couple
               lighting: >
                 soft candlelight mixed with warm ambient illumination
               mood: >
@@ -191,7 +194,7 @@ content:
             - name: "romantic hotel suite"
               description: >
                 elegant hotel interior with flowers, warm lamps and refined
-                romantic decor
+                romantic decor, ideal for married moments
               lighting: >
                 soft warm practical lighting
               mood: >
@@ -200,7 +203,7 @@ content:
             - name: "grand ballroom"
               description: >
                 elegant ballroom with chandeliers, polished floors and
-                romantic floral arrangements
+                romantic floral arrangements for wedding celebrations
               lighting: >
                 dramatic chandelier lighting with warm highlights
               mood: >
@@ -212,24 +215,27 @@ content:
           compositions:
             - >
               cinematic rule-of-thirds composition with strong foreground
-              depth
+              depth focusing on couple connection
             - >
               intimate layered composition with foreground flowers
             - >
-              asymmetric composition with the proposal action as the focal
-              point
+              asymmetric composition with the couple's interaction as focal point
             - >
               dramatic environmental composition with cinematic depth
             - >
-              shallow-depth romantic portrait composition
+              shallow-depth romantic portrait composition with clear faces
             - >
-              strong leading lines directing attention toward the proposer
+              strong leading lines directing attention toward the couple
+            - >
+              wedding ceremony composition with couple prominently featured
+            - >
+              intimate two-person composition emphasizing connection
 
           lighting_styles:
             - >
               warm golden-hour backlight
             - >
-              soft cinematic sunset light
+              soft cinematic wedding day light
             - >
               dramatic warm practical lighting
             - >
@@ -238,6 +244,10 @@ content:
               golden rim light with gentle shadows
             - >
               cinematic blue-hour ambience with warm highlights
+            - >
+              wedding day documentary lighting
+            - >
+              soft romantic interior lighting
 
           color_grading:
             - >
@@ -252,6 +262,10 @@ content:
               warm golden filmic tones
             - >
               natural filmic colors with subtle romantic warmth
+            - >
+              wedding day warm and inviting tones
+            - >
+              romantic amber and warm grading
 
           depth_of_field:
             - >
@@ -259,51 +273,18 @@ content:
             - >
               cinematic background separation
             - >
-              moderate depth of field keeping the proposal action readable
+              moderate depth of field keeping the couple clearly visible
             - >
               soft bokeh behind the couple
             - >
-              environmental depth with clear subjects
+              environmental depth with clear couple subjects
+            - >
+              sharp focus on faces for emotional clarity
+            - >
+              layered focus showing couple connection
+            - >
+              selective focus on couple's expressions
 
-
-# ---------------------------------------------------------------------------
-# Romance scene controls
-# ---------------------------------------------------------------------------
-
-romance:
-
-  enabled: true
-
-  # Both directions are deliberately enabled.
-  # The seeded RNG chooses one per generated scene.
-  proposal_directions:
-    - "boy_proposes_to_girl"
-    - "girl_proposes_to_boy"
-
-  # Approximately 45% of scenes include the third woman.
-  third_person_probability: 0.45
-
-  # Make the physical proposal action explicit.
-  require_kneeling: true
-  require_flowers: true
-  require_ring: true
-
-  # Specific ring style requested.
-  ring_style: >
-    a clearly visible elegant marquise-cut engagement ring
-
-  # Third woman is a genuine love-triangle character, not a random extra.
-  third_person_role: >
-    a heartbroken woman in unrequited love for the boy
-
-  third_person_emotion: >
-    crying, quietly sobbing, tears visibly running down her cheeks,
-    heartbroken but not hostile
-
-  cinematic_style: >
-    grand cinematic Indian romantic-film atmosphere, emotionally expressive
-    faces, dramatic romantic lighting, heartfelt Bollywood-style visual
-    storytelling, photorealistic, realistic human anatomy, natural skin
 
     ai_tools:
 
@@ -614,6 +595,46 @@ romance:
 
 
 # ---------------------------------------------------------------------------
+# Romance scene controls
+# ---------------------------------------------------------------------------
+
+romance:
+
+  enabled: true
+
+  # Marriage/wedding focus - no more proposal directions
+  # Couple is already married/getting married
+  proposal_directions:
+    - "wedding_day_celebration"
+    - "married_couple_moment"
+
+  # Reduce third person for married/wedding context (optional, set to 0 if not needed)
+  third_person_probability: 0.15
+
+  # Wedding elements, not proposal elements
+  require_ring: true
+  require_flowers: true
+  require_kneeling: false
+
+  # Classic elegant wedding/married ring, not marquise proposal ring
+  ring_style: >
+    a clearly visible elegant classic or band wedding ring
+
+  # Third person role changed for married context
+  third_person_role: >
+    a wedding guest or family member celebrating the couple's union
+
+  third_person_emotion: >
+    joyful, celebrating, happy tears, genuinely delighted
+
+  cinematic_style: >
+    grand cinematic Indian wedding and married-life atmosphere, emotionally
+    expressive faces, dramatic romantic lighting, heartfelt Bollywood-style
+    visual storytelling, photorealistic, realistic human anatomy, natural skin,
+    crystal-clear faces
+
+
+# ---------------------------------------------------------------------------
 # Brief generation
 # ---------------------------------------------------------------------------
 
@@ -688,9 +709,8 @@ image:
 
   hq_model: "black-forest-labs/FLUX.1-schnell"
 
-  # DreamShaper SD1.5 photorealistic path. 20 DPM++ Karras steps ≈ the quality
-  # of 26 at ~25% less time — the dominant cost on a CPU runner.
-  steps: 20
+  # Increased from 20 to 25 for better image quality and clarity
+  steps: 25
 
   guidance_scale: 6.5
 
@@ -713,15 +733,15 @@ image:
   hires_scale: 1.5
   hires_denoise: 0.35                 # lower -> refines without changing identity
   hires_steps: 16
-  # GFPGAN face restoration (if installed) — strongest fix for distorted faces.
+  # GFPGAN face restoration - enabled for clear face quality
   face_restore: true
 
   # CLIP reads only the first 77 tokens. compact_prompt builds a short,
   # identity-first prompt that fits (the couple anchor is never truncated);
   # positive_template below is only used when compact_prompt is false.
   compact_prompt: true
-  max_prompt_words: 45
-  quality_suffix: "photorealistic, cinematic, natural skin, sharp focus, 8k"
+  max_prompt_words: 50
+  quality_suffix: "photorealistic, cinematic, natural skin, sharp focus, crystal-clear faces, 8k"
   # compel (if installed) encodes prompts past CLIP's 77 tokens with no
   # truncation — free, negligible time, and safely optional.
   use_compel: true
@@ -742,6 +762,7 @@ image:
     realistic human anatomy,
     realistic facial features,
     expressive eyes,
+    clear faces,
     realistic hands,
     realistic clothing,
     highly detailed,
@@ -788,9 +809,6 @@ image:
     duplicate couple,
     duplicate girl,
     duplicate boy,
-    wrong proposal direction,
-    boy and girl both kneeling,
-    generic standing couple,
     missing ring,
     missing flowers,
     malformed ring,
@@ -988,7 +1006,7 @@ youtube:
 # the flat IG_*/YOUTUBE_* env-var names never collide. Example secret:
 #
 #   AUTOGRAM_ACCOUNTS='[{"id":"romance","ig_username":"..","ig_session_b64":".."},
-#                       {"id":"shorts","youtube_client_id":"..","youtube_client_secret":"..","youtube_refresh_token":".."}]'
+#                       {"id":"ai_tools","youtube_client_id":"..","youtube_client_secret":"..","youtube_refresh_token":".."}]'
 #
 # Leave this list empty to keep the classic single-account behaviour (creds come
 # from the flat IG_*/YOUTUBE_* env vars, history in state/history.json).
@@ -998,14 +1016,21 @@ accounts:
   - id: romance_account
     platform: instagram        # instagram | youtube
     backend: graph        # instagrapi | graph | youtube ("" -> derived)
-    profile: romance           # a key under content.profiles
+    profile: romance      # Which content profile to use
     enabled: true
-    content_mix: { reel: 3, carousel: 1, photo: 1 }
-    audio_dir: "assets/audio/romantic"
-  - id: aitools_account
+    content_mix:
+      reel: 3
+      carousel: 1
+      photo: 1
+    audio_dir: "assets/audio"
+
+  - id: ai_tools_account
     platform: instagram
     backend: graph
-    profile: ai_tools          # a key under content.profiles
-    enabled: true
-    content_mix: { reel: 1, carousel: 2, photo: 2 }
-    audio_dir: "assets/audio/tech_music"
+    profile: ai_tools     # Separate AI Tools profile
+    enabled: false        # Disabled by default; enable when ready
+    content_mix:
+      reel: 4
+      carousel: 0
+      photo: 1
+    audio_dir: "assets/audio"
