@@ -26,7 +26,15 @@ from ..config import Config, Secrets
 from ..imagegen import GeneratedImage, ImageGenerator
 from ..postproc import ProcessedImage, process_image
 from ..safety import SafetyError, load_profanity, run_caption_gates, run_image_gates
-from ..scene import Brief, build_character_block, generate_brief, render_prompts, vary_framing
+from ..scene import (
+    Brief,
+    build_character_block,
+    generate_brief,
+    random_brief,
+    random_theme_active,
+    render_prompts,
+    vary_framing,
+)
 from ..state import State
 
 if TYPE_CHECKING:
@@ -167,7 +175,7 @@ def generate_scene(
     propagate so the orchestrator can map it to the SAFETY exit code.
     """
     try:
-        brief = generate_brief(
+        brief = random_brief(ctx.cfg, recent_subjects) if random_theme_active(ctx.cfg) else generate_brief(
             client=ctx.ollama,
             cfg=ctx.cfg,
             seed=seed,
@@ -232,7 +240,11 @@ def generate_scenes(ctx: ProductionContext, num_scenes: int) -> list[SceneResult
 
     for i in range(1, max(1, num_scenes)):
         scene_seed = ctx.seed + i * 7919
-        variant = vary_framing(primary.brief, scene_seed)
+        variant = (
+            random_brief(ctx.cfg, recent_subjects)
+            if random_theme_active(ctx.cfg)
+            else vary_framing(primary.brief, scene_seed)
+        )
         try:
             scenes.append(
                 _render_scene(ctx, variant, scene_seed, ctx.out_dir / f"{ctx.stamp}_{i}.jpg")

@@ -18,21 +18,126 @@
 # ---------------------------------------------------------------------------
 
 theme: >
-  high-quality photorealistic cinematic Indian romance centered on dramatic
-  marriage proposals between the same recurring couple, with crystal-clear
-  expressive faces, natural emotions, realistic skin, realistic anatomy,
-  engagement rings, flowers, emotional reactions, beautiful locations,
-  cinematic lighting and professional photography aesthetics.
+  photorealistic cinematic travel, street, nature and everyday-life
+  photography from around the world, with a different place, subject and
+  light in every image.
 
-seed_salt: "autogram-romance-v2"
+seed_salt: "autogram-travel-v1"
+
+# ---------------------------------------------------------------------------
+# Random theme: each image draws fresh values from these pools (OS entropy),
+# so runs do not repeat a subject. The prompt is held to max_prompt_words,
+# under CLIP's 77-token window, so the model reads the whole prompt.
+# ---------------------------------------------------------------------------
+
+random_theme:
+  enabled: true
+  applies_to_profiles: ["travel"]
+  max_prompt_words: 40
+  quality_suffix: "photorealistic, natural colors, sharp focus, detailed, 8k"
+  negative: "illustration, painting, drawing, cartoon, anime, 3d render, cgi, text, watermark, signature, logo, subtitles, blurry, lowres, jpeg artifacts, oversaturated, distorted, deformed, extra limbs, bad anatomy, noise, overexposed"
+  pools:
+    subject:
+      - "a street food vendor flipping dosas on a brass griddle"
+      - "a fisherman mending nets on a wooden jetty at dawn"
+      - "a potter shaping a clay bowl on a spinning wheel"
+      - "a cyclist crossing a stone bridge through morning fog"
+      - "a girl in a yellow raincoat chasing paper boats through a puddle"
+      - "an old tea seller pouring chai from height into small glasses"
+      - "a climber resting on a granite ledge above a glacial lake"
+      - "a snow leopard half hidden on a rocky ridge"
+      - "a lantern maker hanging paper lanterns over a narrow alley"
+      - "a glassblower shaping a glowing orange bulb of glass"
+      - "a lighthouse keeper climbing iron stairs during a storm"
+      - "a monk sweeping leaves from temple steps at sunrise"
+      - "a mechanic working under a vintage car lit by a work lamp"
+      - "a child releasing a kite over a dusty village field"
+      - "a beekeeper lifting a honeycomb frame into golden light"
+      - "a sailor coiling rope on a red fishing boat"
+      - "a violinist playing on an empty train platform at dusk"
+      - "a baker pulling bread from a stone oven"
+      - "a hiker crossing a rope bridge over a misty gorge"
+      - "a flower seller arranging marigolds in a crowded market"
+      - "an astronomer adjusting a brass telescope on a hilltop"
+      - "a surfer waiting for a wave under a pink evening sky"
+      - "a wild horse running through shallow water at sunset"
+      - "a librarian reshelving old books beneath arched windows"
+      - "a dancer's skirt spinning under a single spotlight"
+      - "a shepherd leading goats along a cliff road"
+    setting:
+      - "a misty Himalayan valley"
+      - "a rain-soaked Tokyo alley"
+      - "a sunlit Moroccan medina"
+      - "a windswept Icelandic coastline"
+      - "a rustic Tuscan courtyard"
+      - "a Kerala backwater at dawn"
+      - "a neon-lit Hong Kong street"
+      - "a frozen Scandinavian lake"
+      - "a desert canyon in Arizona"
+      - "a Lisbon tram stop at golden hour"
+      - "a Patagonian grassland"
+      - "a Varanasi riverbank at dusk"
+      - "a cobblestone village in Bavaria"
+      - "an old Havana street"
+      - "a snowy Hokkaido forest"
+      - "a Cornish harbor village"
+    lighting:
+      - "soft window light"
+      - "golden-hour backlight"
+      - "dramatic side light"
+      - "blue-hour ambience"
+      - "overcast diffused light"
+      - "warm tungsten practicals"
+      - "shafts of light through fog"
+      - "harsh noon sun with deep shadows"
+      - "candlelike warm glow"
+      - "neon rim light"
+    lens:
+      - "35mm lens"
+      - "50mm lens"
+      - "85mm portrait lens"
+      - "135mm telephoto lens"
+    mood:
+      - "quiet and contemplative"
+      - "joyful and energetic"
+      - "melancholic"
+      - "tense and cinematic"
+      - "calm and meditative"
+      - "nostalgic"
+      - "adventurous"
+      - "intimate"
+      - "triumphant"
+      - "playful"
+    composition:
+      - "rule-of-thirds framing"
+      - "low-angle hero shot"
+      - "shallow depth of field with bokeh"
+      - "leading lines through the frame"
+      - "symmetrical centered framing"
+      - "layered foreground silhouette"
+      - "tight detail close-up"
+    palette:
+      - "teal and amber grading"
+      - "muted earth tones"
+      - "vibrant saturated colors"
+      - "monochrome with one accent color"
+      - "pastel film tones"
+      - "deep blues with warm highlights"
 
 
 content:
 
   # The active profile controls the entire creative direction.
-  active_profile: "romance"
+  active_profile: "travel"
 
   profiles:
+
+    travel:
+
+      theme: >
+        photorealistic cinematic travel, street, nature and everyday-life
+        photography from around the world, one place, subject and light per
+        image.
 
     romance:
 
@@ -699,9 +804,9 @@ image:
 
   hq_guidance_scale: 0.0
 
-  width: 512
+  width: 576
 
-  height: 512
+  height: 720
 
   # Quality levers for the SD1.5 CPU path (ignored on the FLUX/GPU path).
   scheduler: "dpmpp_karras"          # DPM++ 2M Karras: sharper ("" = model default)
@@ -831,7 +936,7 @@ postproc:
 caption:
 
   tone: >
-    warm, romantic, cinematic, emotionally expressive, understated
+    curious, vivid, cinematic and understated
 
   emoji_budget: 2
 
@@ -858,7 +963,7 @@ hashtags:
 
   brand_tags:
     - "autogram"
-    - "romanticphotography"
+    - "travelphotography"
 
 
 # ---------------------------------------------------------------------------
@@ -998,7 +1103,7 @@ accounts:
   - id: romance_account
     platform: instagram        # instagram | youtube
     backend: graph        # instagrapi | graph | youtube ("" -> derived)
-    profile: romance           # a key under content.profiles
+    profile: travel            # a key under content.profiles
     enabled: true
     content_mix: { reel: 3, carousel: 1, photo: 1 }
     audio_dir: "assets/audio/romantic"

@@ -56,6 +56,9 @@ class Brief(BaseModel):
     third_person_role: str = ""
     romantic_details: str = ""
 
+    # Pre-rendered positive prompt (random_theme mode). Empty -> built from metadata.
+    image_prompt: str = ""
+
 
 def compute_seed(run_date: str, salt: str) -> int:
     """Return a deterministic 31-bit seed."""
@@ -617,6 +620,9 @@ def render_prompts(
     the couple's identity is never truncated away (the biggest image-quality
     lever). Set image.compact_prompt=false for the legacy full-template prompt.
     """
+    if brief.image_prompt:
+        return brief.image_prompt, cfg.random_theme.negative
+
     if cfg.image.compact_prompt:
         positive = _render_compact_positive(brief, cfg, characters_block)
     else:
@@ -1167,3 +1173,30 @@ def generate_brief(
         selected_location,
         style,
     )
+
+
+# ---------------------------------------------------------------------------
+# Random theme (non-repetitive prompts; no LLM call)
+# ---------------------------------------------------------------------------
+
+
+def random_theme_active(cfg: Config) -> bool:
+    """True when the active profile uses the random prompt pools."""
+    rt = cfg.random_theme
+    return bool(rt.enabled and cfg.content.active_profile in rt.applies_to_profiles)
+
+
+def random_brief(cfg: Config, recent_subjects: list[str]) -> Brief:
+    """Build a Brief from fresh random pool picks (OS-entropy seeded)."""
+    from .random_theme import brief_fields, build_random_prompt, new_rng
+
+    rt = cfg.random_theme
+    prompt, parts = build_random_prompt(
+        rt.pools,
+        new_rng(),
+        quality_suffix=rt.quality_suffix,
+        max_words=rt.max_prompt_words,
+        recent_subjects=recent_subjects,
+    )
+    log.info("random prompt (%d words): %s", len(prompt.split()), prompt)
+    return Brief(**brief_fields(parts, prompt))

@@ -144,8 +144,17 @@ def _pick_audio(
     d = Path(audio_dir)
     if not d.is_dir():
         return None
-    tracks = sorted(p for p in d.iterdir() if p.is_file() and p.suffix.lower() in _AUDIO_SUFFIXES)
+    # rglob: a folder of per-profile subfolders (assets/audio/<profile>/) still works.
+    tracks = sorted(
+        p for p in d.rglob("*") if p.is_file() and p.suffix.lower() in _AUDIO_SUFFIXES
+    )
     if not tracks:
+        import logging
+
+        logging.getLogger("autogram.reel").warning(
+            "no audio tracks found under %s; falling back to synthesized ambient audio",
+            audio_dir,
+        )
         return None
 
     track = rng.choice(tracks)

@@ -536,8 +536,30 @@ class AccountConfig(BaseModel):
         return "youtube" if self.platform == "youtube" else "instagrapi"
 
 
+class RandomThemeConfig(BaseModel):
+    """Random, non-repetitive prompt pools (see autogram/random_theme.py).
+
+    When enabled for a profile, every image draws fresh values from ``pools`` with
+    OS entropy, so no run repeats a subject. ``max_prompt_words`` keeps the prompt
+    inside CLIP's 77-token window.
+    """
+
+    enabled: bool = False
+    applies_to_profiles: list[str] = Field(default_factory=list)
+    max_prompt_words: int = 40
+    quality_suffix: str = "photorealistic, natural colors, sharp focus, detailed, 8k"
+    negative: str = (
+        "illustration, painting, drawing, cartoon, anime, 3d render, cgi, text, "
+        "watermark, signature, logo, subtitles, blurry, lowres, jpeg artifacts, "
+        "oversaturated, distorted, deformed, extra limbs, bad anatomy, noise, overexposed"
+    )
+    pools: dict[str, list[str]] = Field(default_factory=dict)
+
+
 class Config(BaseModel):
     theme: str = ""
+
+    random_theme: RandomThemeConfig = Field(default_factory=RandomThemeConfig)
 
     seed_salt: str = "autogram-v1"
 
