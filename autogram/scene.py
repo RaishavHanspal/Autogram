@@ -27,7 +27,7 @@ from typing import Any
 from pydantic import BaseModel, Field, ValidationError
 from rapidfuzz import fuzz
 
-from .caption import OllamaClient, OllamaError
+from .caption import OllamaClient, OllamaError, clip_words
 from .config import Config
 from .logging_utils import get_logger
 
@@ -35,14 +35,20 @@ log = get_logger("scene")
 
 
 class Brief(BaseModel):
+    # Only ``subject`` is required: a small CPU LLM fails validation far less
+    # often (and spends fewer tokens) when it may omit fields it has no use for.
     subject: str
-    setting: str
-    lighting: str
-    mood: str
-    composition: str
-    color_palette: str
-    time_of_day: str
+    setting: str = ""
+    lighting: str = ""
+    mood: str = ""
+    composition: str = ""
+    color_palette: str = ""
+    time_of_day: str = ""
     style_modifiers: list[str] = Field(default_factory=list)
+
+    # Infographic text, typeset onto the image (never drawn by the diffusion model).
+    headline: str = ""
+    points: list[str] = Field(default_factory=list)
 
     # Existing history/scene metadata.
     location_name: str = ""
@@ -58,6 +64,19 @@ class Brief(BaseModel):
 
     # Pre-rendered positive prompt (random_theme mode). Empty -> built from metadata.
     image_prompt: str = ""
+
+
+def profile_kind(cfg: Config) -> str:
+    """The active profile's scene kind: "scene", "romance" or "infographic"."""
+    return cfg.active_content.kind
+
+
+# Word budgets for text injected into the LLM prompt. A 3B model follows a
+# short, focused prompt far better than a long one, and config text grows.
+_THEME_WORDS = 45
+_INSTRUCTION_WORDS = 90
+_FIELD_WORDS = 25
+_RECENT_BRIEFS = 8
 
 
 def compute_seed(run_date: str, salt: str) -> int:
@@ -401,10 +420,7 @@ def select_style(
     if not isinstance(trends, dict):
         trends = {}
 
-    proposal = select_proposal_scene(
-        rng,
-        cfg,
-    )
+    proposal = select_proposal_scene(rng, cfg) if profile_kind(cfg) == "romance" else {}
 
     return {
         "framing": select_framing(rng),
@@ -547,7 +563,8 @@ def _compact_action(brief: Brief, cfg: Config) -> str:
     elif direction == "girl_proposes_to_boy":
         core = "the woman kneeling proposing to the man"
     else:
-        core = brief.interaction or ""
+        # Non-romance: the subject IS the action (interaction is style jargon).
+        return clip_words(brief.subject, 20)
     extras: list[str] = []
     if cfg.romance.require_ring and cfg.romance.require_flowers:
         extras.append("with a ring and flowers")
@@ -597,6 +614,29 @@ def _render_compact_positive(brief: Brief, cfg: Config, characters_block: str) -
     return ", ".join(p for p in [core, extras, quality] if p and p.strip())
 
 
+_INFOGRAPHIC_TAIL = "minimal clean design, high contrast, sharp focus, no text"
+
+
+def _render_infographic_positive(brief: Brief, cfg: Config, characters_block: str) -> str:
+    """Text-free background prompt; the headline/points are typeset afterwards.
+
+    SD1.5 cannot spell, so any request for words yields gibberish glyphs —
+    the prompt asks for clean negative space instead.
+    """
+    budget = cfg.image.max_prompt_words - len(_INFOGRAPHIC_TAIL.split())
+    body = _budget_join(
+        [
+            characters_block,
+            clip_words(brief.subject, 20),
+            brief.color_palette,
+            brief.lighting,
+            "large empty dark area at the top",
+        ],
+        max(0, budget),
+    )
+    return ", ".join(p for p in [body, _INFOGRAPHIC_TAIL] if p)
+
+
 def _render_template_positive(brief: Brief, cfg: Config, characters_block: str) -> str:
     """Legacy full-template prompt (can exceed 77 tokens; compact_prompt=false)."""
     fields: dict[str, Any] = brief.model_dump()
@@ -623,11 +663,13 @@ def render_prompts(
     if brief.image_prompt:
         return brief.image_prompt, cfg.random_theme.negative
 
-    if cfg.image.compact_prompt:
+    if profile_kind(cfg) == "infographic":
+        positive = _render_infographic_positive(brief, cfg, characters_block)
+    elif cfg.image.compact_prompt:
         positive = _render_compact_positive(brief, cfg, characters_block)
     else:
         positive = _render_template_positive(brief, cfg, characters_block)
-    negative = cfg.image.negative_template
+    negative = cfg.active_content.negative_prompt.strip() or cfg.image.negative_template
     positive = re.sub(r"(,\s*){2,}", ", ", positive).strip(" ,")
     return positive, negative
 
@@ -644,6 +686,39 @@ def vary_framing(brief: Brief, seed: int) -> Brief:
     return variant
 
 
+_SCENE_SCHEMA = (
+    '{"subject": "string", "setting": "string", "lighting": "string", '
+    '"mood": "string", "composition": "string", "color_palette": "string", '
+    '"time_of_day": "string", "style_modifiers": ["string"]}'
+)
+_INFOGRAPHIC_SCHEMA = (
+    '{"subject": "string", "headline": "string", "points": ["string"], '
+    '"color_palette": "string", "mood": "string"}'
+)
+
+
+def _romance_sections(cfg: Config, style: dict[str, str]) -> str:
+    """Proposal + love-triangle direction (romance profiles only)."""
+    if style.get("proposal_direction") == "girl_proposes_to_boy":
+        proposer, receiver, ring = "girl", "boy", "an engagement ring"
+    else:
+        proposer, receiver, ring = "boy", "girl", "a marquise-cut engagement ring"
+    text = (
+        f"\nMANDATORY PROPOSAL: the {proposer} proposes to the {receiver}. "
+        f"The {proposer} kneels on one knee, presents {ring} (visible) and flowers. "
+        f"The {receiver} reacts with sincere emotion. Never reverse the roles, "
+        "never a generic standing couple.\n"
+    )
+    if style.get("third_person_present") == "True":
+        text += (
+            "LOVE TRIANGLE: a third woman, "
+            f"{clip_words(cfg.romance.third_person_role, _FIELD_WORDS)}, watches from a "
+            f"distance, {clip_words(cfg.romance.third_person_emotion, _FIELD_WORDS)}. "
+            "Not a villain; the couple stays the focus.\n"
+        )
+    return text
+
+
 def _build_messages(
     cfg: Config,
     axis_hints: dict[str, str],
@@ -653,183 +728,98 @@ def _build_messages(
     selected_location: dict[str, str] | None,
     style: dict[str, str],
 ) -> list[dict[str, str]]:
-    schema = (
-        '{"subject": "string", "setting": "string", '
-        '"lighting": "string", "mood": "string", '
-        '"composition": "string", "color_palette": "string", '
-        '"time_of_day": "string", '
-        '"style_modifiers": ["string", ...]}'
-    )
+    kind = profile_kind(cfg)
+    profile = cfg.active_content
+    schema = _INFOGRAPHIC_SCHEMA if kind == "infographic" else _SCENE_SCHEMA
 
     system = (
-        f"{cfg.active_content.system_prompt.strip()} "
-        f"Respond ONLY with a JSON object matching this schema exactly: "
-        f"{schema}. No prose, no code fences."
+        f"{clip_words(profile.system_prompt, _INSTRUCTION_WORDS)} "
+        f"Respond ONLY with a JSON object matching this schema: {schema}. "
+        "No prose, no code fences."
     )
 
     char_section = ""
-
     if characters_data.get("characters"):
-        female = characters_data["characters"].get(
-            "female",
-            {},
-        )
-
-        male = characters_data["characters"].get(
-            "male",
-            {},
-        )
-
+        female = characters_data["characters"].get("female", {})
+        male = characters_data["characters"].get("male", {})
         char_section = (
-            "\nRECURRING COUPLE — keep these two people consistent:\n"
-            f"Female: {female.get('identity', '')}. "
-            f"Features: {female.get('facial_features', '')}. "
-            f"Hair: {female.get('hair', '')}. "
-            f"Accessories: {female.get('accessories', '')}.\n"
-            f"Male: {male.get('identity', '')}. "
-            f"Features: {male.get('facial_features', '')}. "
-            f"Hair: {male.get('hair', '')}. "
-            f"Beard: {male.get('facial_hair', '')}.\n"
+            "\nRECURRING COUPLE (keep consistent):\n"
+            f"Female: {female.get('identity', '')}; {female.get('facial_features', '')}; "
+            f"hair {female.get('hair', '')}.\n"
+            f"Male: {male.get('identity', '')}; {male.get('facial_features', '')}; "
+            f"hair {male.get('hair', '')}; beard {male.get('facial_hair', '')}.\n"
         )
 
     location_section = ""
-
     if selected_location:
+        label = "TOPIC" if kind == "infographic" else "LOCATION"
         location_section = (
-            "\nLOCATION:\n"
-            f"Name: {selected_location.get('name', '')}\n"
-            f"Description: {selected_location.get('description', '')}\n"
-            f"Lighting: {selected_location.get('lighting', '')}\n"
-            f"Mood: {selected_location.get('mood', '')}\n"
+            f"\n{label}: {selected_location.get('name', '')}: "
+            f"{clip_words(selected_location.get('description', ''), 40)}\n"
         )
 
-    proposal_direction = style.get(
-        "proposal_direction",
-        "boy_proposes_to_girl",
-    )
-
-    if proposal_direction == "boy_proposes_to_girl":
-        proposal_section = """
-PROPOSAL DIRECTION — BOY PROPOSES TO GIRL.
-
-This direction is mandatory.
-
-The boy is the person proposing.
-The boy must kneel on one knee.
-The boy must present the girl with a marquise-cut engagement ring.
-The ring should be visible.
-The boy should give/present flowers.
-The girl is receiving the proposal.
-The girl should have a sincere emotional reaction.
-
-Do NOT reverse the proposal roles.
-Do NOT turn this into a generic standing couple scene.
-"""
+    if kind == "infographic":
+        # Visual direction for the background; the facts come from the topic.
+        style_lines = [
+            ("Palette", style.get("color_grading", "")),
+            ("Mood", style.get("emotion", "")),
+        ]
     else:
-        proposal_section = """
-PROPOSAL DIRECTION — GIRL PROPOSES TO BOY.
-
-This direction is mandatory.
-
-The girl is the person proposing.
-The girl must kneel on one knee.
-The girl must present the boy with an engagement ring.
-The ring should be visible.
-The girl should give/present flowers.
-The boy is receiving the proposal.
-The boy should have a sincere emotional reaction.
-
-Do NOT reverse the proposal roles.
-Do NOT turn this into a generic standing couple scene.
-"""
-
-    triangle_section = ""
-
-    if style.get("third_person_present") == "True":
-        triangle_section = f"""
-LOVE TRIANGLE — THIRD WOMAN PRESENT.
-
-A third woman is part of the emotional story.
-
-She is {cfg.romance.third_person_role}.
-
-She must:
-- remain visually separate from the main couple;
-- watch the proposal from a respectful distance;
-- visibly cry;
-- have tears on her cheeks;
-- appear to be quietly sobbing;
-- communicate heartbreak through her face and body language.
-
-She is not a villain and is not attacking anyone.
-
-Her emotional pain comes from seeing the person she loves choose
-someone else.
-
-Third-woman emotion:
-{cfg.romance.third_person_emotion}
-
-The main couple remains the visual focus.
-"""
-
-    style_section = (
-        "\nPHOTOGRAPHIC DIRECTION:\n"
-        f"Framing: {style.get('framing', '')}\n"
-        f"Interaction: {style.get('interaction', '')}\n"
-        f"Emotion: {style.get('emotion', '')}\n"
-        f"Composition: {style.get('composition', '')}\n"
-        f"Lighting: {style.get('lighting_style', '')}\n"
-        f"Color grading: {style.get('color_grading', '')}\n"
-        f"Depth of field: {style.get('depth_of_field', '')}\n"
-        f"Cinematic style: {style.get('romantic_details', '')}\n"
-        "Respect the selected framing and do not default to a generic "
-        "centered portrait.\n"
+        style_lines = [
+            ("Framing", style.get("framing", "")),
+            ("Interaction", style.get("interaction", "")),
+            ("Emotion", style.get("emotion", "")),
+            ("Composition", style.get("composition", "")),
+            ("Lighting", style.get("lighting_style", "")),
+            ("Color grading", style.get("color_grading", "")),
+            ("Depth of field", style.get("depth_of_field", "")),
+        ]
+        if kind == "romance":
+            style_lines.append(("Cinematic style", style.get("romantic_details", "")))
+    style_section = "\nDIRECTION:\n" + "".join(
+        f"- {name}: {clip_words(value, _FIELD_WORDS)}\n" for name, value in style_lines if value
     )
 
-    hints = "\n".join(f"- {key.replace('_', ' ')}: {value}" for key, value in axis_hints.items())
+    hints = ""
+    if kind != "infographic":
+        hints = "".join(f"- {k.replace('_', ' ')}: {v}\n" for k, v in axis_hints.items())
 
-    prev_lines = (
-        "\n".join(
-            f"- {brief.get('subject', '?')} / " f"{brief.get('mood', '?')}"
-            for brief in recent_briefs
-        )
-        or "(none yet)"
-    )
+    key = "headline" if kind == "infographic" else "subject"
+    prev = [
+        clip_words(str(b.get(key) or b.get("subject") or ""), 12)
+        for b in recent_briefs[-_RECENT_BRIEFS:]
+    ]
+    prev_lines = "\n".join(f"- {p}" for p in prev if p) or "(none yet)"
 
     user = (
-        f"Active content profile: {cfg.content.active_profile}\n"
-        f"Standing theme: {cfg.active_content.theme}\n"
+        f"Theme: {clip_words(profile.theme, _THEME_WORDS)}\n"
         f"{char_section}"
         f"{location_section}"
-        f"{proposal_section}"
-        f"{triangle_section}"
-        f"{style_section}\n"
-        f"Creative constraints:\n{hints}\n\n"
-        "Recent briefs already used. The new scene must be substantially "
-        f"different from them:\n{prev_lines}\n\n"
-        f"{cfg.active_content.subject_instruction}\n\n"
-        "The subject must describe a specific marriage-proposal event. "
-        "The pre-selected proposal direction is authoritative and must not "
-        "be changed.\n"
-        "Make the image feel like a dramatic, emotionally rich, "
-        "photorealistic Indian romantic film while remaining tasteful."
+        f"{_romance_sections(cfg, style) if kind == 'romance' else ''}"
+        f"{style_section}"
+        f"{hints}\n"
+        f"Recent posts (be clearly different):\n{prev_lines}\n\n"
+        f"{clip_words(profile.subject_instruction, _INSTRUCTION_WORDS)}"
     )
 
     if error_feedback:
-        user += (
-            f"\n\nPrevious response was invalid: " f"{error_feedback}\n" "Return valid JSON only."
-        )
+        user += f"\n\nPrevious response was invalid: {error_feedback}\nReturn valid JSON only."
 
     return [
-        {
-            "role": "system",
-            "content": system,
-        },
-        {
-            "role": "user",
-            "content": user,
-        },
+        {"role": "system", "content": system},
+        {"role": "user", "content": user},
     ]
+
+
+def _validate_kind(brief: Brief, cfg: Config) -> str | None:
+    """Kind-specific checks; returns an error to feed back, or None."""
+    if profile_kind(cfg) != "infographic":
+        return None
+    brief.headline = clip_words(brief.headline, 10)
+    brief.points = [clip_words(p, 18) for p in brief.points if p and p.strip()][:5]
+    if not brief.headline or len(brief.points) < 2:
+        return "need a non-empty 'headline' and 3-5 short 'points'"
+    return None
 
 
 def _apply_scene(
@@ -894,6 +884,11 @@ def _apply_scene(
         "",
     )
 
+    if not brief.proposal_direction:
+        # Non-romance profiles: keep the LLM's interaction, no proposal summary.
+        brief.interaction = brief.interaction or interaction
+        return brief
+
     if brief.proposal_direction == "boy_proposes_to_girl":
         proposal_summary = (
             "boy kneeling and proposing to girl with " "marquise-cut engagement ring and flowers"
@@ -919,6 +914,18 @@ def _fallback_brief(
     style: dict[str, str],
 ) -> Brief:
     """Create a deterministic proposal brief when Ollama fails."""
+
+    if profile_kind(cfg) != "romance":
+        log.warning("using deterministic fallback brief")
+        loc = selected_location or {}
+        brief = Brief(
+            subject=clip_words(loc.get("description", "") or cfg.active_content.theme, 25),
+            mood=style.get("emotion", ""),
+            composition=style.get("composition", ""),
+            color_palette=style.get("color_grading", ""),
+            headline=loc.get("name", "") if profile_kind(cfg) == "infographic" else "",
+        )
+        return _apply_scene(brief, selected_location, style)
 
     log.warning("using deterministic romantic fallback brief")
 
@@ -1116,6 +1123,9 @@ def generate_brief(
             )
 
             brief = Brief.model_validate(raw)
+            kind_error = _validate_kind(brief, cfg)
+            if kind_error:
+                raise OllamaError(kind_error)
 
         except (
             OllamaError,

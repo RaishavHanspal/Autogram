@@ -24,12 +24,14 @@ from ..caption import (
 )
 from ..config import Config, Secrets
 from ..imagegen import GeneratedImage, ImageGenerator
-from ..postproc import ProcessedImage, process_image
+from ..overlay import plan_slide, typeset
+from ..postproc import ASPECT_DIMS, ProcessedImage, center_crop_to_aspect, process_image
 from ..safety import SafetyError, load_profanity, run_caption_gates, run_image_gates
 from ..scene import (
     Brief,
     build_character_block,
     generate_brief,
+    profile_kind,
     random_brief,
     random_theme_active,
     render_prompts,
@@ -167,6 +169,7 @@ def generate_scene(
     recent_subjects: list[str],
     recent_briefs: list[dict],
     check_dupe: bool = False,
+    slide_total: int = 1,
 ) -> SceneResult:
     """Run one full image scene: brief -> image -> gates -> post-process.
 
@@ -175,19 +178,23 @@ def generate_scene(
     propagate so the orchestrator can map it to the SAFETY exit code.
     """
     try:
-        brief = random_brief(ctx.cfg, recent_subjects) if random_theme_active(ctx.cfg) else generate_brief(
-            client=ctx.ollama,
-            cfg=ctx.cfg,
-            seed=seed,
-            run_date=ctx.run_date,
-            history_subjects=recent_subjects,
-            recent_briefs=recent_briefs,
-            model=ctx.llm_model,
+        brief = (
+            random_brief(ctx.cfg, recent_subjects)
+            if random_theme_active(ctx.cfg)
+            else generate_brief(
+                client=ctx.ollama,
+                cfg=ctx.cfg,
+                seed=seed,
+                run_date=ctx.run_date,
+                history_subjects=recent_subjects,
+                recent_briefs=recent_briefs,
+                model=ctx.llm_model,
+            )
         )
     except Exception as exc:  # noqa: BLE001
         raise ContentError(ExitCode.BRIEF, f"brief generation failed: {exc}") from exc
 
-    scene = _render_scene(ctx, brief, seed, out_path)
+    scene = _render_scene(ctx, brief, seed, out_path, slide_total=slide_total)
     if check_dupe and ctx.state.has_image_hash(scene.processed.sha256):
         raise ContentError(
             ExitCode.DUPLICATE,
@@ -196,19 +203,37 @@ def generate_scene(
     return scene
 
 
-def _render_scene(ctx: ProductionContext, brief: Brief, seed: int, out_path: Path) -> SceneResult:
+def _render_scene(
+    ctx: ProductionContext,
+    brief: Brief,
+    seed: int,
+    out_path: Path,
+    slide_index: int = 0,
+    slide_total: int = 1,
+    reuse: GeneratedImage | None = None,
+) -> SceneResult:
     """Render one image from an already-built brief: prompt -> image -> gates ->
     post-process. No LLM call — used for extra reel/carousel scenes so a
     multi-scene deliverable needs only ONE brief (a big CPU-time saving)."""
     positive, negative = render_prompts(brief, ctx.cfg, characters_block=ctx.characters_block)
     ctx.log.info("positive prompt: %s", positive)
+    if reuse is not None:
+        generated = reuse  # already generated and gated (infographic slides)
+    else:
+        try:
+            generated = ctx.gen.generate(positive, negative, seed)
+        except Exception as exc:  # noqa: BLE001
+            raise ContentError(ExitCode.IMAGE, f"image generation failed: {exc}") from exc
+        run_image_gates(generated.image, ctx.cfg)  # SafetyError propagates
+    image = generated.image
+    if profile_kind(ctx.cfg) == "infographic" and brief.headline:
+        # Typeset at final resolution so text is sharp and never cropped.
+        image = typeset(
+            center_crop_to_aspect(image, *ASPECT_DIMS[ctx.cfg.postproc.aspect]),
+            plan_slide(brief.headline, brief.points, slide_index, slide_total),
+        )
     try:
-        generated = ctx.gen.generate(positive, negative, seed)
-    except Exception as exc:  # noqa: BLE001
-        raise ContentError(ExitCode.IMAGE, f"image generation failed: {exc}") from exc
-    run_image_gates(generated.image, ctx.cfg)  # SafetyError propagates
-    try:
-        processed = process_image(generated.image, ctx.cfg, out_path)
+        processed = process_image(image, ctx.cfg, out_path)
     except Exception as exc:  # noqa: BLE001
         raise ContentError(ExitCode.POSTPROC, f"post-processing failed: {exc}") from exc
     return SceneResult(
@@ -228,6 +253,9 @@ def generate_scenes(ctx: ProductionContext, num_scenes: int) -> list[SceneResult
     recent_subjects = ctx.state.recent_subjects(ctx.cfg.brief.history_depth)
     recent_briefs = ctx.state.recent_briefs(ctx.cfg.brief.history_depth)
 
+    if profile_kind(ctx.cfg) == "infographic":
+        return _infographic_slides(ctx, num_scenes, recent_subjects, recent_briefs)
+
     primary = generate_scene(
         ctx,
         ctx.seed,
@@ -235,6 +263,7 @@ def generate_scenes(ctx: ProductionContext, num_scenes: int) -> list[SceneResult
         recent_subjects=recent_subjects,
         recent_briefs=recent_briefs,
         check_dupe=True,
+        slide_total=max(1, num_scenes),
     )
     scenes = [primary]
 
@@ -247,11 +276,60 @@ def generate_scenes(ctx: ProductionContext, num_scenes: int) -> list[SceneResult
         )
         try:
             scenes.append(
-                _render_scene(ctx, variant, scene_seed, ctx.out_dir / f"{ctx.stamp}_{i}.jpg")
+                _render_scene(
+                    ctx,
+                    variant,
+                    scene_seed,
+                    ctx.out_dir / f"{ctx.stamp}_{i}.jpg",
+                    slide_index=i,
+                    slide_total=max(1, num_scenes),
+                )
             )
         except (ContentError, SafetyError) as exc:
             ctx.log.warning("scene %d skipped (%s); continuing", i, exc)
     return scenes
+
+
+# Instagram's carousel limit.
+_MAX_SLIDES = 10
+
+
+def _infographic_slides(
+    ctx: ProductionContext,
+    num_scenes: int,
+    recent_subjects: list[str],
+    recent_briefs: list[dict],
+) -> list[SceneResult]:
+    """One background, N typeset slides: headline, one per takeaway, recap.
+
+    Renders the diffusion image ONCE (the dominant CPU cost) and reuses it, so
+    a carousel can carry every takeaway and keeps a consistent template look.
+    """
+    first = generate_scene(
+        ctx,
+        ctx.seed,
+        ctx.out_dir / f"{ctx.stamp}.jpg",
+        recent_subjects=recent_subjects,
+        recent_briefs=recent_briefs,
+        check_dupe=True,
+        slide_total=1,
+    )
+    brief = first.brief
+    if not brief.headline or num_scenes <= 1:
+        return [first]
+    total = min(_MAX_SLIDES, max(num_scenes, 1 + len(brief.points)))
+    return [
+        _render_scene(
+            ctx,
+            brief,
+            ctx.seed,
+            ctx.out_dir / (f"{ctx.stamp}.jpg" if i == 0 else f"{ctx.stamp}_{i}.jpg"),
+            slide_index=i,
+            slide_total=total,
+            reuse=first.generated,
+        )
+        for i in range(total)
+    ]
 
 
 @dataclass

@@ -34,8 +34,10 @@ random_theme:
   enabled: true
   applies_to_profiles: ["travel"]
   max_prompt_words: 40
-  quality_suffix: "photorealistic, natural colors, sharp focus, detailed, 8k"
-  negative: "illustration, painting, drawing, cartoon, anime, 3d render, cgi, text, watermark, signature, logo, subtitles, blurry, lowres, jpeg artifacts, oversaturated, distorted, deformed, extra limbs, bad anatomy, noise, overexposed"
+  # Candid, film-like realism reads as authentic in the feed (the current
+  # trend away from over-polished "AI gloss").
+  quality_suffix: "candid documentary photo, natural colors, fine film grain, sharp focus"
+  negative: "illustration, painting, drawing, cartoon, anime, 3d render, cgi, plastic skin, airbrushed, text, watermark, signature, logo, subtitles, blurry, lowres, jpeg artifacts, oversaturated, distorted, deformed, deformed face, distorted face, blurry face, bad eyes, extra fingers, mutated hands, extra limbs, bad anatomy, noise, overexposed"
   pools:
     subject:
       - "a street food vendor flipping dosas on a brass griddle"
@@ -139,7 +141,21 @@ content:
         photography from around the world, one place, subject and light per
         image.
 
+      caption_voice: >
+        a curious traveller's field note: specific sensory detail, names the
+        place naturally, quietly observant, never "wanderlust" cliches.
+
+      brand_tags:
+        - "travelphotography"
+
     romance:
+
+      # romance: enables the proposal / love-triangle scene controls below.
+      kind: romance
+
+      caption_voice: >
+        a cinematic love-story narrator: tender, specific, a little dramatic,
+        like a line from a Bollywood film, never cheesy greeting-card lines.
 
       theme: >
         photorealistic cinematic Indian romance centered on dramatic marriage
@@ -370,78 +386,45 @@ content:
             - >
               environmental depth with clear subjects
 
-
-# ---------------------------------------------------------------------------
-# Romance scene controls
-# ---------------------------------------------------------------------------
-
-romance:
-
-  enabled: true
-
-  # Both directions are deliberately enabled.
-  # The seeded RNG chooses one per generated scene.
-  proposal_directions:
-    - "boy_proposes_to_girl"
-    - "girl_proposes_to_boy"
-
-  # Approximately 45% of scenes include the third woman.
-  third_person_probability: 0.45
-
-  # Make the physical proposal action explicit.
-  require_kneeling: true
-  require_flowers: true
-  require_ring: true
-
-  # Specific ring style requested.
-  ring_style: >
-    a clearly visible elegant marquise-cut engagement ring
-
-  # Third woman is a genuine love-triangle character, not a random extra.
-  third_person_role: >
-    a heartbroken woman in unrequited love for the boy
-
-  third_person_emotion: >
-    crying, quietly sobbing, tears visibly running down her cheeks,
-    heartbroken but not hostile
-
-  cinematic_style: >
-    grand cinematic Indian romantic-film atmosphere, emotionally expressive
-    faces, dramatic romantic lighting, heartfelt Bollywood-style visual
-    storytelling, photorealistic, realistic human anatomy, natural skin
-
     ai_tools:
 
+      # infographic: the diffusion model paints a TEXT-FREE background (SD1.5
+      # cannot spell) and the LLM-written headline + points are typeset on top
+      # with Pillow, so every word on the slide is crisp and correct.
+      kind: infographic
+
       theme: >
-        high-quality educational infographic-style visual explanations of
-        artificial intelligence concepts, machine learning algorithms, and
-        cutting-edge AI research, with clear readable titles, data flow
-        diagrams, conceptual visualizations, technical accuracy, modern
-        design aesthetics, and professional visual communication.
+        save-worthy educational posts that explain one AI or machine-learning
+        concept per post in plain language, with a bold headline and short,
+        accurate takeaways.
 
       system_prompt: >
-        You are a technical educator and visual communication specialist
-        creating educational infographic content about AI and machine
-        learning concepts. Generate clear, visually informative scenes that
-        explain complex AI topics in an accessible way. Each image must
-        feature readable text elements, visual hierarchy, data flow
-        representations, and conceptual diagrams. Prioritize clarity over
-        complexity, with professional design aesthetics and precise technical
-        accuracy. Make abstract concepts visually concrete through
-        metaphorical representations, flowcharts, and layered composition.
+        You are a sharp AI educator writing a swipeable Instagram explainer.
+        Pick ONE concrete idea, explain it accurately in plain words, and
+        describe an abstract, text-free background visual that fits it.
 
       subject_instruction: >
-        Create one specific educational visual explanation of an AI or
-        machine learning concept. The scene must communicate the core idea
-        clearly through visual elements. Include readable title text and
-        supporting visual metaphors or diagrams. Avoid generic AI imagery;
-        make the specific technical concept visually obvious and
-        understandable. Use modern design principles with clear visual
-        hierarchy and color-coded information flow.
+        subject: a text-free visual metaphor for the concept (shapes, light,
+        flow, network, layers), no words, no screens with text.
+        headline: max 8 words, curiosity-driven, no clickbait, no emoji.
+        points: 3-5 accurate takeaways, each max 14 words, plain language,
+        one idea each.
 
       prompt_anchor: >
-        professional educational infographic, technical diagram, clean modern
-        design, readable sans-serif typography, scientific accuracy
+        abstract 3d tech background, glowing nodes and data streams
+
+      negative_prompt: >
+        text, letters, words, typography, numbers, captions, labels, watermark,
+        logo, signature, people, face, hands, cluttered, busy, blurry, lowres,
+        jpeg artifacts, noise
+
+      caption_voice: >
+        a clear, friendly AI educator: plain words, no hype, one practical
+        takeaway, ends by inviting people to save the post or comment a
+        question.
+
+      brand_tags:
+        - "learnai"
 
       visual:
 
@@ -718,6 +701,47 @@ romance:
             scientifically grounded visual metaphors
 
 
+
+# ---------------------------------------------------------------------------
+# Romance scene controls
+# ---------------------------------------------------------------------------
+
+romance:
+
+  enabled: true
+
+  # Both directions are deliberately enabled.
+  # The seeded RNG chooses one per generated scene.
+  proposal_directions:
+    - "boy_proposes_to_girl"
+    - "girl_proposes_to_boy"
+
+  # Approximately 45% of scenes include the third woman.
+  third_person_probability: 0.45
+
+  # Make the physical proposal action explicit.
+  require_kneeling: true
+  require_flowers: true
+  require_ring: true
+
+  # Specific ring style requested.
+  ring_style: >
+    a clearly visible elegant marquise-cut engagement ring
+
+  # Third woman is a genuine love-triangle character, not a random extra.
+  third_person_role: >
+    a heartbroken woman in unrequited love for the boy
+
+  third_person_emotion: >
+    crying, quietly sobbing, tears visibly running down her cheeks,
+    heartbroken but not hostile
+
+  cinematic_style: >
+    grand cinematic Indian romantic-film atmosphere, emotionally expressive
+    faces, dramatic romantic lighting, heartfelt Bollywood-style visual
+    storytelling, photorealistic, realistic human anatomy, natural skin
+
+
 # ---------------------------------------------------------------------------
 # Brief generation
 # ---------------------------------------------------------------------------
@@ -781,6 +805,14 @@ llm:
   temperature: 0.8
 
   max_retries: 3
+
+  # Explicit context window. Ollama silently drops the START of an over-long
+  # prompt (the system prompt + schema) when it exceeds num_ctx, so keep this
+  # above the largest prompt; prompts are budgeted to stay well under it.
+  num_ctx: 4096
+
+  # Output cap: a brief/caption JSON never needs more; stops runaway output.
+  num_predict: 600
 
 
 # ---------------------------------------------------------------------------
@@ -935,8 +967,12 @@ postproc:
 
 caption:
 
+  # Default voice; a profile's caption_voice takes precedence.
   tone: >
     curious, vivid, cinematic and understated
+
+  # Feed truncates at ~125 chars, so the hook must land inside it.
+  hook_max_chars: 125
 
   emoji_budget: 2
 
@@ -951,9 +987,12 @@ caption:
 
 hashtags:
 
-  min_count: 12
+  # Instagram caps feed posts and Reels at 5 hashtags (caption + comments
+  # combined) since Dec 2025; more can block the post. Captions/keywords now
+  # drive search, so a few specific tags beat a wall of generic ones.
+  min_count: 3
 
-  max_count: 18
+  max_count: 5
 
   tier_broad: 0.30
 
@@ -961,9 +1000,8 @@ hashtags:
 
   tier_niche: 0.20
 
-  brand_tags:
-    - "autogram"
-    - "travelphotography"
+  # Global fallback; a profile's own brand_tags take precedence.
+  brand_tags: []
 
 
 # ---------------------------------------------------------------------------

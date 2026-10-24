@@ -1,5 +1,7 @@
 # AI Tools Content Profile - Complete Implementation
 
+> **Outdated in places.** Text on ai_tools images is now typeset by `autogram/overlay.py` (the image model renders a text-free background), and Instagram allows at most 5 hashtags. See [CONFIGURE.md](CONFIGURE.md#1-what-to-post-the-content-profile) for current behaviour.
+
 ## What's New
 
 A complete **AI tools educational content profile** has been added to ContentPoster, enabling you to generate informative reels about AI and machine learning concepts with:

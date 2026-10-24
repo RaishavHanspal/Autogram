@@ -3,7 +3,9 @@ from __future__ import annotations
 import pytest
 
 from autogram.caption import (
+    _build_messages,
     _RawHashtag,
+    brief_digest,
     compose_final_caption,
     enforce_caption_rules,
     generate_caption,
@@ -44,11 +46,43 @@ def test_process_hashtags_dedupe_filter_and_brand(cfg):
     assert len(tags) <= cfg.hashtags.max_count
 
 
-def test_hashtag_hard_cap_30(cfg):
+def test_hashtag_hard_cap_is_instagram_limit(cfg):
+    # Instagram allows at most 5 hashtags per post/Reel (since Dec 2025).
     cfg.hashtags.max_count = 100
     raw = [_RawHashtag(tag=f"tag{i}", tier="mid") for i in range(50)]
     tags = process_hashtags(raw, cfg, set())
-    assert len(tags) <= 30
+    assert len(tags) <= 5
+
+
+def test_brand_tags_survive_the_cap(cfg):
+    # Topical tags are trimmed first; brand tags keep their reserved slots.
+    raw = [_RawHashtag(tag=f"tag{i}", tier="niche") for i in range(10)]
+    tags = [t.lower() for t in process_hashtags(raw, cfg, set())]
+    assert len(tags) == 5
+    assert tags[-2:] == ["#autogram", "#slowdesign"]
+
+
+def test_profile_brand_tags_override_global(cfg):
+    cfg.active_content.brand_tags = ["roomnotes"]
+    tags = [t.lower() for t in process_hashtags([], cfg, set())]
+    assert tags == ["#roomnotes"]
+
+
+def test_brief_digest_is_compact(brief):
+    brief.image_prompt = "x " * 200  # never shown to the copywriter
+    digest = brief_digest(brief)
+    assert "subject: a cozy reading nook" in digest
+    assert "x x x" not in digest
+    assert len(digest) < 400
+
+
+def test_caption_prompt_uses_profile_voice_and_trend_rules(cfg, brief):
+    cfg.active_content.caption_voice = "a dry-witted interior stylist"
+    msgs = _build_messages(brief, cfg, None)
+    text = msgs[0]["content"] + msgs[1]["content"]
+    assert "a dry-witted interior stylist" in text
+    assert "romantic" not in text.lower()
+    assert "under 125 characters" in text
 
 
 def test_validate_tier_distribution():

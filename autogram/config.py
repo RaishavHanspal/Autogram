@@ -49,6 +49,11 @@ class ContentProfile(BaseModel):
 
     theme: str = ""
 
+    # How scenes are built: "scene" (generic LLM brief), "romance" (proposal /
+    # love-triangle controls from the top-level ``romance`` block) or
+    # "infographic" (text-free background + headline/points typeset on top).
+    kind: str = "scene"
+
     system_prompt: str = (
         "You are a creative director generating one specific, photorealistic "
         "image scene. Prioritize clear faces, realistic anatomy, natural "
@@ -62,7 +67,23 @@ class ContentProfile(BaseModel):
 
     prompt_anchor: str = ""
 
+    # Negative prompt for this profile ("" -> image.negative_template).
+    negative_prompt: str = ""
+
+    # Caption persona for this profile ("" -> caption.tone).
+    caption_voice: str = ""
+
+    # Always-on hashtags for this profile (None -> hashtags.brand_tags).
+    brand_tags: list[str] | None = None
+
     visual: dict[str, Any] = Field(default_factory=dict)
+
+    @field_validator("kind")
+    @classmethod
+    def _valid_kind(cls, value: str) -> str:
+        if value not in {"scene", "romance", "infographic"}:
+            raise ValueError("kind must be 'scene', 'romance' or 'infographic'")
+        return value
 
 
 class ContentConfig(BaseModel):
@@ -187,6 +208,10 @@ class LlmConfig(BaseModel):
     temperature: float = 0.8
 
     max_retries: int = 3
+
+    num_ctx: int = 4096
+
+    num_predict: int = 600
 
 
 # --------------------------------------------------------------------------- #
@@ -318,6 +343,8 @@ class PostprocConfig(BaseModel):
 class CaptionConfig(BaseModel):
     tone: str = "warm, authentic, understated"
 
+    hook_max_chars: int = 125
+
     emoji_budget: int = 2
 
     max_length: int = 2200
@@ -345,9 +372,9 @@ class CaptionConfig(BaseModel):
 
 
 class HashtagsConfig(BaseModel):
-    min_count: int = 12
+    min_count: int = 3
 
-    max_count: int = 18
+    max_count: int = 5
 
     tier_broad: float = 0.30
 

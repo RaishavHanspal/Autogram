@@ -300,7 +300,12 @@ def _run_account(
     profile = args.content_profile or account.profile or cfg.content.active_profile
     cfg.content.active_profile = profile
     if profile not in cfg.content.profiles and cfg.content.profiles:
-        log.warning("profile %r not defined; using fallback profile", profile)
+        # Never silently post another profile's content under this account.
+        raise ContentError(
+            ExitCode.CONFIG,
+            f"account {account.id!r}: profile {profile!r} is not defined under "
+            f"content.profiles (have: {sorted(cfg.content.profiles)})",
+        )
     if args.description:
         cfg.active_content.theme = args.description
     if account.audio_dir:
@@ -445,7 +450,13 @@ def run_pipeline(args: argparse.Namespace, cfg: Config, secrets: Secrets) -> int
 
     worst = ExitCode.OK
     # Warm the LLM + image model once; reuse across every account and scene.
-    with OllamaClient(host, cfg.llm.ready_timeout_s, cfg.llm.request_timeout_s) as ollama:
+    with OllamaClient(
+        host,
+        cfg.llm.ready_timeout_s,
+        cfg.llm.request_timeout_s,
+        num_ctx=cfg.llm.num_ctx,
+        num_predict=cfg.llm.num_predict,
+    ) as ollama:
         try:
             with stage_timer(log, "ollama"):
                 ollama.ensure_running()

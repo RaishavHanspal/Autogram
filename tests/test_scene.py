@@ -142,3 +142,46 @@ def test_generate_brief_falls_back_when_all_invalid(cfg):
         model="m",
     )
     assert isinstance(out, Brief)  # deterministic fallback, run never dies
+
+
+def test_non_romance_prompt_has_no_proposal_and_keeps_subject(cfg, brief):
+    pos, _ = render_prompts(brief, cfg)
+    assert "a cozy reading nook" in pos
+    assert "kneeling" not in pos and "proposing" not in pos
+
+
+def test_non_romance_messages_have_no_proposal_direction(cfg):
+    from autogram.scene import _build_messages
+
+    msgs = _build_messages(cfg, {}, [], None, {}, None, {"emotion": "calm"})
+    text = (msgs[0]["content"] + msgs[1]["content"]).lower()
+    assert "propos" not in text and "triangle" not in text
+
+
+def test_infographic_prompt_is_text_free_and_brief_needs_points(cfg):
+    cfg.active_content.kind = "infographic"
+    b = Brief(subject="glowing layered network", headline="Attention, explained", points=[])
+    pos, _ = render_prompts(b, cfg, characters_block="abstract tech background")
+    assert pos.startswith("abstract tech background") and "no text" in pos
+
+    client = _FakeOllama(
+        [
+            {"subject": "glowing grid", "headline": "Attention, explained", "points": []},
+            {
+                "subject": "glowing grid",
+                "headline": "Attention, explained",
+                "points": ["each token scores every other", "scores become weights"],
+            },
+        ]
+    )
+    out = generate_brief(
+        client=client,
+        cfg=cfg,
+        seed=3,
+        run_date="2026-10-24",
+        history_subjects=[],
+        recent_briefs=[],
+        model="m",
+    )
+    assert client.calls == 2  # first reply rejected: no points
+    assert out.points == ["each token scores every other", "scores become weights"]

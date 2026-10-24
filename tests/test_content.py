@@ -266,3 +266,31 @@ def test_secret_only_accounts_are_synthesized(tmp_path, monkeypatch):
     # Backend routed from the creds present: graph (access token) vs instagrapi.
     assert hist_a[-1]["backend"] == "graph"
     assert hist_b[-1]["backend"] == "instagrapi"
+
+
+def test_unknown_profile_fails_instead_of_falling_back(tmp_path):
+    # A typo'd/missing profile must not silently post another profile's content.
+    _write_config(
+        tmp_path,
+        extra=(
+            "content:\n  profiles:\n    real: {theme: a real theme}\n"
+            "accounts:\n"
+            "  - id: ghost\n    profile: no_such_profile\n    content_mix: {photo: 1}\n"
+        ),
+    )
+    code = _run(tmp_path, ["--dry-run", "--seed", "9"])
+    assert code == run_mod.ExitCode.CONFIG
+    assert not (tmp_path / "out" / "ghost").exists()
+
+
+def test_shipped_config_defines_every_account_profile():
+    from autogram.config import load_config
+
+    cfg = load_config(str(Path(__file__).resolve().parents[1] / "config" / "config.yaml"))
+    assert {"travel", "romance", "ai_tools"} <= set(cfg.content.profiles)
+    assert cfg.content.profiles["ai_tools"].kind == "infographic"
+    assert cfg.content.profiles["romance"].kind == "romance"
+    for account in cfg.accounts:
+        assert account.profile in cfg.content.profiles, account.id
+    # The romance style string must stay a short phrase (it is injected into prompts).
+    assert len(cfg.romance.cinematic_style.split()) < 60

@@ -44,10 +44,14 @@ class OllamaClient:
         host: str,
         ready_timeout_s: int = 120,
         request_timeout_s: int = 180,
+        num_ctx: int = 4096,
+        num_predict: int = 600,
     ) -> None:
         self.host = host.rstrip("/")
         self.ready_timeout_s = ready_timeout_s
         self.request_timeout_s = request_timeout_s
+        self.num_ctx = num_ctx
+        self.num_predict = num_predict
         self._proc: subprocess.Popen[bytes] | None = None
         self._started_by_us = False
 
@@ -151,12 +155,29 @@ class OllamaClient:
         temperature: float,
     ) -> dict[str, Any]:
         """POST /api/chat with JSON format; return parsed JSON object."""
+        # Ollama silently truncates the START of a prompt that overflows num_ctx
+        # (losing the system prompt and schema), so flag it loudly instead.
+        est_tokens = estimate_tokens(messages)
+        if est_tokens + self.num_predict > self.num_ctx:
+            log.warning(
+                "prompt ~%d tokens + %d output exceeds num_ctx %d; the start will be truncated",
+                est_tokens,
+                self.num_predict,
+                self.num_ctx,
+            )
+        else:
+            log.debug("prompt ~%d tokens", est_tokens)
         payload = {
             "model": model,
             "messages": messages,
             "stream": False,
             "format": "json",
-            "options": {"temperature": temperature, "seed": seed},
+            "options": {
+                "temperature": temperature,
+                "seed": seed,
+                "num_ctx": self.num_ctx,
+                "num_predict": self.num_predict,
+            },
         }
         try:
             r = requests.post(
@@ -172,6 +193,17 @@ class OllamaClient:
             return json.loads(content)
         except json.JSONDecodeError as exc:
             raise OllamaError(f"ollama returned non-JSON content: {content[:200]!r}") from exc
+
+
+def estimate_tokens(messages: list[dict[str, str]]) -> int:
+    """Rough token count (~4 chars/token for English) — cheap, no tokenizer."""
+    return sum(len(m.get("content", "")) for m in messages) // 4 + 8 * len(messages)
+
+
+def clip_words(text: str, max_words: int) -> str:
+    """Collapse whitespace and keep at most ``max_words`` words (prompt budget)."""
+    words = text.split()
+    return " ".join(words[:max_words])
 
 
 def _ollama_env(host: str) -> dict[str, str]:
@@ -208,7 +240,8 @@ class _LlmCaption(BaseModel):
 # Hashtag normalization / filtering / tiering
 # --------------------------------------------------------------------------- #
 _TAG_RE = re.compile(r"^#[A-Za-z0-9_]{2,29}$")
-IG_HASHTAG_HARD_CAP = 30
+# Instagram limit for feed posts + Reels since Dec 2025 (caption + comments).
+IG_HASHTAG_HARD_CAP = 5
 
 
 def load_banned_hashtags(path: str = "config/banned_hashtags.txt") -> set[str]:
@@ -247,33 +280,36 @@ def process_hashtags(
     cfg: Config,
     banned: set[str],
 ) -> list[str]:
-    """Normalize, dedupe, filter banned, append brand tags, enforce counts/cap."""
+    """Normalize, dedupe, filter banned, keep brand tags, enforce counts/cap.
+
+    Brand tags get reserved slots so the topical tags are trimmed first — with
+    only 5 tags allowed, appending brands and then truncating would drop them.
+    """
+    limit = min(cfg.hashtags.max_count, IG_HASHTAG_HARD_CAP)
     seen: set[str] = set()
-    kept: list[str] = []
 
-    def _add(tag: str) -> None:
-        norm = normalize_tag(tag)
-        if not norm:
-            return
-        key = norm.lstrip("#").lower()
-        if key in seen or key in banned:
-            return
-        seen.add(key)
-        kept.append(norm)
+    def _collect(tags: list[str]) -> list[str]:
+        out: list[str] = []
+        for tag in tags:
+            norm = normalize_tag(tag)
+            if not norm:
+                continue
+            key = norm.lstrip("#").lower()
+            if key in seen or key in banned:
+                continue
+            seen.add(key)
+            out.append(norm)
+        return out
 
-    for rt in raw_tags:
-        _add(rt.tag)
+    brands = _collect(brand_tags_for(cfg))[:limit]
+    topical = _collect([rt.tag for rt in raw_tags])[: limit - len(brands)]
+    return topical + brands
 
-    # Always append configured brand tags (also normalized/deduped).
-    for brand in cfg.hashtags.brand_tags:
-        _add(brand)
 
-    # Enforce max_count first (leave room mentally for the hard cap), then cap.
-    if len(kept) > cfg.hashtags.max_count:
-        kept = kept[: cfg.hashtags.max_count]
-    if len(kept) > IG_HASHTAG_HARD_CAP:
-        kept = kept[:IG_HASHTAG_HARD_CAP]
-    return kept
+def brand_tags_for(cfg: Config) -> list[str]:
+    """Profile brand tags when set, else the global hashtags.brand_tags."""
+    profile_tags = cfg.active_content.brand_tags
+    return list(profile_tags) if profile_tags is not None else list(cfg.hashtags.brand_tags)
 
 
 def validate_tier_distribution(
@@ -342,38 +378,75 @@ def compose_final_caption(caption: str, hashtags: list[str], cfg: Config) -> str
 # --------------------------------------------------------------------------- #
 # Generation
 # --------------------------------------------------------------------------- #
+# Brief fields worth showing the copywriter; everything else (prompts, seeds,
+# framing jargon) only burns tokens and drags the caption toward describing
+# the image instead of the moment.
+_CAPTION_FIELDS: tuple[str, ...] = (
+    "subject",
+    "setting",
+    "location_name",
+    "mood",
+    "lighting",
+    "time_of_day",
+    "headline",
+    "points",
+)
+
+
+def brief_digest(brief: Brief, max_words: int = 30) -> str:
+    """Compact ``key: value`` lines of the non-empty, caption-relevant fields."""
+    data = brief.model_dump()
+    lines: list[str] = []
+    seen: set[str] = set()
+    for key in _CAPTION_FIELDS:
+        value = data.get(key)
+        if isinstance(value, list):
+            value = " | ".join(str(v) for v in value if v)
+        text = clip_words(str(value or ""), max_words)
+        if not text or text.lower() in seen:
+            continue
+        seen.add(text.lower())
+        lines.append(f"{key}: {text}")
+    if brief.proposal_direction:
+        if brief.proposal_direction == "boy_proposes_to_girl":
+            story = "he proposes to her"
+        else:
+            story = "she proposes to him"
+        if brief.third_person_present:
+            story += "; a heartbroken woman watches from afar"
+        lines.append(f"story: {story}")
+    return "\n".join(lines)
+
+
 def _build_messages(brief: Brief, cfg: Config, error_feedback: str | None) -> list[dict[str, str]]:
     schema = (
         '{"caption": "string", "hashtags": '
-        '[{"tag": "string", "tier": "broad|mid|niche"}], "alt_text": "string"}'
+        '[{"tag": "string", "tier": "broad|niche"}], "alt_text": "string"}'
     )
+    voice = clip_words(cfg.active_content.caption_voice or cfg.caption.tone, 40)
     system = (
-        "You are an expert Instagram copywriter who writes warm, authentic, and humanly captions. "
-        "You write like you're sharing a genuine moment with friends, not describing an image. "
-        "Your captions feel personal, emotional, and relatable. "
-        f"Respond ONLY with a single JSON object matching this schema exactly: {schema}. "
-        "No prose, no code fences."
+        "You write Instagram captions people stop for, save and share. "
+        f"Voice: {voice} "
+        f"Respond ONLY with one JSON object matching: {schema}. No prose, no code fences."
     )
-    n = cfg.hashtags.max_count
+    limit = min(cfg.hashtags.max_count, IG_HASHTAG_HARD_CAP)
+    n_topical = max(1, limit - len(brand_tags_for(cfg)))
     user = (
-        f"Write a warm, authentic Instagram caption for this romantic moment:\n"
-        f"{brief.model_dump_json(indent=2)}\n\n"
-        f"Requirements:\n"
-        f"- Tone/voice: {cfg.caption.tone}. Be personal and genuine, like sharing with close friends.\n"
-        f"- The FIRST line must work as a compelling hook that draws people in emotionally.\n"
-        f"- Write about the FEELING and MOMENT, not a technical description of the image.\n"
-        f"- Use conversational language: contractions, natural phrasing, authentic emotion.\n"
-        f"- NO generic clichés. Make it specific to what's happening in this moment.\n"
-        f"- At most {cfg.caption.emoji_budget} emoji total (use sparingly for emphasis).\n"
-        f"- Do NOT invent @mentions of accounts.\n"
-        f"- Keep the whole caption well under {cfg.caption.max_length} characters.\n"
-        f"- Provide {cfg.hashtags.min_count}-{n} relevant hashtags, each labelled with a tier: "
-        f"~30% 'broad' (>1M posts), ~50% 'mid', ~20% 'niche'.\n"
-        f"- alt_text: one factual sentence describing the image for accessibility (not poetic, just descriptive).\n"
-        f"\nMake this feel like a real moment shared authentically, not a staged product description."
+        f"Post:\n{brief_digest(brief)}\n\n"
+        "Caption structure (blank line between parts):\n"
+        f"1. Hook: ONE line under {cfg.caption.hook_max_chars} characters, specific, "
+        "sparks curiosity or emotion. Never open with 'This', 'Here' or a hashtag.\n"
+        "2. Body: 2-4 short lines. Name the subject and place in plain searchable words "
+        "(Instagram search reads captions). One sensory detail or one real insight.\n"
+        "3. Close: one natural call to action: a question, or an invite to save/share.\n"
+        "Rules: no cliches (wanderlust, goals, vibes, magic), no @mentions, "
+        f"at most {cfg.caption.emoji_budget} emoji, no hashtags inside the caption.\n"
+        f"hashtags: exactly {n_topical} specific tags, no '#', no spaces; "
+        "1 'broad', the rest 'niche'.\n"
+        "alt_text: one plain factual sentence describing the image."
     )
     if error_feedback:
-        user += f"\nYour previous reply was invalid: {error_feedback}\nFix it and reply with valid JSON only."
+        user += f"\nYour previous reply was invalid: {error_feedback}\nReply with valid JSON only."
     return [
         {"role": "system", "content": system},
         {"role": "user", "content": user},
@@ -383,17 +456,21 @@ def _build_messages(brief: Brief, cfg: Config, error_feedback: str | None) -> li
 def _fallback_caption(brief: Brief, cfg: Config, banned: set[str]) -> CaptionResult:
     """Deterministic template so a run never dies on LLM formatting."""
     log.warning("using deterministic fallback caption")
-    hook = f"This moment right here. {brief.mood.capitalize()} and real."
-    body = (
-        f"{hook}\n\n"
-        f"In {brief.setting}, under {brief.lighting}. "
-        f"Just us, just this. {brief.composition}."
-    )
+    # Profile-neutral on purpose: the old romance template ("Just us, just
+    # this") leaked onto travel and AI posts whenever the LLM failed.
+    hook = (brief.headline or brief.subject).strip().rstrip(".")
+    parts = [f"{hook[:1].upper()}{hook[1:]}."]
+    if brief.points:
+        parts.append("\n".join(f"- {p}" for p in brief.points))
+    elif brief.setting:
+        parts.append(f"{brief.setting[:1].upper()}{brief.setting[1:]}.")
+    parts.append("Save this for later.")
+    body = "\n\n".join(parts)
+    stop = {"with", "from", "through", "into", "over", "under", "their", "this", "that"}
     raw = [
-        _RawHashtag(tag=w, tier="mid")
-        for w in re.findall(
-            r"[A-Za-z0-9]+", f"{brief.subject} {brief.mood} {brief.style_modifiers}"
-        )
+        _RawHashtag(tag=w, tier="niche")
+        for w in re.findall(r"[A-Za-z0-9]+", f"{brief.subject} {brief.setting}")
+        if len(w) > 3 and w.lower() not in stop
     ]
     tags = process_hashtags(raw, cfg, banned)
     caption = enforce_caption_rules(body, cfg)

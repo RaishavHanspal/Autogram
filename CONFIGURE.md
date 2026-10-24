@@ -53,6 +53,37 @@ content:
 
 The `romance:` top-level block (proposal direction, ring/flowers/kneeling, the
 optional third-person love triangle) tunes the romance scene brain specifically.
+It only applies to profiles with `kind: romance`.
+
+Per-profile keys that shape quality:
+
+| Key | Effect |
+|---|---|
+| `kind` | `scene` (default, generic LLM brief), `romance` (proposal controls above), or `infographic` (see below) |
+| `caption_voice` | the caption persona for this profile (falls back to `caption.tone`) |
+| `brand_tags` | always-on hashtags for this profile (fall back to `hashtags.brand_tags`) |
+| `negative_prompt` | negative prompt for this profile (falls back to `image.negative_template`) |
+
+An account whose `profile` is not defined under `content.profiles` **fails** with
+a config error rather than silently posting another profile's content.
+
+**`kind: infographic`** (the shipped `ai_tools` profile): SD1.5 cannot spell, so
+the image model paints a *text-free* background and the LLM writes a `headline`
+plus 3–5 `points`, which are typeset on top with Pillow (`autogram/overlay.py`).
+A carousel renders the background once and reuses it for every slide (headline →
+one takeaway per slide → recap if needed), so it costs one diffusion render. Set
+`AUTOGRAM_FONT` to a `.ttf` path to change the typeface.
+
+**Hashtags:** Instagram allows at most **5** hashtags per post/Reel (caption and
+comments combined) since Dec 2025, so `hashtags.max_count` is capped at 5 in code
+and brand tags keep reserved slots. Captions are written for search: a hook under
+`caption.hook_max_chars` (125, the "more" cutoff), plain keywords, and a call to
+action.
+
+**Prompt budget:** text from the profile is clipped to word budgets before it
+reaches the LLM, and `llm.num_ctx` / `llm.num_predict` are sent explicitly. If a
+prompt would overflow the window, the log warns — Ollama otherwise drops the
+*start* of the prompt silently.
 
 Override the theme for a single run without editing YAML:
 
