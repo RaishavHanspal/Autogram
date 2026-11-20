@@ -268,6 +268,7 @@ def _record(
             "caption": deliverable.caption,
             "alt_text": deliverable.alt_text,
             "hashtags": deliverable.hashtags,
+            "poem": deliverable.poem,
             "backend": backend,
             "post_id": getattr(result, "post_id", None),
             "post_url": getattr(result, "url", None),

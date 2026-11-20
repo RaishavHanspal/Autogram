@@ -6,8 +6,10 @@ from .base import (
     Deliverable,
     ProductionContext,
     build_caption,
+    choose_poem,
     generate_scene,
     register,
+    stamp_poem,
 )
 
 
@@ -24,6 +26,8 @@ class PhotoPost:
             recent_briefs=ctx.state.recent_briefs(ctx.cfg.brief.history_depth),
             check_dupe=True,
         )
+        poem = choose_poem(ctx, scene.brief)
+        stamp_poem(ctx, [scene.processed.path], poem)
         cap = None if ctx.image_only else build_caption(ctx, scene.brief)
         return Deliverable(
             kind="photo",
@@ -34,4 +38,5 @@ class PhotoPost:
             hashtags=cap.hashtags if cap else [],
             comment_text=cap.comment_text if cap else None,
             scene_descs=[scene.brief.subject],
+            poem=poem.as_record() if poem else None,
         )

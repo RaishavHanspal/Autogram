@@ -489,6 +489,25 @@ def _build_generated_audio_filter(duration: float, rng: random.Random) -> str:
     )
 
 
+def _add_overlay(
+    cmd: list[str], graph: str, video_label: str, overlay: str | Path | None
+) -> tuple[str, str]:
+    """Composite a fixed full-frame PNG (e.g. the poem) over the finished motion.
+
+    Appended as the LAST input so existing input indexes are untouched. Because
+    it is applied after zoompan/xfade/concat, it never moves with the camera.
+    """
+    if overlay is None or not Path(overlay).exists():
+        return graph, video_label
+    idx = sum(1 for part in cmd if part == "-i")
+    cmd += ["-loop", "1", "-i", str(overlay)]
+    graph += (
+        f";[{video_label}][{idx}:v]overlay=0:0:shortest=1:format=auto,"
+        "format=yuv420p[vpoem]"
+    )
+    return graph, "vpoem"
+
+
 # ---------------------------------------------------------------------------
 # Main renderer
 # ---------------------------------------------------------------------------
@@ -499,8 +518,12 @@ def build_reel(
     cfg: Config,
     out_path: str | Path,
     seed: int = 0,
+    overlay: str | Path | None = None,
 ) -> Path:
-    """Render a unique 1080x1920 Reel from still images."""
+    """Render a unique 1080x1920 Reel from still images.
+
+    ``overlay``: optional full-frame RGBA PNG kept static on top of the motion.
+    """
     if not ffmpeg_available():
         raise ReelError("ffmpeg not found on PATH; cannot build a Reel")
 
@@ -552,6 +575,7 @@ def build_reel(
         audio_map = "[aout]"
     else:
         audio_map = f"{audio_idx}:a"
+    filter_complex, video_label = _add_overlay(cmd, filter_complex, video_label, overlay)
 
     cmd += [
         "-filter_complex",
@@ -618,6 +642,7 @@ def assemble_ai_clips(
     cfg: Config,
     out_path: str | Path,
     seed: int = 0,
+    overlay: str | Path | None = None,
 ) -> Path:
     """Assemble AI-generated video clips (real motion) into a final Reel.
 
@@ -669,13 +694,13 @@ def assemble_ai_clips(
     else:
         audio_map = f"{audio_idx}:a"
 
-    filter_complex = ";".join(parts)
+    filter_complex, video_label = _add_overlay(cmd, ";".join(parts), "vout", overlay)
 
     cmd += [
         "-filter_complex",
         filter_complex,
         "-map",
-        "[vout]",
+        f"[{video_label}]",
         "-map",
         audio_map,
         "-c:v",

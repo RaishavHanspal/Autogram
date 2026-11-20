@@ -563,6 +563,32 @@ class AccountConfig(BaseModel):
         return "youtube" if self.platform == "youtube" else "instagrapi"
 
 
+class PoetryConfig(BaseModel):
+    """Relatable poetry overlay (see autogram/poetry.py).
+
+    A short verse + poet credit (e.g. "— Rumi") is drawn on photos and every
+    carousel slide, and composited as a fixed layer over Reels so it stays still
+    while the camera moves.
+    """
+
+    enabled: bool = True
+    # Profiles that get poetry ([] -> every profile).
+    applies_to_profiles: list[str] = Field(default_factory=list)
+    # Markdown library built by scripts/build_poetry_library.py.
+    library_path: str = "config/poetry.md"
+    # Where the verse sits: "top" or "bottom". It never moves (fixed on Reels).
+    position: str = "top"
+    # Don't reuse a poem used in the last N posts of this account.
+    avoid_recent: int = 300
+
+    @field_validator("position")
+    @classmethod
+    def _valid_position(cls, value: str) -> str:
+        if value not in {"top", "bottom"}:
+            raise ValueError("poetry.position must be 'top' or 'bottom'")
+        return value
+
+
 class RandomThemeConfig(BaseModel):
     """Random, non-repetitive prompt pools (see autogram/random_theme.py).
 
@@ -615,6 +641,8 @@ class Config(BaseModel):
     reel: ReelConfig = Field(default_factory=ReelConfig)
 
     carousel: CarouselConfig = Field(default_factory=CarouselConfig)
+
+    poetry: PoetryConfig = Field(default_factory=PoetryConfig)
 
     # Weighted mix used to pick a content type per run when one isn't forced.
     # Weight 0 disables a type. Overridable per account.

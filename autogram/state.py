@@ -54,6 +54,14 @@ class State:
                 out.append(str(brief["subject"]))
         return out
 
+    def recent_poems(self, n: int) -> list[str]:
+        out: list[str] = []
+        for r in self.recent_records(n):
+            poem = r.get("poem")
+            if isinstance(poem, dict) and poem.get("text"):
+                out.append(str(poem["text"]))
+        return out
+
     def has_image_hash(self, sha256: str) -> bool:
         return any(r.get("image_sha256") == sha256 for r in self.load())
 

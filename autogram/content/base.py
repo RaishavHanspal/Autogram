@@ -25,6 +25,7 @@ from ..caption import (
 from ..config import Config, Secrets
 from ..imagegen import GeneratedImage, ImageGenerator
 from ..overlay import plan_slide, typeset
+from ..poetry import Poem, apply_to_image, pick_poem, poetry_active
 from ..postproc import ASPECT_DIMS, ProcessedImage, center_crop_to_aspect, process_image
 from ..safety import SafetyError, load_profanity, run_caption_gates, run_image_gates
 from ..scene import (
@@ -91,6 +92,7 @@ class Deliverable:
     hashtags: list[str] = field(default_factory=list)
     comment_text: str | None = None
     scene_descs: list[str] = field(default_factory=list)
+    poem: dict[str, str] | None = None  # {"text", "poet"} of the overlaid verse
 
 
 @dataclass
@@ -330,6 +332,29 @@ def _infographic_slides(
         )
         for i in range(total)
     ]
+
+
+def choose_poem(ctx: ProductionContext, brief: Brief) -> Poem | None:
+    """A relatable poem for this post, or None when poetry is off for the profile."""
+    if not poetry_active(ctx.cfg):
+        return None
+    try:
+        recent = ctx.state.recent_poems(ctx.cfg.poetry.avoid_recent)
+        return pick_poem(ctx.cfg, brief, ctx.seed, recent)
+    except Exception as exc:  # noqa: BLE001 - poetry is decorative, never fatal
+        ctx.log.warning("poem selection failed (%s); posting without a poem", exc)
+        return None
+
+
+def stamp_poem(ctx: ProductionContext, paths: list[Path], poem: Poem | None) -> None:
+    """Draw ``poem`` onto each still in the same fixed position (never fatal)."""
+    if poem is None:
+        return
+    for path in paths:
+        try:
+            apply_to_image(path, poem, ctx.cfg.postproc.jpeg_quality, ctx.cfg.poetry.position)
+        except Exception as exc:  # noqa: BLE001
+            ctx.log.warning("could not draw poem on %s (%s)", path, exc)
 
 
 @dataclass

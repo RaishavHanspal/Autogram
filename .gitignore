@@ -36,3 +36,6 @@ models/
 .vscode/
 .DS_Store
 Thumbs.db
+
+# Gutenberg downloads for scripts/build_poetry_library.py
+.cache/
