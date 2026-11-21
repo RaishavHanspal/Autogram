@@ -47,7 +47,7 @@ class Carousel:
         # Same verse, same position on every slide, so it stays put as you swipe.
         poem = choose_poem(ctx, scenes[0].brief)
         stamp_poem(ctx, [s.processed.path for s in scenes], poem)
-        cap = build_caption(ctx, scenes[0].brief)
+        cap = build_caption(ctx, scenes[0].brief, poem)
         return Deliverable(
             kind="carousel",
             media=[s.processed.path for s in scenes],

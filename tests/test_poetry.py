@@ -33,6 +33,31 @@ def test_library_loads_with_poets():
     assert all(0 <= p.likeability <= 100 for p in poems)
 
 
+def test_shayari_library_is_default():
+    cfg = _cfg()
+    assert cfg.poetry.library_path == "config/shayari.md"
+    poems, keywords = _load_library(cfg.poetry.library_path)
+    poets = {p.poet for p in poems}
+    assert {"Kabir", "Rahim", "Ghalib", "Original"} <= poets
+    assert len(poems) >= 200
+    assert {"love", "journey", "chai", "ghar", "dosti"} <= set(keywords)
+
+
+def test_original_shayari_uses_configured_credit():
+    cfg = _cfg()
+    brief = Brief(subject="a couple proposing with a ring")
+    for credit in ("", "@myhandle"):
+        cfg.poetry.original_credit = credit
+        picks = [pick_poem(cfg, brief, seed=s) for s in range(30)]
+        assert all(p is not None and p.poet.lower() != "original" for p in picks)
+        assert any(p.poet == credit for p in picks if p)
+
+
+def test_layer_without_credit_renders():
+    layer = render_layer(Poem(lines=("Chai, dost,", "aur baatein"), poet=""), (1080, 1350))
+    assert layer.getpixel((540, 40))[3] > 0
+
+
 def test_poetry_skips_infographic_profile():
     assert poetry_active(_cfg("travel"))
     assert not poetry_active(_cfg("ai_tools"))
@@ -110,3 +135,21 @@ def test_build_reel_with_overlay(tmp_path):
         text=True,
     )
     assert "video" in res.stdout and "audio" in res.stdout
+
+
+def test_caption_prompt_carries_the_shayari():
+    from autogram.caption import _build_messages
+
+    verse = "Train ki seeti, station ki chai / Safar ki yaadein kabhi na jaayein bhai"
+    user = _build_messages(Brief(subject="chai at a station"), _cfg(), None, verse)[1]["content"]
+    assert verse in user and "mood" in user
+    plain = _build_messages(Brief(subject="chai at a station"), _cfg(), None)[1]["content"]
+    assert "shayari" not in plain
+
+
+def test_verse_block_opens_caption_with_credit():
+    from autogram.content.base import verse_block
+
+    block = verse_block(Poem(lines=("Rahiman dhaaga prem ka,", "mat todo chatkaay"), poet="Rahim"))
+    assert block.startswith("“Rahiman") and block.endswith("— Rahim")
+    assert "—" not in verse_block(Poem(lines=("a", "b"), poet=""))

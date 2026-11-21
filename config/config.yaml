@@ -1096,19 +1096,21 @@ state:
 #
 # A short, relatable verse with the poet's name ("— Rumi", "— Faiz") is placed
 # at the top of every photo, carousel slide and Reel. On Reels it is a fixed
-# layer, so it stays still while the scene moves. config/poetry.md holds
-# ~10,000 public-domain verses ranked by a likeability score (rebuild with
-# `python scripts/build_poetry_library.py`); poems match the post's mood via
-# tags, and high-scoring verses are picked most often.
+# layer, so it stays still while the scene moves. config/shayari.md holds
+# simple, relatable Hinglish shayari (classic dohe/shers + originals); poems
+# match the post's mood via tags and high-♥ verses are picked most often.
+# config/poetry.md is an alternative 10k English library.
 # ---------------------------------------------------------------------------
 
 poetry:
   enabled: true
   # Infographic profiles (ai_tools) already carry typeset text, so skip them.
   applies_to_profiles: ["travel", "romance"]
-  library_path: "config/poetry.md"
+  library_path: "config/shayari.md"
+  original_credit: ""           # name under original shayari, e.g. "@yourhandle"
+  in_caption: true              # caption opens with the shayari and matches its mood
   position: "top"               # top | bottom (always stationary)
-  avoid_recent: 300             # don't repeat a verse within this many posts
+  avoid_recent: 120             # don't repeat a verse within this many posts
 
 
 carousel:

@@ -574,12 +574,19 @@ class PoetryConfig(BaseModel):
     enabled: bool = True
     # Profiles that get poetry ([] -> every profile).
     applies_to_profiles: list[str] = Field(default_factory=list)
-    # Markdown library built by scripts/build_poetry_library.py.
-    library_path: str = "config/poetry.md"
+    # Markdown verse library: config/shayari.md (simple Hinglish shayari) or
+    # config/poetry.md (10k English verses from scripts/build_poetry_library.py).
+    library_path: str = "config/shayari.md"
+    # Credit shown under verses written for the account ("Original" entries),
+    # e.g. "@yourhandle". Blank -> no name line.
+    original_credit: str = ""
+    # Also open the caption with the shayari (the caption is always written to
+    # match its mood).
+    in_caption: bool = True
     # Where the verse sits: "top" or "bottom". It never moves (fixed on Reels).
     position: str = "top"
     # Don't reuse a poem used in the last N posts of this account.
-    avoid_recent: int = 300
+    avoid_recent: int = 120
 
     @field_validator("position")
     @classmethod

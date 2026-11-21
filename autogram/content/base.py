@@ -365,8 +365,20 @@ class CaptionBundle:
     hashtags: list[str]
 
 
-def build_caption(ctx: ProductionContext, brief: Brief) -> CaptionBundle:
-    """Generate + gate + compose the final caption for a brief."""
+def verse_block(poem: Poem) -> str:
+    """The shayari as it opens the caption: quoted lines + the poet's credit."""
+    body = "\n".join(poem.lines)
+    credit = f"\n— {poem.poet}" if poem.poet.strip() else ""
+    return f"“{body}”{credit}"
+
+
+def build_caption(ctx: ProductionContext, brief: Brief, poem: Poem | None = None) -> CaptionBundle:
+    """Generate + gate + compose the final caption for a brief.
+
+    With ``poem`` the caption is written to match the shayari's mood and, when
+    ``poetry.in_caption`` is on, opens with the shayari itself so the image and
+    the caption say the same thing.
+    """
     try:
         banned = load_banned_hashtags()
         result: CaptionResult = generate_caption(
@@ -376,19 +388,28 @@ def build_caption(ctx: ProductionContext, brief: Brief) -> CaptionBundle:
             seed=ctx.seed,
             model=ctx.llm_model,
             banned=banned,
+            verse=" / ".join(poem.lines) if poem else None,
         )
     except Exception as exc:  # noqa: BLE001
         raise ContentError(ExitCode.CAPTION, f"caption generation failed: {exc}") from exc
 
     run_caption_gates(result.caption, ctx.cfg, load_profanity())  # SafetyError propagates
 
-    try:
+    def compose(text: str) -> tuple[str, str | None]:
         if ctx.cfg.caption.hashtag_placement == "caption":
-            final_caption = compose_final_caption(result.caption, result.hashtags, ctx.cfg)
-            comment_text: str | None = None
+            return compose_final_caption(text, result.hashtags, ctx.cfg), None
+        tags = " ".join(result.hashtags) if result.hashtags else None
+        return compose_final_caption(text, [], ctx.cfg), tags
+
+    try:
+        text = result.caption
+        if poem is not None and ctx.cfg.poetry.in_caption:
+            try:
+                final_caption, comment_text = compose(f"{verse_block(poem)}\n\n{text}")
+            except ValueError:  # too long with the verse: keep the caption alone
+                final_caption, comment_text = compose(text)
         else:
-            final_caption = compose_final_caption(result.caption, [], ctx.cfg)
-            comment_text = " ".join(result.hashtags) if result.hashtags else None
+            final_caption, comment_text = compose(text)
     except ValueError as exc:
         raise ContentError(ExitCode.CAPTION, f"caption length error: {exc}") from exc
 

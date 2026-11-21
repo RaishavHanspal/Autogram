@@ -17,7 +17,7 @@ from __future__ import annotations
 import os
 import random
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from functools import lru_cache
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -54,6 +54,9 @@ _CREDIT_FONTS: tuple[str, ...] = (
     "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
     "C:/Windows/Fonts/segoeuib.ttf",
 )
+
+# Library entries by this poet name were written for the account itself.
+ORIGINAL = "original"
 
 _TEXT = (255, 255, 255, 255)
 _CREDIT = (255, 214, 153, 255)  # warm gold, reads well over any photo
@@ -162,7 +165,9 @@ def poetry_active(cfg: Config) -> bool:
     return not profiles or cfg.content.active_profile in profiles
 
 
-def _brief_words(brief: Brief, theme: str) -> set[str]:
+def _brief_words(brief: Brief) -> set[str]:
+    """Words describing THIS scene (not the account theme, which is the same
+    for every post and would make every scene look alike)."""
     text = " ".join(
         str(x)
         for x in (
@@ -176,19 +181,25 @@ def _brief_words(brief: Brief, theme: str) -> set[str]:
             brief.interaction,
             brief.romantic_details,
             brief.proposal_action,
-            theme,
         )
         if x
     ).lower()
-    return set(re.findall(r"[a-z]+", text))
+    words = set(re.findall(r"[a-z]+", text))
+    return words | {w[:-1] for w in words if w.endswith("s") and len(w) > 3}
 
 
-def _score(poem: Poem, words: set[str], keywords: dict[str, tuple[str, ...]]) -> int:
-    score = 0
-    for tag in poem.tags:
-        triggers = {tag, *keywords.get(tag, ())}
-        score += sum(1 for t in triggers if t in words)
-    return score
+def _scene_tags(words: set[str], keywords: dict[str, tuple[str, ...]]) -> set[str]:
+    """Moods the scene evokes: every tag with at least one trigger word present."""
+    return {tag for tag, triggers in keywords.items() if ({tag, *triggers} & words)}
+
+
+# Broad moods half-weight, so a specific one (rain, chai, proposal) wins.
+_GENERIC_TAGS = frozenset({"journey", "city", "hope", "time", "soul"})
+
+
+def _score(poem: Poem, scene_tags: set[str]) -> int:
+    """How strongly the poem's moods match the scene's."""
+    return sum(1 if t in _GENERIC_TAGS else 2 for t in scene_tags.intersection(poem.tags))
 
 
 def pick_poem(
@@ -209,15 +220,19 @@ def pick_poem(
     recent = set(recent_texts or [])
     pool = [p for p in poems if p.text not in recent] or list(poems)
 
-    words = _brief_words(brief, cfg.active_content.theme)
-    scored = [(_score(p, words, keywords), p) for p in pool]
+    scene = _scene_tags(_brief_words(brief), keywords)
+    scored = [(_score(p, scene), p) for p in pool]
     best = max(s for s, _ in scored)
-    candidates = [p for s, p in scored if best > 0 and s >= max(1, best - 1)] or pool
+    # Only the poems sharing the most moods with the scene; no match -> any poem.
+    candidates = [p for s, p in scored if best > 0 and s == best] or pool
     weights = [(max(p.likeability, 1.0) / 100.0) ** 6 for p in candidates]
     poem = random.Random(seed).choices(candidates, weights=weights, k=1)[0]
+    if poem.poet.lower() == ORIGINAL:
+        # Written for this account: never credit it to a real poet.
+        poem = replace(poem, poet=cfg.poetry.original_credit.strip())
     log.info(
-        "poem (match %d/%d, ♥ %g, %d candidates): %s — %s",
-        _score(poem, words, keywords),
+        "poem (scene moods %s, match %d, ♥ %g, %d candidates): %s — %s",
+        sorted(scene),
         best,
         poem.likeability,
         len(candidates),
@@ -295,11 +310,11 @@ def render_layer(
             break
         size_px -= 2
     credit_font = _font(int(size_px * 0.78), credit=True)
-    credit = f"\u2014 {poem.poet}"
+    credit = f"\u2014 {poem.poet}" if poem.poet.strip() else ""
 
     line_h = int(size_px * 1.38)
-    gap = int(size_px * 0.55)
-    credit_h = int(size_px * 0.78 * 1.3)
+    gap = int(size_px * 0.55) if credit else 0
+    credit_h = int(size_px * 0.78 * 1.3) if credit else 0
     block_h = len(wrapped) * line_h + gap + credit_h
 
     if position == "bottom":
@@ -333,16 +348,17 @@ def render_layer(
             stroke_fill=_SHADOW,
         )
         y += line_h
-    y += gap
-    cw = draw.textlength(credit, font=credit_font)
-    draw.text(
-        ((w - cw) / 2, y),
-        credit,
-        font=credit_font,
-        fill=_CREDIT,
-        stroke_width=stroke,
-        stroke_fill=_SHADOW,
-    )
+    if credit:
+        y += gap
+        cw = draw.textlength(credit, font=credit_font)
+        draw.text(
+            ((w - cw) / 2, y),
+            credit,
+            font=credit_font,
+            fill=_CREDIT,
+            stroke_width=stroke,
+            stroke_fill=_SHADOW,
+        )
     return layer
 
 

@@ -84,9 +84,7 @@ def _assemble_reel(
 
     try:
         if ai_clips:
-            path = assemble_ai_clips(
-                ai_clips, cfg, out_dir / f"{stamp}.mp4", seed, overlay=overlay
-            )
+            path = assemble_ai_clips(ai_clips, cfg, out_dir / f"{stamp}.mp4", seed, overlay=overlay)
             log.info("reel assembled from %d AI clip(s)", len(ai_clips))
         else:
             path = build_reel(scene_paths, cfg, out_dir / f"{stamp}.mp4", seed, overlay=overlay)
@@ -125,8 +123,8 @@ class Reel:
         scenes = generate_scenes(ctx, ctx.cfg.reel.num_scenes)
         scene_paths = [s.processed.path for s in scenes]
         scene_descs = [s.brief.subject for s in scenes]
-        cap = build_caption(ctx, scenes[0].brief)
         poem = choose_poem(ctx, scenes[0].brief)
+        cap = build_caption(ctx, scenes[0].brief, poem)
         publish_path = _assemble_reel(ctx, scene_paths, scene_descs, poem)
         return Deliverable(
             kind="reel",

@@ -261,8 +261,8 @@ def test_secret_only_accounts_are_synthesized(tmp_path, monkeypatch):
     assert (tmp_path / "out" / "acct_a").is_dir()
     assert (tmp_path / "out" / "acct_b").is_dir()
 
-    hist_a = json.loads((tmp_path / "state" / "history.acct_a.json").read_text())
-    hist_b = json.loads((tmp_path / "state" / "history.acct_b.json").read_text())
+    hist_a = json.loads((tmp_path / "state" / "history.acct_a.json").read_text(encoding="utf-8"))
+    hist_b = json.loads((tmp_path / "state" / "history.acct_b.json").read_text(encoding="utf-8"))
     # Backend routed from the creds present: graph (access token) vs instagrapi.
     assert hist_a[-1]["backend"] == "graph"
     assert hist_b[-1]["backend"] == "instagrapi"

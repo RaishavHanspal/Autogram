@@ -28,7 +28,7 @@ class PhotoPost:
         )
         poem = choose_poem(ctx, scene.brief)
         stamp_poem(ctx, [scene.processed.path], poem)
-        cap = None if ctx.image_only else build_caption(ctx, scene.brief)
+        cap = None if ctx.image_only else build_caption(ctx, scene.brief, poem)
         return Deliverable(
             kind="photo",
             media=[scene.processed.path],

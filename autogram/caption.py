@@ -418,7 +418,9 @@ def brief_digest(brief: Brief, max_words: int = 30) -> str:
     return "\n".join(lines)
 
 
-def _build_messages(brief: Brief, cfg: Config, error_feedback: str | None) -> list[dict[str, str]]:
+def _build_messages(
+    brief: Brief, cfg: Config, error_feedback: str | None, verse: str | None = None
+) -> list[dict[str, str]]:
     schema = (
         '{"caption": "string", "hashtags": '
         '[{"tag": "string", "tier": "broad|niche"}], "alt_text": "string"}'
@@ -445,6 +447,12 @@ def _build_messages(brief: Brief, cfg: Config, error_feedback: str | None) -> li
         "1 'broad', the rest 'niche'.\n"
         "alt_text: one plain factual sentence describing the image."
     )
+    if verse:
+        user += (
+            f'\n\nThis shayari is shown on the image and opens the caption: "{verse}"\n'
+            "Match its mood and theme: the hook continues its feeling in simple, "
+            "warm words (a little Hinglish is welcome). Do NOT repeat or translate the shayari."
+        )
     if error_feedback:
         user += f"\nYour previous reply was invalid: {error_feedback}\nReply with valid JSON only."
     return [
@@ -488,8 +496,13 @@ def generate_caption(
     seed: int,
     model: str,
     banned: set[str] | None = None,
+    verse: str | None = None,
 ) -> CaptionResult:
-    """Generate caption+hashtags+alt text, validating and retrying, with fallback."""
+    """Generate caption+hashtags+alt text, validating and retrying, with fallback.
+
+    ``verse``: the shayari overlaid on the image; the caption is written to
+    match its mood (see :func:`_build_messages`).
+    """
     if banned is None:
         banned = load_banned_hashtags()
 
@@ -498,7 +511,7 @@ def generate_caption(
         try:
             raw = client.chat_json(
                 model=model,
-                messages=_build_messages(brief, cfg, error_feedback),
+                messages=_build_messages(brief, cfg, error_feedback, verse),
                 seed=seed,
                 temperature=cfg.llm.temperature,
             )
